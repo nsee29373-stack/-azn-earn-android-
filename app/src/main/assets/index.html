@@ -120,6 +120,71 @@ window.onAdRewarded = function(){
  document.getElementById("views").textContent = completedViews;
  setStatus("مشاهده تبلیغ کامل شد.");
 };
+
+<script>
+let completedViews = 0;
+
+function watchAd() {
+    const button = document.getElementById("watchButton");
+
+    if (window.AndroidAds &&
+        typeof AndroidAds.showRewardedAd === "function") {
+
+        button.disabled = true;
+        setStatus("در حال بررسی آماده بودن تبلیغ...");
+
+        AndroidAds.showRewardedAd();
+
+    } else {
+        setStatus("اتصال اندروید به تبلیغات برقرار نیست.");
+    }
+}
+
+function setStatus(message) {
+    document.getElementById("status").textContent = message;
+}
+
+function enableWatchButton() {
+    document.getElementById("watchButton").disabled = false;
+}
+
+window.onNativeAdStatus = function(message) {
+    setStatus(message);
+    enableWatchButton();
+};
+
+window.onRewardedAdReady = function() {
+    setStatus("تبلیغ آماده است؛ دوباره دکمه را بزنید.");
+    enableWatchButton();
+};
+
+window.onRewardedAdNotReady = function() {
+    setStatus("تبلیغ هنوز آماده نیست؛ چند لحظه دیگر تلاش کنید.");
+    enableWatchButton();
+};
+
+window.onRewardedAdOpened = function() {
+    setStatus("تبلیغ در حال نمایش است...");
+};
+
+window.onRewardedAdClosed = function() {
+    setStatus("تبلیغ بسته شد. وضعیت پاداش توسط تپسل بررسی می‌شود.");
+    enableWatchButton();
+};
+
+window.onRewardedAdError = function() {
+    setStatus("خطا در دریافت یا نمایش تبلیغ. دوباره تلاش کنید.");
+    enableWatchButton();
+};
+
+window.onAdRewarded = function() {
+    completedViews++;
+
+    document.getElementById("views").textContent =
+        completedViews;
+
+    setStatus("تکمیل تبلیغ توسط تپسل تأیید شد.");
+
+    enableWatchButton();
+};
 </script>
-</body>
-</html>
