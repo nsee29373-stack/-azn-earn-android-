@@ -21,7 +21,6 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
-
         release {
             minifyEnabled false
         }
@@ -41,5 +40,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'
 
+    // Tapsell Plus Advertising SDK
     implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.3.3'
 }
