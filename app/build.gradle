@@ -1,4 +1,4 @@
-Gradle
+
 
 plugins {
     id 'com.android.application'
