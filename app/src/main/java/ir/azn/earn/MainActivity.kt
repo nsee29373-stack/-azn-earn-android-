@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             "6aec64d1a2434702499bd0dd"
 
         private const val BANNER_ZONE_ID =
-            "6aec65a2434702499bd0de"
+            "6aec65d1a2434702499bd0de"
     }
 
     private lateinit var webView: WebView
