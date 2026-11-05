@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity() {
                     rewardedAdShowing = false
 
                     if (!rewardReceived) {
-                        notifyWebView("onRewardedAdClosed")   
+                      notifyWebView("onRewardedAdClosed")    
                     }
 
                     requestRewardedAd()
