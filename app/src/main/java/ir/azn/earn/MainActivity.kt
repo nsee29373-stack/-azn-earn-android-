@@ -1,13 +1,13 @@
-
 package ir.azn.earn
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -20,37 +20,61 @@ class MainActivity : AppCompatActivity() {
 
         webView = WebView(this)
 
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            allowFileAccess = true
+            allowContentAccess = true
+        }
+
+        webView.webChromeClient = WebChromeClient()
 
         webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(
+
+            override fun onPageFinished(
                 view: WebView,
-                request: WebResourceRequest
-            ): Boolean {
-                val url = request.url.toString()
+                url: String
+            ) {
+                super.onPageFinished(view, url)
+            }
 
-                if (url.startsWith("http://") ||
-                    url.startsWith("https://")) {
-                    startActivity(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    )
-                    return true
+            override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: WebResourceError
+            ) {
+                super.onReceivedError(view, request, error)
+
+                if (request.isForMainFrame) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "خطا در بارگذاری صفحه برنامه",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-
-                return false
             }
         }
 
         setContentView(webView)
-        webView.loadUrl("file:///android_asset/index.html")
+
+        webView.loadUrl(
+            "file:///android_asset/index.html"
+        )
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (::webView.isInitialized && webView.canGoBack()) {
             webView.goBack()
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        if (::webView.isInitialized) {
+            webView.destroy()
+        }
+        super.onDestroy()
     }
 }
