@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "AZN_EARN"
 
         private const val TAPSELL_APP_KEY =
-            "robqfqdmedelfokdmefdltccslflqkgthqgsiaajjjkkhtgpasmmcgggcfafbchcntmqho"
+            "YOUR_EXISTING_TAPSELL_APP_KEY"
 
         private const val REWARDED_ZONE_ID =
             "6aec64d1a2434702499bd0dd"
@@ -59,8 +59,10 @@ class MainActivity : AppCompatActivity() {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.databaseEnabled = true
+
             webViewClient = WebViewClient()
             webChromeClient = WebChromeClient()
+
             addJavascriptInterface(AndroidAds(), "AndroidAds")
         }
 
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         root.addView(bannerContainer)
+
         setContentView(root)
 
         webView.loadUrl("file:///android_asset/index.html")
@@ -107,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                         notifyWebViewStatus(
                             "اتصال به تپسل برقرار شد."
                         )
+
                         requestBannerAd()
                         requestRewardedAd()
                     }
@@ -259,9 +263,8 @@ class MainActivity : AppCompatActivity() {
 
                     rewardedAdShowing = false
 
-                    if (!rewardReceived) {
-                      notifyWebView("onRewardedAdClosed")    
-                    }
+                    // Always notify JavaScript when the ad closes.
+                    notifyWebView("onRewardedAdClosed")
 
                     requestRewardedAd()
                 }
@@ -365,4 +368,3 @@ class MainActivity : AppCompatActivity() {
         return (this * resources.displayMetrics.density).toInt()
     }
 }
-
