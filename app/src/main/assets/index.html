@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -6,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
 <title>A.Z.N Earn</title>
+
 <style>
 *{box-sizing:border-box}
 body{
@@ -45,6 +45,7 @@ button:disabled{opacity:.5}
 }
 </style>
 </head>
+
 <body>
 <div class="container">
 
@@ -57,15 +58,19 @@ button:disabled{opacity:.5}
 <div class="card balance">
  <p>موجودی شما</p>
  <h2>0.00 $</h2>
- <p class="note">درآمد واقعی پس از تأیید در پنل تبلیغاتی قابل بررسی است.</p>
+ <p class="note">
+ درآمد واقعی پس از تأیید در پنل تبلیغاتی قابل بررسی است.
+ </p>
 </div>
 
 <div class="card">
  <h3>🎁 کسب درآمد</h3>
  <p>برای مشاهده تبلیغ و دریافت پاداش، دکمه زیر را بزنید.</p>
+
  <button id="watchButton" onclick="watchAd()">
  مشاهده تبلیغ و دریافت پاداش
  </button>
+
  <div class="status" id="status">
  در حال آماده‌سازی شبکه تبلیغات
  </div>
@@ -86,40 +91,8 @@ button:disabled{opacity:.5}
 </div>
 
 <p class="note">A.Z.N Earn | نسخه آزمایشی</p>
+
 </div>
-
-<script>
-let completedViews = 0;
-
-function watchAd(){
- const button = document.getElementById("watchButton");
-
- if(window.AndroidAds &&
-    typeof AndroidAds.showRewardedAd === "function"){
-   button.disabled = true;
-   setStatus("در حال دریافت تبلیغ...");
-   AndroidAds.showRewardedAd();
- }else{
-   setStatus("این قابلیت فقط در نسخه اندروید فعال است.");
- }
-}
-
-function setStatus(message){
- document.getElementById("status").textContent = message;
-}
-
-window.onNativeAdStatus = function(message){
- setStatus(message);
-
- const button = document.getElementById("watchButton");
- if(button) button.disabled = false;
-};
-
-window.onAdRewarded = function(){
- completedViews++;
- document.getElementById("views").textContent = completedViews;
- setStatus("مشاهده تبلیغ کامل شد.");
-};
 
 <script>
 let completedViews = 0;
@@ -188,3 +161,6 @@ window.onAdRewarded = function() {
     enableWatchButton();
 };
 </script>
+
+</body>
+</html>
