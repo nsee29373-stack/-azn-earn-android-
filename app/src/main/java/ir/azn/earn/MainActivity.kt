@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "AZN_EARN"
 
-        private const val TAPSELL_APP_KEY =
-            "robqfqdmedelfokdmefdltccslflqkgthqgsiaajjjkkhtgpasmmcgggcfafbchcntmqho "
+        private const val TAPSELL_APP_KEY
+        "robqfqdmedelfokdmefdltccslflqkgthqgsiaajjjkkhtgpasmmcgggcfafbchcntmqho"
 
         private const val REWARDED_ZONE_ID 
             "6aec64d1a2434702499bd0dd"
