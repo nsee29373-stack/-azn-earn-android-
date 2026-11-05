@@ -1,9 +1,13 @@
+
 package ir.azn.earn
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.webkit.*
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -14,56 +18,39 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        webView = WebView(this).apply {
-            settings.javaScriptEnabled = true
-            settings.domStorageEnabled = true
-            settings.allowFileAccess = true
-            settings.allowContentAccess = false
-            settings.javaScriptCanOpenWindowsAutomatically = false
-            settings.setSupportMultipleWindows(false)
-            settings.allowFileAccessFromFileURLs = false
-            settings.allowUniversalAccessFromFileURLs = false
+        webView = WebView(this)
 
-            webChromeClient = WebChromeClient()
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
 
-            webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(
-                    view: WebView,
-                    request: WebResourceRequest
-                ): Boolean {
-                    val uri = request.url
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                val url = request.url.toString()
 
-                    return if (uri.scheme == "https" || uri.scheme == "http") {
-                        try {
-                            startActivity(Intent(Intent.ACTION_VIEW, uri))
-                        } catch (_: Exception) {}
-                        true
-                    } else {
-                        false
-                    }
+                if (url.startsWith("http://") ||
+                    url.startsWith("https://")) {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    )
+                    return true
                 }
-            }
 
-            loadUrl("file:///android_asset/index.html")
+                return false
+            }
         }
 
         setContentView(webView)
+        webView.loadUrl("file:///android_asset/index.html")
     }
 
-    @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
         if (::webView.isInitialized && webView.canGoBack()) {
             webView.goBack()
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onDestroy() {
-        if (::webView.isInitialized) {
-            webView.stopLoading()
-            webView.destroy()
-        }
-        super.onDestroy()
     }
 }
