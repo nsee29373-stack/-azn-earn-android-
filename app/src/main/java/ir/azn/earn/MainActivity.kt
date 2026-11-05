@@ -1,4 +1,3 @@
-Kotlin
 
 package ir.azn.earn
 
