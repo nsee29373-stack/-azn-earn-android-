@@ -1,3 +1,4 @@
+Kotlin
 
 package ir.azn.earn
 
@@ -26,10 +27,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "AZN_EARN"
 
-        private const val TAPSELL_APP_KEY
-        "robqfqdmedelfokdmefdltccslflqkgthqgsiaajjjkkhtgpasmmcgggcfafbchcntmqho"
+        private const val TAPSELL_APP_KEY =
+            "robqfqdmedelfokdmefdltccslflqkgthqgsiaajjjkkhtgpasmmcgggcfafbchcntmqho"
 
-        private const val REWARDED_ZONE_ID 
+        private const val REWARDED_ZONE_ID =
             "6aec64d1a2434702499bd0dd"
 
         private const val BANNER_ZONE_ID =
@@ -47,6 +48,9 @@ class MainActivity : AppCompatActivity() {
     private var tapsellInitialized = false
     private var rewardReceived = false
 
+    private var pageLoaded = false
+    private val pendingJavaScript = mutableListOf<String>()
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +62,31 @@ class MainActivity : AppCompatActivity() {
         webView = WebView(this).apply {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-            settings.databaseEnabled = true
 
-            webViewClient = WebViewClient()
             webChromeClient = WebChromeClient()
+
+            webViewClient = object : WebViewClient() {
+                override fun onPageFinished(
+                    view: WebView?,
+                    url: String?
+                ) {
+                    super.onPageFinished(view, url)
+                    pageLoaded = true
+
+                    val messages = pendingJavaScript.toList()
+                    pendingJavaScript.clear()
+
+                    messages.forEach {
+                        evaluateJavascript(it, null)
+                    }
+
+                    if (tapsellInitialized) {
+                        notifyWebViewStatus(
+                            "اتصال به تپسل برقرار شد."
+                        )
+                    }
+                }
+            }
 
             addJavascriptInterface(AndroidAds(), "AndroidAds")
         }
@@ -104,13 +129,12 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     tapsellInitialized = true
 
-                    Log.d(TAG, "Tapsell initialized successfully")
+                    Log.d(TAG, "Tapsell initialized")
 
                     runOnUiThread {
                         notifyWebViewStatus(
                             "اتصال به تپسل برقرار شد."
                         )
-
                         requestBannerAd()
                         requestRewardedAd()
                     }
@@ -144,10 +168,9 @@ class MainActivity : AppCompatActivity() {
 
                 override fun response(adModel: TapsellPlusAdModel) {
                     super.response(adModel)
-
                     bannerResponseId = adModel.responseId
 
-                    Log.d(TAG, "Banner response received")
+                    Log.d(TAG, "Banner ready")
 
                     runOnUiThread {
                         showBannerAd()
@@ -205,7 +228,6 @@ class MainActivity : AppCompatActivity() {
                     rewardedResponseId = adModel.responseId
 
                     Log.d(TAG, "Rewarded ad ready")
-
                     notifyWebView("onRewardedAdReady")
                 }
 
@@ -248,7 +270,6 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onOpened(adModel: TapsellPlusAdModel) {
                     super.onOpened(adModel)
-
                     Log.d(TAG, "Rewarded ad opened")
                     notifyWebView("onRewardedAdOpened")
                 }
@@ -258,14 +279,11 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d(
                         TAG,
-                        "Rewarded ad closed. Reward received: $rewardReceived"
+                        "Ad closed. Reward: $rewardReceived"
                     )
 
                     rewardedAdShowing = false
-
-                    // Always notify JavaScript when the ad closes.
                     notifyWebView("onRewardedAdClosed")
-
                     requestRewardedAd()
                 }
 
@@ -275,9 +293,7 @@ class MainActivity : AppCompatActivity() {
                     if (rewardReceived) return
 
                     rewardReceived = true
-
                     Log.d(TAG, "Reward callback received")
-
                     notifyWebView("onAdRewarded")
                 }
 
@@ -293,7 +309,6 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     notifyWebView("onRewardedAdError")
-
                     requestRewardedAd()
                 }
             }
@@ -301,16 +316,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun notifyWebView(functionName: String) {
+        val allowedFunctions = setOf(
+            "onRewardedAdReady",
+            "onRewardedAdNotReady",
+            "onRewardedAdOpened",
+            "onRewardedAdClosed",
+            "onRewardedAdError",
+            "onAdRewarded"
+        )
+
+        if (functionName !in allowedFunctions) return
         if (!::webView.isInitialized) return
 
         runOnUiThread {
-            if (!isFinishing && !isDestroyed) {
-                webView.evaluateJavascript(
-                    "if(typeof window.$functionName === 'function'){" +
-                        "window.$functionName();" +
-                        "}",
-                    null
-                )
+            if (isFinishing || isDestroyed) return@runOnUiThread
+
+            val script =
+                "if(typeof window.$functionName === 'function'){" +
+                "window.$functionName();" +
+                "}"
+
+            if (pageLoaded) {
+                webView.evaluateJavascript(script, null)
+            } else {
+                pendingJavaScript.add(script)
             }
         }
     }
@@ -319,16 +348,19 @@ class MainActivity : AppCompatActivity() {
         if (!::webView.isInitialized) return
 
         runOnUiThread {
-            if (!isFinishing && !isDestroyed) {
-                val safeMessage =
-                    org.json.JSONObject.quote(message)
+            if (isFinishing || isDestroyed) return@runOnUiThread
 
-                webView.evaluateJavascript(
-                    "if(typeof window.onNativeAdStatus === 'function'){" +
-                        "window.onNativeAdStatus($safeMessage);" +
-                        "}",
-                    null
-                )
+            val safeMessage = org.json.JSONObject.quote(message)
+
+            val script =
+                "if(typeof window.onNativeAdStatus === 'function'){" +
+                "window.onNativeAdStatus($safeMessage);" +
+                "}"
+
+            if (pageLoaded) {
+                webView.evaluateJavascript(script, null)
+            } else {
+                pendingJavaScript.add(script)
             }
         }
     }
