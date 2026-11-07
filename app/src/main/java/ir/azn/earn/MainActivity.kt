@@ -1,4 +1,3 @@
-
 package ir.azn.earn
 
 import android.annotation.SuppressLint
@@ -34,6 +33,9 @@ class MainActivity : AppCompatActivity() {
 
         private const val BANNER_ZONE_ID =
             "6aec65d1a2434702499bd0de"
+
+        private const val PREFS = "azn_earn_data"
+        private const val COMPLETED_ADS = "completed_rewarded_ads"
     }
 
     private lateinit var webView: WebView
@@ -46,11 +48,10 @@ class MainActivity : AppCompatActivity() {
     private var rewardedAdShowing = false
     private var tapsellInitialized = false
     private var rewardReceived = false
-
     private var pageLoaded = false
+
     private val pendingJavaScript = mutableListOf<String>()
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                     url: String?
                 ) {
                     super.onPageFinished(view, url)
+
                     pageLoaded = true
 
                     val messages = pendingJavaScript.toList()
@@ -79,10 +81,10 @@ class MainActivity : AppCompatActivity() {
                         evaluateJavascript(it, null)
                     }
 
+                    notifyRewardedCount(getCompletedAdsCount())
+
                     if (tapsellInitialized) {
-                        notifyWebViewStatus(
-                            "اتصال به تپسل برقرار شد."
-                        )
+                        notifyWebViewStatus("اتصال به تپسل برقرار شد.")
                     }
                 }
             }
@@ -107,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         root.addView(bannerContainer)
-
         setContentView(root)
 
         webView.loadUrl("file:///android_asset/index.html")
@@ -131,9 +132,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "Tapsell initialized")
 
                     runOnUiThread {
-                        notifyWebViewStatus(
-                            "اتصال به تپسل برقرار شد."
-                        )
+                        notifyWebViewStatus("اتصال به تپسل برقرار شد.")
                         requestBannerAd()
                         requestRewardedAd()
                     }
@@ -143,10 +142,7 @@ class MainActivity : AppCompatActivity() {
                     adNetworks: AdNetworks,
                     adNetworkError: AdNetworkError
                 ) {
-                    Log.e(
-                        TAG,
-                        "Initialization failed: ${adNetworkError.errorMessage}"
-                    )
+                    Log.e(TAG, "Initialization failed: ${adNetworkError.errorMessage}")
 
                     notifyWebViewStatus(
                         "خطا در اتصال تپسل: ${adNetworkError.errorMessage}"
@@ -167,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun response(adModel: TapsellPlusAdModel) {
                     super.response(adModel)
+
                     bannerResponseId = adModel.responseId
 
                     Log.d(TAG, "Banner ready")
@@ -213,8 +210,6 @@ class MainActivity : AppCompatActivity() {
 
         rewardedAdLoading = true
 
-        Log.d(TAG, "Requesting rewarded ad")
-
         TapsellPlus.requestRewardedVideoAd(
             this,
             REWARDED_ZONE_ID,
@@ -235,10 +230,7 @@ class MainActivity : AppCompatActivity() {
 
                     Log.e(TAG, "Rewarded request error: $message")
 
-                    notifyWebViewStatus(
-                        "خطا در دریافت تبلیغ: $message"
-                    )
-
+                    notifyWebViewStatus("خطا در دریافت تبلیغ: $message")
                     notifyWebView("onRewardedAdError")
                 }
             }
@@ -260,8 +252,6 @@ class MainActivity : AppCompatActivity() {
         rewardedAdShowing = true
         rewardReceived = false
 
-        Log.d(TAG, "Showing rewarded ad")
-
         TapsellPlus.showRewardedVideoAd(
             this,
             responseId,
@@ -276,12 +266,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onClosed(adModel: TapsellPlusAdModel) {
                     super.onClosed(adModel)
 
-                    Log.d(
-                        TAG,
-                        "Ad closed. Reward: $rewardReceived"
-                    )
+                    Log.d(TAG, "Ad closed. Reward: $rewardReceived")
 
                     rewardedAdShowing = false
+
                     notifyWebView("onRewardedAdClosed")
                     requestRewardedAd()
                 }
@@ -292,8 +280,17 @@ class MainActivity : AppCompatActivity() {
                     if (rewardReceived) return
 
                     rewardReceived = true
-                    Log.d(TAG, "Reward callback received")
-                    notifyWebView("onAdRewarded")
+
+                    val newCount = getCompletedAdsCount() + 1
+
+                    getSharedPreferences(PREFS, MODE_PRIVATE)
+                        .edit()
+                        .putInt(COMPLETED_ADS, newCount)
+                        .apply()
+
+                    Log.d(TAG, "Verified reward count: $newCount")
+
+                    notifyRewardedCount(newCount)
                 }
 
                 override fun onError(errorModel: TapsellPlusErrorModel) {
@@ -303,15 +300,37 @@ class MainActivity : AppCompatActivity() {
 
                     Log.e(TAG, "Rewarded show error: $errorModel")
 
-                    notifyWebViewStatus(
-                        "خطای نمایش تبلیغ: $errorModel"
-                    )
-
+                    notifyWebViewStatus("خطای نمایش تبلیغ: $errorModel")
                     notifyWebView("onRewardedAdError")
+
                     requestRewardedAd()
                 }
             }
         )
+    }
+
+    private fun getCompletedAdsCount(): Int {
+        return getSharedPreferences(PREFS, MODE_PRIVATE)
+            .getInt(COMPLETED_ADS, 0)
+    }
+
+    private fun notifyRewardedCount(count: Int) {
+        if (!::webView.isInitialized) return
+
+        runOnUiThread {
+            if (isFinishing || isDestroyed) return@runOnUiThread
+
+            val script =
+                "if(typeof window.onAdRewarded === 'function'){" +
+                "window.onAdRewarded($count);" +
+                "}"
+
+            if (pageLoaded) {
+                webView.evaluateJavascript(script, null)
+            } else {
+                pendingJavaScript.add(script)
+            }
+        }
     }
 
     private fun notifyWebView(functionName: String) {
@@ -320,8 +339,7 @@ class MainActivity : AppCompatActivity() {
             "onRewardedAdNotReady",
             "onRewardedAdOpened",
             "onRewardedAdClosed",
-            "onRewardedAdError",
-            "onAdRewarded"
+            "onRewardedAdError"
         )
 
         if (functionName !in allowedFunctions) return
@@ -365,6 +383,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class AndroidAds {
+
+        @JavascriptInterface
+        fun getCompletedAdsCount(): Int {
+            return this@MainActivity.getCompletedAdsCount()
+        }
 
         @JavascriptInterface
         fun showRewardedAd() {
