@@ -40,7 +40,7 @@ h1 {
     margin: 12px 0;
 }
 
-.subtitle, .note {
+.subtitle {
     color: #aab7ca;
 }
 
@@ -80,6 +80,7 @@ button:disabled {
 }
 
 .note {
+    color: #aab7ca;
     font-size: 12px;
     line-height: 2;
     text-align: center;
@@ -112,12 +113,6 @@ button:disabled {
     line-height: 2;
 }
 
-.footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 12px;
-    margin-top: 25px;
-}
 /* Publisher Revenue Styles */
 
 .publisher-state {
@@ -172,15 +167,12 @@ button:disabled {
     overflow-wrap: anywhere;
 }
 
-.note {
-    color: #aab7ca;
-    font-size: 11px;
-    line-height: 2;
+.footer {
     text-align: center;
-    margin-top: 15px;
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 25px;
 }
-
-/* Small Screen Support */
 
 @media (max-width: 360px) {
     .publisher-details {
@@ -213,52 +205,118 @@ button:disabled {
     </div>
 
     <!-- Publisher Revenue Card -->
-<div class="card balance">
-    <p>درآمد ناشر تپسل</p>
+    <div class="card balance">
 
-    <h2 id="publisherBalance">—</h2>
+        <p>درآمد ناشر تپسل</p>
 
-    <div class="publisher-state">
-        <span class="state-dot"></span>
-        <span>اتصال گزارش درآمد ناشر فعال نشده است</span>
+        <h2 id="publisherBalance">—</h2>
+
+        <div class="publisher-state">
+            <span class="state-dot"></span>
+            <span>اتصال گزارش درآمد ناشر فعال نشده است</span>
+        </div>
+
+        <div class="publisher-details">
+
+            <div class="publisher-item">
+                <span>درآمد امروز</span>
+                <strong id="todayRevenue">—</strong>
+            </div>
+
+            <div class="publisher-item">
+                <span>درآمد کل</span>
+                <strong id="totalRevenue">—</strong>
+            </div>
+
+            <div class="publisher-item">
+                <span>وضعیت تسویه</span>
+                <strong id="paymentStatus">نامشخص</strong>
+            </div>
+
+        </div>
+
+        <p class="note">
+            درآمد ناشر بر اساس گزارش رسمی پنل تپسل محاسبه می‌شود.
+            تعداد تبلیغات مشاهده‌شده به‌تنهایی به معنی درآمد قطعی نیست.
+            تا زمان اتصال گزارش واقعی، مبلغی نمایش داده نمی‌شود.
+        </p>
+
+    </div>
+    <!-- End Publisher Revenue Card -->
+
+
+    <!-- Rewarded Advertisement Card -->
+    <div class="card">
+
+        <h3>🎁 کسب درآمد از مشاهده تبلیغ</h3>
+
+        <p class="note">
+            برای مشاهده تبلیغ، دکمه زیر را انتخاب کنید.
+        </p>
+
+        <button
+            id="watchButton"
+            type="button"
+            onclick="watchAd()">
+            مشاهده تبلیغ
+        </button>
+
+        <div class="status" id="status">
+            آماده دریافت تبلیغ
+        </div>
+
+    </div>
+    <!-- End Rewarded Advertisement Card -->
+
+
+    <!-- Advertisement Statistics -->
+    <div class="card">
+
+        <h3>📊 آمار تبلیغات</h3>
+
+        <div class="stats">
+            تعداد تبلیغ‌های تکمیل‌شده:
+            <strong id="views">0</strong>
+        </div>
+
+        <p class="note">
+            این عدد تعداد تبلیغ‌های تأییدشده در برنامه را نشان می‌دهد
+            و با درآمد ناشر تپسل متفاوت است.
+        </p>
+
     </div>
 
-    <div class="publisher-details">
 
-        <div class="publisher-item">
-            <span>درآمد امروز</span>
-            <strong id="todayRevenue">—</strong>
-        </div>
-
-        <div class="publisher-item">
-            <span>درآمد کل</span>
-            <strong id="totalRevenue">—</strong>
-        </div>
-
-        <div class="publisher-item">
-            <span>وضعیت تسویه</span>
-            <strong id="paymentStatus">نامشخص</strong>
-        </div>
-
+    <div class="banner-info">
+        📢 تبلیغات بنری در صورت دریافت و نمایش توسط تپسل
+        در محل اختصاص‌یافته به تبلیغ نمایش داده می‌شوند.
     </div>
 
-    <p class="note">
-        درآمد ناشر بر اساس گزارش رسمی پنل تپسل محاسبه می‌شود.
-        تعداد تبلیغات مشاهده‌شده به‌تنهایی به معنی درآمد قطعی نیست.
-        تا زمان اتصال گزارش واقعی، مبلغی نمایش داده نمی‌شود.
-    </p>
+
+    <div class="footer">
+        A.Z.N Earn - نسخه آزمایشی
+    </div>
+
 </div>
-<!-- End Publisher Revenue Card -->
+
 
 <script>
 
 let completedViews = 0;
 
 const button = document.getElementById("watchButton");
+const statusElement = document.getElementById("status");
+const viewsElement = document.getElementById("views");
+
 
 function setStatus(message) {
-    document.getElementById("status").textContent = message;
+
+    if (statusElement) {
+        statusElement.textContent = message;
+    }
+
 }
+
 
 function updateCompletedViews(count) {
 
@@ -267,50 +325,75 @@ function updateCompletedViews(count) {
         Number(count) || 0
     );
 
-    document.getElementById("views").textContent =
-        completedViews;
+    if (viewsElement) {
+        viewsElement.textContent = completedViews;
+    }
+
 }
 
+
 function enableWatchButton() {
-    button.disabled = false;
+
+    if (button) {
+        button.disabled = false;
+    }
+
 }
+
 
 function watchAd() {
 
     if (
         window.AndroidAds &&
-        typeof AndroidAds.showRewardedAd === "function"
+        typeof window.AndroidAds.showRewardedAd === "function"
     ) {
 
         button.disabled = true;
 
         setStatus("در حال بررسی آماده بودن تبلیغ...");
 
-        AndroidAds.showRewardedAd();
+        try {
+
+            window.AndroidAds.showRewardedAd();
+
+        } catch (error) {
+
+            setStatus("خطا در اجرای تبلیغ اندروید.");
+
+            enableWatchButton();
+
+        }
 
     } else {
 
         setStatus("اتصال اندروید به تبلیغات برقرار نیست.");
 
         enableWatchButton();
+
     }
+
 }
+
 
 window.onNativeAdStatus = function(message) {
 
     setStatus(message);
 
     enableWatchButton();
+
 };
+
 
 window.onRewardedAdReady = function() {
 
     setStatus(
-        "تبلیغ آماده است؛ برای مشاهده دوباره دکمه را بزنید."
+        "تبلیغ آماده است؛ برای مشاهده دکمه را بزنید."
     );
 
     enableWatchButton();
+
 };
+
 
 window.onRewardedAdNotReady = function() {
 
@@ -319,13 +402,16 @@ window.onRewardedAdNotReady = function() {
     );
 
     enableWatchButton();
+
 };
+
 
 window.onRewardedAdOpened = function() {
 
     setStatus("تبلیغ در حال نمایش است...");
 
 };
+
 
 window.onRewardedAdClosed = function() {
 
@@ -334,7 +420,9 @@ window.onRewardedAdClosed = function() {
     );
 
     enableWatchButton();
+
 };
+
 
 window.onRewardedAdError = function() {
 
@@ -343,7 +431,9 @@ window.onRewardedAdError = function() {
     );
 
     enableWatchButton();
+
 };
+
 
 window.onAdRewarded = function(count) {
 
@@ -354,7 +444,9 @@ window.onAdRewarded = function(count) {
     );
 
     enableWatchButton();
+
 };
+
 
 window.addEventListener("load", function() {
 
@@ -362,11 +454,11 @@ window.addEventListener("load", function() {
 
         if (
             window.AndroidAds &&
-            typeof AndroidAds.getCompletedAdsCount === "function"
+            typeof window.AndroidAds.getCompletedAdsCount === "function"
         ) {
 
             updateCompletedViews(
-                AndroidAds.getCompletedAdsCount()
+                window.AndroidAds.getCompletedAdsCount()
             );
 
         }
