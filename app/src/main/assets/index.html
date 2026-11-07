@@ -131,64 +131,43 @@ button:disabled {
         <div class="subtitle">مرکز کسب درآمد از تبلیغات</div>
     </div>
 
-    <div class="card balance">
-        <p>موجودی شما</p>
+    <!-- Publisher Revenue Card -->
+<div class="card balance">
+    <p>درآمد ناشر تپسل</p>
 
-        <h2>$ 0.00</h2>
+    <h2 id="publisherBalance">—</h2>
 
-        <p class="note">
-            درآمد ناشر پس از ثبت و تأیید در پنل تپسل مشخص می‌شود.
-            این عدد فعلاً موجودی قابل برداشت نیست.
-        </p>
+    <div class="publisher-state">
+        <span class="state-dot"></span>
+        <span>اتصال گزارش درآمد ناشر فعال نشده است</span>
     </div>
 
-    <div class="card">
+    <div class="publisher-details">
 
-        <h3>🎁 کسب درآمد</h3>
+        <div class="publisher-item">
+            <span>درآمد امروز</span>
+            <strong id="todayRevenue">—</strong>
+        </div>
 
-        <p>
-            برای مشاهده تبلیغ و دریافت پاداش، دکمه زیر را بزنید.
-        </p>
+        <div class="publisher-item">
+            <span>درآمد کل</span>
+            <strong id="totalRevenue">—</strong>
+        </div>
 
-        <button id="watchButton" onclick="watchAd()">
-            مشاهده تبلیغ و دریافت پاداش
-        </button>
-
-        <div class="status" id="status">
-            در حال آماده‌سازی شبکه تبلیغات
+        <div class="publisher-item">
+            <span>وضعیت تسویه</span>
+            <strong id="paymentStatus">نامشخص</strong>
         </div>
 
     </div>
 
-    <div class="card">
-
-        <h3>📊 آمار فعالیت</h3>
-
-        <div class="stats">
-            تعداد تبلیغات جایزه‌ای تأییدشده:
-            <b id="views">0</b>
-        </div>
-
-        <p class="note">
-            تعداد تبلیغات تأییدشده روی همین دستگاه ذخیره می‌شود.
-            این شمارنده به معنی درآمد ناشر یا موجودی قابل برداشت نیست.
-        </p>
-
-    </div>
-
-    <div class="banner-info">
-        📢 تبلیغات بنری
-
-        <br>
-
-        بنر از طریق SDK اندروید در پایین صفحه بارگذاری می‌شود.
-    </div>
-
-    <div class="footer">
-        A.Z.N Earn | نسخه آزمایشی
-    </div>
-
+    <p class="note">
+        درآمد ناشر بر اساس گزارش رسمی پنل تپسل محاسبه می‌شود.
+        تعداد تبلیغات مشاهده‌شده به‌تنهایی به معنی درآمد قطعی نیست.
+        تا زمان اتصال گزارش واقعی، مبلغی نمایش داده نمی‌شود.
+    </p>
 </div>
+<!-- End Publisher Revenue Card -->
 
 <script>
 
