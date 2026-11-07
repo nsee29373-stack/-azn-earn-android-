@@ -118,6 +118,87 @@ button:disabled {
     font-size: 12px;
     margin-top: 25px;
 }
+/* Publisher Revenue Styles */
+
+.publisher-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    background: #101827;
+    color: #fbbf24;
+    border-radius: 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.state-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+}
+
+.publisher-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.publisher-item {
+    min-width: 0;
+    background: #101827;
+    padding: 12px 5px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.publisher-item span {
+    display: block;
+    color: #aab7ca;
+    font-size: 11px;
+    margin-bottom: 9px;
+}
+
+.publisher-item strong {
+    display: block;
+    color: #e2e8f0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.note {
+    color: #aab7ca;
+    font-size: 11px;
+    line-height: 2;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Small Screen Support */
+
+@media (max-width: 360px) {
+    .publisher-details {
+        gap: 5px;
+    }
+
+    .publisher-item {
+        padding: 10px 3px;
+    }
+
+    .publisher-item span {
+        font-size: 10px;
+    }
+
+    .publisher-item strong {
+        font-size: 11px;
+    }
+}
 </style>
 </head>
 
