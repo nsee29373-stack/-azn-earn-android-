@@ -448,32 +448,6 @@ window.onAdRewarded = function(count) {
 };
 
 
-window.addEventListener("load", function() {
-
-    try {
-
-        if (
-            window.AndroidAds &&
-            typeof window.AndroidAds.getCompletedAdsCount === "function"
-        ) {
-
-            updateCompletedViews(
-                window.AndroidAds.getCompletedAdsCount()
-            );
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Could not read saved ad count",
-            error
-        );
-
-    }
-
-});
-
 </script>
 
 </body>
