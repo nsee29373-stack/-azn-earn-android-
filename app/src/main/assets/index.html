@@ -204,45 +204,52 @@ button:disabled {
         <div class="subtitle">مرکز کسب درآمد از تبلیغات</div>
     </div>
 
-    <!-- Publisher Revenue Card -->
-    <div class="card balance">
+<!-- Publisher Revenue Card -->
+<div class="card balance">
 
-        <p>درآمد ناشر تپسل</p>
+    <p>درآمد ناشر تپسل</p>
 
-        <h2 id="publisherBalance">—</h2>
+    <h2 id="publisherBalance">—</h2>
 
-        <div class="publisher-state">
-            <span class="state-dot"></span>
-            <span>اتصال گزارش درآمد ناشر فعال نشده است</span>
+    <div class="publisher-state">
+        <span class="state-dot"></span>
+        <span>گزارش مالی از SDK دریافت نمی‌شود</span>
+    </div>
+
+    <div class="publisher-details">
+
+        <div class="publisher-item">
+            <span>درآمد امروز</span>
+            <strong id="todayRevenue">پنل ناشر</strong>
         </div>
 
-        <div class="publisher-details">
-
-            <div class="publisher-item">
-                <span>درآمد امروز</span>
-                <strong id="todayRevenue">—</strong>
-            </div>
-
-            <div class="publisher-item">
-                <span>درآمد کل</span>
-                <strong id="totalRevenue">—</strong>
-            </div>
-
-            <div class="publisher-item">
-                <span>وضعیت تسویه</span>
-                <strong id="paymentStatus">نامشخص</strong>
-            </div>
-
+        <div class="publisher-item">
+            <span>درآمد کل</span>
+            <strong id="totalRevenue">پنل ناشر</strong>
         </div>
 
-        <p class="note">
-            درآمد ناشر بر اساس گزارش رسمی پنل تپسل محاسبه می‌شود.
-            تعداد تبلیغات مشاهده‌شده به‌تنهایی به معنی درآمد قطعی نیست.
-            تا زمان اتصال گزارش واقعی، مبلغی نمایش داده نمی‌شود.
-        </p>
+        <div class="publisher-item">
+            <span>وضعیت تسویه</span>
+            <strong id="paymentStatus">پنل ناشر</strong>
+        </div>
 
     </div>
-    <!-- End Publisher Revenue Card -->
+
+    <a href="https://dashboard.tapsell.ir"
+       style="display:block;background:#0ea5e9;color:white;
+       padding:15px;border-radius:12px;text-decoration:none;
+       margin-top:18px;font-weight:bold;">
+       ورود به پنل رسمی تپسل
+    </a>
+
+    <p class="note">
+        اطلاعات مالی واقعی ناشر باید از گزارش رسمی تپسل دریافت شود.
+        تعداد تبلیغات تکمیل‌شده با درآمد ناشر متفاوت است.
+        تا زمان اتصال منبع رسمی، مبلغی به‌صورت تخمینی نمایش داده نمی‌شود.
+    </p>
+
+</div>
+<!-- End Publisher Revenue Card -->
 
 
     <!-- Rewarded Advertisement Card -->
