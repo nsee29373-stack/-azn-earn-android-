@@ -459,6 +459,316 @@ window.onAdRewarded = function(count) {
 };
 
 </script>
+    
+<style>
+#aznRevenueBook {
+  margin:18px 0;
+  padding:16px;
+  border:1px solid #334155;
+  border-radius:16px;
+  background:#172235;
+  color:#f8fafc;
+  text-align:right;
+  font-family:inherit;
+}
+#aznRevenueBook h2 {
+  margin:0 0 8px;
+  font-size:18px;
+}
+#aznRevenueBook p {
+  color:#cbd5e1;
+  font-size:12px;
+  line-height:1.8;
+}
+#aznRevenueBook label {
+  display:block;
+  font-size:12px;
+  color:#cbd5e1;
+  margin:8px 0 5px;
+}
+#aznRevenueBook input,
+#aznRevenueBook select {
+  box-sizing:border-box;
+  width:100%;
+  padding:11px;
+  border-radius:9px;
+  border:1px solid #475569;
+  background:#0f172a;
+  color:white;
+  font:inherit;
+}
+#aznRevenueBook button {
+  border:0;
+  border-radius:9px;
+  padding:10px 12px;
+  margin:8px 4px 0 0;
+  background:#38bdf8;
+  color:#082f49;
+  font-weight:bold;
+}
+#aznRevenueBook .azn-stats {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:12px 0;
+}
+#aznRevenueBook .azn-stat {
+  background:#0f172a;
+  padding:10px;
+  border-radius:10px;
+  font-size:12px;
+  color:#cbd5e1;
+}
+#aznRevenueBook .azn-stat b {
+  display:block;
+  color:#fff;
+  font-size:17px;
+  margin-top:5px;
+}
+#aznRevenueBook .azn-row {
+  border-top:1px solid #334155;
+  padding:9px 0;
+  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+}
+#aznRevenueBook .azn-row button {
+  background:#7f1d1d;
+  color:#fff;
+  margin:0;
+  padding:6px 9px;
+}
+</style>
 
+<section id="aznRevenueBook" dir="rtl">
+
+<h2>📒 دفتر ثبت درآمد ناشر</h2>
+
+<p>
+به دلیل نبود API رسمی درآمد ناشر تپسل،
+مبلغ را پس از مشاهده گزارش پنل تپسل دستی ثبت کنید.
+اطلاعات روی همین دستگاه ذخیره می‌شود.
+</p>
+
+<div class="azn-stats">
+  <div class="azn-stat">
+    مجموع ثبت‌شده
+    <b id="aznTotal">۰ تومان</b>
+  </div>
+
+  <div class="azn-stat">
+    ثبت امروز
+    <b id="aznToday">۰ تومان</b>
+  </div>
+
+  <div class="azn-stat">
+    در انتظار تسویه
+    <b id="aznPending">۰ تومان</b>
+  </div>
+
+  <div class="azn-stat">
+    تعداد ثبت‌ها
+    <b id="aznCount">۰</b>
+  </div>
+</div>
+
+<label for="aznAmount">مبلغ درآمد (تومان)</label>
+<input
+  id="aznAmount"
+  type="number"
+  min="1"
+  step="1"
+  inputmode="numeric"
+  placeholder="مثلاً 25000"
+>
+
+<label for="aznDate">تاریخ گزارش</label>
+<input id="aznDate" type="date">
+
+<label for="aznPayment">وضعیت تسویه</label>
+<select id="aznPayment">
+  <option value="pending">در انتظار تسویه</option>
+  <option value="paid">تسویه‌شده</option>
+</select>
+
+<button type="button" id="aznSave">ثبت درآمد</button>
+<button type="button" id="aznBackup">دریافت فایل پشتیبان</button>
+
+<div id="aznMessage" role="status"></div>
+
+<h3 style="font-size:14px;margin:16px 0 6px">
+سوابق درآمد
+</h3>
+
+<div id="aznRecords"></div>
+
+</section>
+
+<script>
+(function(){
+
+ const KEY = "azn_earn_publisher_revenue_v1";
+
+ const $ = id => document.getElementById(id);
+
+ const today = () => {
+   const d = new Date();
+   return d.getFullYear() + "-" +
+     String(d.getMonth()+1).padStart(2,"0") + "-" +
+     String(d.getDate()).padStart(2,"0");
+ };
+
+ const money = n =>
+   new Intl.NumberFormat("fa-IR")
+   .format(Math.round(Number(n)||0)) + " تومان";
+
+ let records = [];
+
+ try {
+   records = JSON.parse(localStorage.getItem(KEY)||"[]");
+   if(!Array.isArray(records)) records=[];
+ } catch(e) {
+   records=[];
+ }
+
+ $("aznDate").value = today();
+
+ function persist(){
+   try {
+     localStorage.setItem(KEY,JSON.stringify(records));
+     $("aznMessage").textContent =
+       "اطلاعات روی همین دستگاه ذخیره شد.";
+   } catch(e) {
+     $("aznMessage").textContent =
+       "ذخیره‌سازی در دسترس نیست؛ فایل پشتیبان بگیرید.";
+   }
+ }
+
+ function render(){
+
+   const total = records.reduce(
+     (s,r)=>s+(Number(r.amount)||0),0
+   );
+
+   const day = records.filter(
+     r=>r.date===today()
+   ).reduce((s,r)=>s+(Number(r.amount)||0),0);
+
+   const pending = records.filter(
+     r=>r.status==="pending"
+   ).reduce((s,r)=>s+(Number(r.amount)||0),0);
+
+   $("aznTotal").textContent = money(total);
+   $("aznToday").textContent = money(day);
+   $("aznPending").textContent = money(pending);
+
+   $("aznCount").textContent =
+     new Intl.NumberFormat("fa-IR").format(records.length);
+
+   const host = $("aznRecords");
+   host.textContent = "";
+
+   if(!records.length){
+     host.textContent = "هنوز درآمدی ثبت نشده است.";
+     return;
+   }
+
+   records.slice().reverse().forEach(r=>{
+
+     const index = records.indexOf(r);
+
+     const line = document.createElement("div");
+     line.className = "azn-row";
+
+     const info = document.createElement("span");
+
+     info.textContent =
+       r.date + " | " + money(r.amount) + " | " +
+       (r.status==="paid" ? "تسویه‌شده" : "در انتظار تسویه");
+
+     const del = document.createElement("button");
+     del.type = "button";
+     del.textContent = "حذف";
+
+     del.addEventListener("click",()=>{
+
+       if(confirm("این رکورد حذف شود؟")){
+         records.splice(index,1);
+         persist();
+         render();
+       }
+
+     });
+
+     line.append(info,del);
+     host.appendChild(line);
+
+   });
+
+ }
+
+ $("aznSave").addEventListener("click",()=>{
+
+   const amount = Number($("aznAmount").value);
+   const date = $("aznDate").value;
+   const status = $("aznPayment").value;
+
+   if(!Number.isFinite(amount)||amount<=0||!date){
+     $("aznMessage").textContent =
+       "مبلغ و تاریخ معتبر وارد کنید.";
+     return;
+   }
+
+   records.push({
+     amount:Math.round(amount),
+     date,
+     status,
+     createdAt:new Date().toISOString()
+   });
+
+   persist();
+   $("aznAmount").value="";
+   render();
+
+ });
+
+ $("aznBackup").addEventListener("click",()=>{
+
+   const data = {
+     app:"A.Z.N Earn",
+     type:"publisher-revenue-manual-backup",
+     createdAt:new Date().toISOString(),
+     records
+   };
+
+   const blob = new Blob(
+     [JSON.stringify(data,null,2)],
+     {type:"application/json"}
+   );
+
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement("a");
+
+   a.href = url;
+   a.download = "azn-earn-revenue-backup.json";
+
+   document.body.appendChild(a);
+   a.click();
+   a.remove();
+
+   URL.revokeObjectURL(url);
+
+   $("aznMessage").textContent =
+     "فایل پشتیبان آماده شد.";
+
+ });
+
+ render();
+
+})();
+</script>
+    
 </body>
 </html>
