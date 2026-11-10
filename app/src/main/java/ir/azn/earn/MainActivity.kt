@@ -290,8 +290,7 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d(TAG, "Verified reward count: $newCount")
 
-                    notifyRewardedCount(newCount)
-                }
+                notifyRewardedCount(newCount, true)    
 
                 override fun onError(errorModel: TapsellPlusErrorModel) {
                     super.onError(errorModel)
