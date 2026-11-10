@@ -313,24 +313,36 @@ class MainActivity : AppCompatActivity() {
             .getInt(COMPLETED_ADS, 0)
     }
 
-    private fun notifyRewardedCount(count: Int) {
-        if (!::webView.isInitialized) return
+private fun notifyRewardedCount(
+    count: Int,
+    isNewReward: Boolean = false
+) {
+    if (!::webView.isInitialized) return
 
-        runOnUiThread {
-            if (isFinishing || isDestroyed) return@runOnUiThread
+    runOnUiThread {
+        if (isFinishing || isDestroyed) return@runOnUiThread
 
-            val script =
-                "if(typeof window.onAdRewarded === 'function'){" +
-                "window.onAdRewarded($count);" +
-                "}"
+        val rewardCall = if (isNewReward) {
+            "if(typeof window.onAdRewarded === 'function'){" +
+            "window.onAdRewarded($count);" +
+            "}"
+        } else {
+            ""
+        }
 
-            if (pageLoaded) {
-                webView.evaluateJavascript(script, null)
-            } else {
-                pendingJavaScript.add(script)
-            }
+        val script =
+            "if(typeof window.onCompletedAdsCount === 'function'){" +
+            "window.onCompletedAdsCount($count);" +
+            "}" +
+            rewardCall
+
+        if (pageLoaded) {
+            webView.evaluateJavascript(script, null)
+        } else {
+            pendingJavaScript.add(script)
         }
     }
+}  
 
     private fun notifyWebView(functionName: String) {
         val allowedFunctions = setOf(
