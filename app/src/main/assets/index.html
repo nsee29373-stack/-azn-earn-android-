@@ -594,9 +594,24 @@ window.onAdRewarded = function(count) {
 </select>
 
 <button type="button" id="aznSave">ثبت درآمد</button>
-<button type="button" id="aznBackup">دریافت فایل پشتیبان</button>
+<button type="button" id="aznBackup">ساخت پشتیبان</button>
+<button type="button" id="aznCopyBackup">کپی متن پشتیبان</button>
 
-<div id="aznMessage" role="status"></div>
+<label for="aznBackupText">متن پشتیبان و بازیابی اطلاعات</label>
+<textarea
+  id="aznBackupText"
+  rows="7"
+  placeholder="برای بازیابی، متن فایل پشتیبان را اینجا وارد کنید."
+  style="width:100%;padding:12px;border-radius:9px;
+  background:#0f172a;color:white;border:1px solid #475569;
+  direction:ltr;font-size:12px;">
+</textarea>
+
+<button type="button" id="aznRestore">بازیابی اطلاعات</button>
+
+<div id="aznMessage" role="status"
+     style="font-size:12px;line-height:2;margin-top:10px;">
+</div>
 
 <h3 style="font-size:14px;margin:16px 0 6px">
 سوابق درآمد
