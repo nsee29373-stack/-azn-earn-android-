@@ -622,6 +622,7 @@ window.onAdRewarded = function(count) {
 </section>
 
 <script>
+
 (function(){
 
  const KEY = "azn_earn_publisher_revenue_v1";
@@ -649,6 +650,234 @@ window.onAdRewarded = function(count) {
  }
 
  $("aznDate").value = today();
+
+ function persist(showMessage=true){
+   try {
+     localStorage.setItem(KEY,JSON.stringify(records));
+     if(showMessage) {
+       $("aznMessage").textContent =
+         "اطلاعات با موفقیت ذخیره شد.";
+     }
+     return true;
+   } catch(e) {
+     $("aznMessage").textContent =
+       "خطا در ذخیره‌سازی اطلاعات.";
+     return false;
+   }
+ }
+
+ function render(){
+
+   const total = records.reduce(
+     (s,r)=>s+(Number(r.amount)||0),0
+   );
+
+   const day = records.filter(
+     r=>r.date===today()
+   ).reduce((s,r)=>s+(Number(r.amount)||0),0);
+
+   const pending = records.filter(
+     r=>r.status==="pending"
+   ).reduce((s,r)=>s+(Number(r.amount)||0),0);
+
+   $("aznTotal").textContent = money(total);
+   $("aznToday").textContent = money(day);
+   $("aznPending").textContent = money(pending);
+
+   $("aznCount").textContent =
+     new Intl.NumberFormat("fa-IR").format(records.length);
+
+   const host = $("aznRecords");
+   host.textContent = "";
+
+   if(!records.length){
+     host.textContent = "هنوز درآمدی ثبت نشده است.";
+     return;
+   }
+
+   records.slice().reverse().forEach(r=>{
+
+     const index = records.indexOf(r);
+
+     const line = document.createElement("div");
+     line.className = "azn-row";
+
+     const info = document.createElement("span");
+
+     info.textContent =
+       r.date + " | " + money(r.amount) + " | " +
+       (r.status==="paid" ? "تسویه‌شده" : "در انتظار تسویه");
+
+     const del = document.createElement("button");
+     del.type = "button";
+     del.textContent = "حذف";
+
+     del.addEventListener("click",()=>{
+
+       if(confirm("این رکورد حذف شود؟")){
+         records.splice(index,1);
+         if(persist()) render();
+       }
+
+     });
+
+     line.append(info,del);
+     host.appendChild(line);
+
+   });
+
+ }
+
+ $("aznSave").addEventListener("click",()=>{
+
+   const amount = Number($("aznAmount").value);
+   const date = $("aznDate").value;
+   const status = $("aznPayment").value;
+
+   if(!Number.isFinite(amount)||amount<=0||!date){
+     $("aznMessage").textContent =
+       "مبلغ و تاریخ معتبر وارد کنید.";
+     return;
+   }
+
+   records.push({
+     amount:Math.round(amount),
+     date,
+     status,
+     createdAt:new Date().toISOString()
+   });
+
+   if(persist()){
+     $("aznAmount").value="";
+     render();
+   } else {
+     records.pop();
+   }
+
+ });
+
+ function createBackup(){
+
+   return JSON.stringify({
+     app:"A.Z.N Earn",
+     type:"publisher-revenue-manual-backup",
+     version:1,
+     createdAt:new Date().toISOString(),
+     records:records
+   },null,2);
+
+ }
+
+ $("aznBackup").addEventListener("click",()=>{
+
+   $("aznBackupText").value = createBackup();
+
+   $("aznMessage").textContent =
+     "پشتیبان ساخته شد. متن را کپی و در جای امن نگه‌داری کنید.";
+
+ });
+
+ $("aznCopyBackup").addEventListener("click",async()=>{
+
+   const text = createBackup();
+   $("aznBackupText").value = text;
+
+   try {
+     if(navigator.clipboard && navigator.clipboard.writeText){
+       await navigator.clipboard.writeText(text);
+       $("aznMessage").textContent =
+         "متن پشتیبان کپی شد.";
+     } else {
+       $("aznBackupText").focus();
+       $("aznBackupText").select();
+       $("aznMessage").textContent =
+         "متن انتخاب شد؛ آن را کپی کنید.";
+     }
+   } catch(e) {
+     $("aznBackupText").focus();
+     $("aznBackupText").select();
+     $("aznMessage").textContent =
+       "متن انتخاب شد؛ آن را کپی کنید.";
+   }
+
+ });
+
+ $("aznRestore").addEventListener("click",()=>{
+
+   const raw = $("aznBackupText").value.trim();
+
+   if(!raw){
+     $("aznMessage").textContent =
+       "ابتدا متن پشتیبان را وارد کنید.";
+     return;
+   }
+
+   let data;
+
+   try {
+     data = JSON.parse(raw);
+   } catch(e) {
+     $("aznMessage").textContent =
+       "متن پشتیبان معتبر نیست.";
+     return;
+   }
+
+   if(
+     !data ||
+     data.app !== "A.Z.N Earn" ||
+     data.type !== "publisher-revenue-manual-backup" ||
+     !Array.isArray(data.records)
+   ){
+     $("aznMessage").textContent =
+       "این فایل، پشتیبان معتبر A.Z.N Earn نیست.";
+     return;
+   }
+
+   const valid = data.records.every(r =>
+     r &&
+     Number.isFinite(Number(r.amount)) &&
+     Number(r.amount)>0 &&
+     typeof r.date==="string" &&
+     /^\d{4}-\d{2}-\d{2}$/.test(r.date) &&
+     (r.status==="paid" || r.status==="pending")
+   );
+
+   if(!valid){
+     $("aznMessage").textContent =
+       "اطلاعات داخل پشتیبان ناقص یا نامعتبر است.";
+     return;
+   }
+
+   if(!confirm(
+     "بازیابی انجام شود؟ سوابق فعلی با اطلاعات پشتیبان جایگزین می‌شوند."
+   )){
+     return;
+   }
+
+   const oldRecords = records;
+
+   records = data.records.map(r=>({
+     amount:Math.round(Number(r.amount)),
+     date:r.date,
+     status:r.status,
+     createdAt:r.createdAt || ""
+   }));
+
+   if(persist(false)){
+     render();
+     $("aznMessage").textContent =
+       "بازیابی اطلاعات با موفقیت انجام شد.";
+   } else {
+     records = oldRecords;
+     $("aznMessage").textContent =
+       "بازیابی ناموفق بود؛ اطلاعات قبلی حفظ شد.";
+   }
+
+ });
+
+ render();
+
+})();
 
  function persist(){
    try {
