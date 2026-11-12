@@ -1,1014 +1,159 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0b1024">
 <title>A.Z.N Earn | A.Z.N Play</title>
-
 <style>
-:root {
-  --bg:#0b1024;
-  --panel:#171d3b;
-  --line:#343d68;
-  --text:#f8faff;
-  --muted:#aab4d3;
-  --cyan:#42e8dc;
-  --blue:#4ea5ff;
-  --purple:#a66bff;
-  --gold:#ffd76a;
-  --green:#4ade80;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;
-  padding:16px 14px 28px;
-  background:radial-gradient(circle at 15% 0%,#29215a 0,#10152f 36%,var(--bg) 76%);
-  font-family:Tahoma,Arial,sans-serif;
-  color:var(--text);
-}
-.container {max-width:520px;margin:auto}
-.header {text-align:center;padding:18px 8px 20px}
-.logo {font-size:42px}
-h1 {margin:8px 0;color:#8deaff;font-size:27px}
-.subtitle,.muted,.note {
-  color:var(--muted);
-  font-size:12px;
-  line-height:2;
-}
-.card {
-  background:linear-gradient(145deg,rgba(31,39,78,.97),rgba(19,25,53,.98));
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:17px;
-  margin:14px 0;
-  box-shadow:0 12px 28px #05081766;
-}
-button {
-  font-family:inherit;
-  border:0;
-  border-radius:13px;
-  padding:14px 16px;
-  font-size:14px;
-  font-weight:bold;
-  cursor:pointer;
-  color:#081126;
-  background:linear-gradient(100deg,var(--cyan),#79baff);
-}
-button:disabled {opacity:.55;cursor:not-allowed}
-button.secondary {
-  background:#30395f;
-  color:#fff;
-  border:1px solid #53608d;
-}
-.full {width:100%;margin-top:10px}
-.eyebrow {font-size:11px;color:var(--cyan)}
-.game-card {
-  background:linear-gradient(145deg,#26306a,#38245f 58%,#153f63);
-  border:1px solid #6876c7;
-  overflow:hidden;
-}
-.game-top {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-.pill {
-  font-size:10px;
-  padding:6px 9px;
-  border-radius:20px;
-  background:#ffffff1c;
-}
-.score {
-  font-size:37px;
-  font-weight:bold;
-  text-align:center;
-  margin:13px 0 2px;
-  color:white;
-  text-shadow:0 0 20px #62dfff;
-}
-.score-label {
-  text-align:center;
-  font-size:12px;
-  color:#d7e4ff;
-}
-.tap-button {
-  display:block;
-  width:min(210px,75%);
-  aspect-ratio:1;
-  border-radius:50%;
-  margin:17px auto 12px;
-  color:white;
-  font-size:23px;
-  border:5px solid #ffffff55;
-  background:radial-gradient(circle at 35% 25%,#b0fff7,#4c9cff 45%,#8149e8 78%);
-  box-shadow:0 0 0 8px #ffffff12,0 12px 32px #050a2b99;
-  touch-action:manipulation;
-  user-select:none;
-  -webkit-user-select:none;
-}
-.tap-button:active {transform:scale(.96)}
-.game-stats {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:13px;
-}
-.game-stat {
-  background:#10163199;
-  border:1px solid #ffffff1c;
-  border-radius:12px;
-  padding:10px 4px;
-  text-align:center;
-}
-.game-stat b {
-  display:block;
-  font-size:17px;
-  margin-bottom:5px;
-}
-.game-stat span {
-  font-size:10px;
-  color:#d0dafa;
-}
-.progress {
-  height:9px;
-  background:#0c1430;
-  border-radius:20px;
-  overflow:hidden;
-  margin:10px 0;
-}
-.progress>i {
-  display:block;
-  height:100%;
-  width:0;
-  background:linear-gradient(90deg,var(--cyan),#9c83ff);
-  border-radius:20px;
-  transition:width .2s;
-}
-.status {
-  background:#101831;
-  border-radius:11px;
-  padding:11px;
-  margin-top:10px;
-  color:#a9e8ff;
-  font-size:12px;
-  line-height:1.9;
-  text-align:center;
-}
-.mission {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  background:#111831;
-  border-radius:12px;
-  padding:12px;
-  margin-top:9px;
-}
-.mission strong {font-size:12px}
-.mission small {
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  margin-top:5px;
-}
-.mission .reward {
-  color:var(--gold);
-  font-weight:bold;
-  white-space:nowrap;
-  font-size:12px;
-}
-.balance {text-align:center}
-.balance .amount {
-  font-size:31px;
-  color:var(--gold);
-  font-weight:bold;
-  margin:8px 0;
-}
-.publisher-state {
-  background:#111831;
-  border-radius:12px;
-  padding:10px;
-  color:#ffd77a;
-  font-size:12px;
-  line-height:1.9;
-}
-.publisher-details {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-  margin:13px 0;
-}
-.publisher-item {
-  background:#10172e;
-  padding:10px 4px;
-  border-radius:11px;
-  text-align:center;
-}
-.publisher-item span {
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  margin-bottom:7px;
-}
-.publisher-item strong {
-  font-size:12px;
-  overflow-wrap:anywhere;
-}
-.panel-link {
-  display:block;
-  text-align:center;
-  text-decoration:none;
-  background:#167cc0;
-  color:white;
-  padding:13px;
-  border-radius:12px;
-  font-weight:bold;
-  margin-top:12px;
-}
-.banner-info {
-  border:1px dashed #65749b;
-  border-radius:14px;
-  padding:12px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  line-height:2;
-  margin-top:14px;
-}
-.footer {
-  text-align:center;
-  color:#7f8aad;
-  font-size:11px;
-  margin:22px 0;
-}
-#aznRevenueBook label {
-  display:block;
-  font-size:12px;
-  color:#cbd5e1;
-  margin:10px 0 5px;
-}
-#aznRevenueBook input,
-#aznRevenueBook select,
-#aznRevenueBook textarea {
-  box-sizing:border-box;
-  width:100%;
-  padding:11px;
-  border-radius:9px;
-  border:1px solid #475569;
-  background:#0f172a;
-  color:white;
-  font:inherit;
-}
-#aznRevenueBook .book-stats {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-  margin:12px 0;
-}
-#aznRevenueBook .book-stat {
-  background:#0f172a;
-  padding:10px;
-  border-radius:10px;
-  font-size:11px;
-  color:#cbd5e1;
-}
-#aznRevenueBook .book-stat b {
-  display:block;
-  color:#fff;
-  font-size:16px;
-  margin-top:5px;
-}
-.book-row {
-  border-top:1px solid #334155;
-  padding:9px 0;
-  font-size:11px;
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center;
-}
-.book-row button {
-  width:auto;
-  margin:0;
-  padding:7px 9px;
-  font-size:11px;
-  background:#7f1d1d;
-  color:white;
-}
-.book-actions {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-}
-.book-actions button {
-  font-size:11px;
-  padding:11px 5px;
-}
-@media(max-width:360px) {
-  body {padding:10px}
-  .publisher-details {gap:4px}
-  .publisher-item span {font-size:9px}
-  .publisher-item strong {font-size:10px}
-}
+:root{--bg:#0b1024;--panel:#171d3b;--line:#343d68;--txt:#f8faff;--muted:#aab4d3;--cyan:#42e8dc;--gold:#ffd76a}
+*{box-sizing:border-box}body{margin:0;padding:14px;background:radial-gradient(circle at 15% 0%,#29215a,#10152f 40%,var(--bg) 78%);font-family:Tahoma,Arial,sans-serif;color:var(--txt)}
+.wrap{max-width:520px;margin:auto}.head{text-align:center;padding:16px}.head .logo{font-size:40px}h1{color:#8deaff;margin:6px}h2,h3{margin:8px 0 12px}.muted,.note{color:var(--muted);font-size:12px;line-height:1.9}
+.card{background:linear-gradient(145deg,#1f274e,#131935);border:1px solid var(--line);border-radius:19px;padding:16px;margin:13px 0;box-shadow:0 10px 25px #05081766}
+.game{background:linear-gradient(145deg,#26306a,#38245f 58%,#153f63);border-color:#6876c7}
+.top{display:flex;justify-content:space-between;align-items:center}.pill{font-size:10px;background:#ffffff20;border-radius:20px;padding:6px 9px}
+.score{text-align:center;font-size:40px;font-weight:bold;text-shadow:0 0 18px #62dfff;margin:10px}.scorelabel{text-align:center;font-size:12px;color:#d7e4ff}
+button{font-family:inherit;border:0;border-radius:13px;padding:13px;font-size:14px;font-weight:bold;background:linear-gradient(100deg,var(--cyan),#79baff);color:#081126;cursor:pointer}
+button:disabled{opacity:.55}.tap{display:block;width:min(210px,72%);aspect-ratio:1;border-radius:50%;margin:18px auto;color:white;font-size:22px;border:5px solid #ffffff55;background:radial-gradient(circle at 35% 25%,#b0fff7,#4c9cff 45%,#8149e8 78%);box-shadow:0 0 0 8px #ffffff12,0 12px 32px #050a2b99;touch-action:manipulation}
+.stats,.extras,.bookstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat,.extra,.bookstat{background:#101631aa;border:1px solid #ffffff1c;border-radius:12px;padding:10px 4px;text-align:center}.stat b,.extra b{display:block;font-size:18px;margin-bottom:5px}.stat span,.extra small{font-size:10px;color:#d0dafa}
+.extras{grid-template-columns:1fr 1fr;margin-top:10px}.extra b{color:var(--gold);font-size:20px}
+.progress{height:9px;background:#0c1430;border-radius:20px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),#9c83ff);transition:width .2s}
+.status{background:#101831;border-radius:11px;padding:11px;margin-top:10px;color:#a9e8ff;font-size:12px;line-height:1.9;text-align:center}
+.full{width:100%;margin-top:10px}.challenge{width:100%;margin-top:10px;background:linear-gradient(100deg,#ffd76a,#ff9f6b)}
+.mission{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#111831;border-radius:12px;padding:12px}.mission small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.reward{color:var(--gold);font-weight:bold;white-space:nowrap}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.badgeitem{background:#10172e;border:1px solid #ffffff1c;border-radius:12px;padding:10px 4px;text-align:center;opacity:.45}.badgeitem.on{opacity:1;border-color:var(--gold);background:#3b2e22}.badgeitem span{display:block;font-size:22px}.badgeitem b{display:block;font-size:10px}.badgeitem small{font-size:9px;color:var(--muted)}
+.publisher{background:#111831;border-radius:12px;padding:11px;color:#ffd77a;font-size:12px;line-height:1.9}.link{display:block;text-align:center;text-decoration:none;background:#167cc0;color:white;padding:13px;border-radius:12px;font-weight:bold;margin-top:12px}
+.bookstats{grid-template-columns:1fr 1fr}.bookstat{text-align:right;font-size:11px;color:var(--muted)}.bookstat b{display:block;color:white;font-size:15px;margin-top:5px}
+label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px}input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:#0f172a;color:white;font:inherit}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #334155;padding:9px 0;font-size:11px}.row button{padding:7px 9px;background:#7f1d1d;color:white;font-size:11px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.secondary{background:#30395f;color:white;border:1px solid #53608d}
+.footer{text-align:center;color:#7f8aad;font-size:11px;margin:22px}
 </style>
 </head>
+<body><main class="wrap">
+<header class="head"><div class="logo">💎</div><h1>A.Z.N Earn</h1><div class="muted">بازی کن، رکورد بزن، افتخار جمع کن</div></header>
 
-<body>
-<div class="container">
-
-<header class="header">
-  <div class="logo">💎</div>
-  <h1>A.Z.N Earn</h1>
-  <div class="subtitle">مرکز بازی، تبلیغات و پاداش کاربران</div>
-</header>
-
-<!-- GAME -->
-<section class="card game-card" id="aznPlay">
-  <div class="game-top">
-    <div>
-      <div class="eyebrow">بخش بازی و سرگرمی</div>
-      <h2 style="margin:5px 0">🎮 A.Z.N Play</h2>
-    </div>
-    <span class="pill">نسخه آزمایشی</span>
-  </div>
-
-  <p class="muted" style="color:#d7defb">
-    بازی کن، امتیاز جمع کن و مرحله‌های جدید را باز کن.
-  </p>
-
-  <div class="score" id="gameScore">۰</div>
-  <div class="score-label">امتیاز بازی شما</div>
-
-  <button type="button" class="tap-button" id="tapButton">
-    ضربه بزن! ✨
-  </button>
-
-  <div class="game-stats">
-    <div class="game-stat">
-      <b id="tapCount">۰</b>
-      <span>تعداد ضربه‌ها</span>
-    </div>
-    <div class="game-stat">
-      <b id="level">۱</b>
-      <span>مرحله فعلی</span>
-    </div>
-    <div class="game-stat">
-      <b id="bestScore">۰</b>
-      <span>بالاترین امتیاز</span>
-    </div>
-  </div>
-
-  <div style="margin-top:15px;display:flex;justify-content:space-between;font-size:11px;color:#d8e5ff">
-    <span>پیشرفت مرحله</span>
-    <span id="levelProgressText">۰ از ۱۰۰</span>
-  </div>
-  <div class="progress"><i id="levelProgress"></i></div>
-
-  <div class="status" id="gameStatus">
-    برای شروع، روی دکمه بزرگ ضربه بزنید.
-  </div>
+<section class="card game">
+ <div class="top"><div><small style="color:var(--cyan)">بازی و سرگرمی</small><h2>🎮 A.Z.N Play</h2></div><span class="pill">نسخه آزمایشی</span></div>
+ <p class="muted" style="color:#d7defb">با ضربه‌های سریع کمبو بساز، مرحله بالا برو و رکوردت را بشکن!</p>
+ <div class="score" id="score">۰</div><div class="scorelabel">امتیاز بازی</div>
+ <button class="tap" id="tap">ضربه بزن! ✨</button>
+ <div class="stats">
+  <div class="stat"><b id="taps">۰</b><span>کل ضربه‌ها</span></div>
+  <div class="stat"><b id="level">۱</b><span>مرحله</span></div>
+  <div class="stat"><b id="best">۰</b><span>بهترین امتیاز</span></div>
+ </div>
+ <div class="top" style="font-size:11px;margin-top:14px"><span>پیشرفت مرحله</span><span id="levelText">۰ از ۱۰۰</span></div><div class="progress"><i id="levelBar"></i></div>
+ <div class="extras">
+  <div class="extra"><small>🔥 کمبوی فعلی</small><b id="combo">×۱</b><small id="comboHint">سریع ضربه بزن!</small></div>
+  <div class="extra"><small>🏆 رکورد چالش</small><b id="challengeBest">۰</b><small>ضربه در ۳۰ ثانیه</small></div>
+ </div>
+ <button class="challenge" id="challengeBtn">⏱ شروع چالش ۳۰ ثانیه‌ای</button>
+ <div class="status" id="challengeStatus">در ۳۰ ثانیه تا می‌توانی ضربه بزن و رکوردت را ثبت کن.</div>
+ <div class="status" id="gameStatus">برای شروع روی دکمه بزرگ بزن.</div>
 </section>
 
-<!-- DAILY MISSION -->
-<section class="card">
-  <h3>🎯 مأموریت روزانه</h3>
-
-  <div class="mission">
-    <div>
-      <strong>۱۰۰ ضربه در یک روز</strong>
-      <small id="missionProgress">پیشرفت امروز: ۰ از ۱۰۰</small>
-    </div>
-    <div class="reward" id="missionReward">+۲۵ امتیاز</div>
-  </div>
-
-  <div class="progress"><i id="missionBar"></i></div>
-
-  <p class="note">
-    با تکمیل مأموریت روزانه، ۲۵ امتیاز بازی دریافت می‌کنید.
-    این امتیاز فعلاً آزمایشی و غیرقابل برداشت است.
-  </p>
+<section class="card"><h3>🏅 کلکسیون افتخارات</h3><p class="note">با پیشرفت در بازی نشان‌های تازه آزاد کن.</p>
+ <div class="badges">
+  <div class="badgeitem" id="bFirst"><span>🌱</span><b>شروع‌کننده</b><small>۱۰ امتیاز</small></div>
+  <div class="badgeitem" id="bHundred"><span>💯</span><b>صدتایی</b><small>۱۰۰ امتیاز</small></div>
+  <div class="badgeitem" id="bCombo"><span>⚡</span><b>کمبو استاد</b><small>کمبوی ۱۰</small></div>
+  <div class="badgeitem" id="bLevel"><span>🚀</span><b>پیشرو</b><small>مرحله ۵</small></div>
+  <div class="badgeitem" id="bChallenge"><span>⏱️</span><b>چالش‌گر</b><small>یک چالش</small></div>
+  <div class="badgeitem" id="bDaily"><span>🎯</span><b>متعهد</b><small>مأموریت روزانه</small></div>
+ </div><div class="status" id="badgeStatus">هنوز نشانی آزاد نشده؛ ادامه بده!</div>
 </section>
 
-<!-- REWARDED ADS -->
-<section class="card">
-  <h3>🎁 پاداش تبلیغ تپسل</h3>
-
-  <p class="note">
-    پس از تکمیل واقعی تبلیغ و تأیید پاداش توسط SDK تپسل،
-    ۱۰ امتیاز بازی به شما اضافه می‌شود.
-    صرف باز کردن یا بستن تبلیغ پاداش ندارد.
-  </p>
-
-  <button id="watchButton" class="full" type="button">
-    مشاهده تبلیغ و دریافت امتیاز
-  </button>
-
-  <div class="status" id="status">
-    در حال بررسی اتصال تبلیغات...
-  </div>
-
-  <div style="margin-top:12px;font-size:13px">
-    تبلیغ‌های پاداش‌دار تأییدشده:
-    <strong id="views">۰</strong>
-  </div>
+<section class="card"><h3>🎯 مأموریت روزانه</h3>
+ <div class="mission"><div><b>۱۰۰ ضربه در یک روز</b><small id="missionText">پیشرفت امروز: ۰ از ۱۰۰</small></div><div class="reward" id="missionReward">+۲۵ امتیاز</div></div>
+ <div class="progress"><i id="missionBar"></i></div>
+ <p class="note">با تکمیل مأموریت، ۲۵ امتیاز بازی می‌گیری. این امتیاز فعلاً آزمایشی و غیرقابل برداشت است.</p>
 </section>
 
-<!-- PUBLISHER REVENUE -->
-<section class="card balance">
-  <div class="eyebrow">گزارش مالی رسمی</div>
-  <h3>درآمد ناشر تپسل</h3>
-
-  <div class="amount" id="publisherBalance">—</div>
-
-  <div class="publisher-state">
-    ● مبلغ واقعی درآمد ناشر فقط از گزارش مالی رسمی تپسل قابل تأیید است.
-    آمار بازی و SDK به‌تنهایی موجودی مالی نیستند.
-  </div>
-
-  <div class="publisher-details">
-    <div class="publisher-item">
-      <span>درآمد امروز</span>
-      <strong id="todayRevenue">پنل ناشر</strong>
-    </div>
-    <div class="publisher-item">
-      <span>درآمد کل</span>
-      <strong id="totalRevenue">پنل ناشر</strong>
-    </div>
-    <div class="publisher-item">
-      <span>وضعیت تسویه</span>
-      <strong id="paymentStatus">پنل ناشر</strong>
-    </div>
-  </div>
-
-  <a class="panel-link"
-     href="https://dashboard.tapsell.ir"
-     target="_blank"
-     rel="noopener">
-    ورود به پنل رسمی تپسل
-  </a>
-
-  <p class="note">
-    درآمد تخمینی یا ساختگی نمایش داده نمی‌شود.
-    امتیاز بازی با درآمد نقدی ناشر متفاوت است.
-  </p>
+<section class="card"><h3>🎁 پاداش تبلیغ تپسل</h3>
+ <p class="note">فقط پس از تکمیل واقعی تبلیغ و تأیید پاداش توسط SDK، ۱۰ امتیاز بازی اضافه می‌شود. باز کردن یا بستن تبلیغ پاداش ندارد.</p>
+ <button class="full" id="watchButton">مشاهده تبلیغ و دریافت امتیاز</button><div class="status" id="adStatus">در حال بررسی اتصال تبلیغات...</div>
+ <p class="muted">تبلیغ‌های پاداش‌دار تأییدشده: <b id="views">۰</b></p>
 </section>
 
-<!-- AD STATISTICS -->
-<section class="card">
-  <h3>📊 آمار تبلیغات</h3>
-
-  <div style="line-height:2.5;font-size:13px">
-    تعداد تبلیغ‌های پاداش‌دار تأییدشده:
-    <strong id="viewsSecondary">۰</strong>
-  </div>
-
-  <p class="note">
-    این آمار از callback تأییدشده تبلیغ پاداش‌دار در برنامه اندروید
-    دریافت می‌شود و جایگزین گزارش مالی تپسل نیست.
-  </p>
+<section class="card"><h3>💰 درآمد ناشر تپسل</h3><div class="publisher">مبلغ واقعی درآمد ناشر فقط از گزارش مالی رسمی تپسل قابل تأیید است. آمار بازی و SDK به‌تنهایی موجودی مالی نیستند.</div>
+ <div class="stats" style="margin-top:12px"><div class="stat"><span>درآمد امروز</span><b>پنل ناشر</b></div><div class="stat"><span>درآمد کل</span><b>پنل ناشر</b></div><div class="stat"><span>تسویه</span><b>پنل ناشر</b></div></div>
+ <a class="link" href="https://dashboard.tapsell.ir" target="_blank" rel="noopener">ورود به پنل رسمی تپسل</a>
+ <p class="note">امتیاز بازی با درآمد نقدی ناشر متفاوت است؛ درآمد ساختگی نمایش داده نمی‌شود.</p>
 </section>
 
-<!-- REVENUE BOOK -->
-<section class="card" id="aznRevenueBook">
-  <h3>📒 دفتر ثبت درآمد ناشر</h3>
-
-  <p class="note">
-    مبلغ را فقط پس از مشاهده گزارش پنل تپسل دستی ثبت کنید.
-    سوابق در حافظه همین دستگاه ذخیره می‌شوند؛ مرتب پشتیبان بگیرید.
-  </p>
-
-  <div class="book-stats">
-    <div class="book-stat">
-      مجموع ثبت‌شده
-      <b id="aznTotal">۰ تومان</b>
-    </div>
-    <div class="book-stat">
-      ثبت امروز
-      <b id="aznToday">۰ تومان</b>
-    </div>
-    <div class="book-stat">
-      در انتظار تسویه
-      <b id="aznPending">۰ تومان</b>
-    </div>
-    <div class="book-stat">
-      تعداد ثبت‌ها
-      <b id="aznCount">۰</b>
-    </div>
-  </div>
-
-  <label for="aznAmount">مبلغ درآمد (تومان)</label>
-  <input id="aznAmount" type="number" min="1" step="1"
-         inputmode="numeric" placeholder="مثلاً ۲۵۰۰۰">
-
-  <label for="aznDate">تاریخ گزارش</label>
-  <input id="aznDate" type="date">
-
-  <label for="aznPayment">وضعیت تسویه</label>
-  <select id="aznPayment">
-    <option value="pending">در انتظار تسویه</option>
-    <option value="paid">تسویه‌شده</option>
-  </select>
-
-  <button type="button" class="full" id="aznSave">
-    ثبت درآمد
-  </button>
-
-  <div class="book-actions">
-    <button type="button" class="secondary" id="aznBackup">
-      ساخت پشتیبان
-    </button>
-    <button type="button" class="secondary" id="aznCopyBackup">
-      کپی متن پشتیبان
-    </button>
-  </div>
-
-  <label for="aznBackupText">متن پشتیبان و بازیابی</label>
-  <textarea id="aznBackupText" rows="6"
-            placeholder="برای بازیابی، متن پشتیبان را اینجا وارد کنید."
-            style="direction:ltr;font-size:11px"></textarea>
-
-  <button type="button" class="secondary full" id="aznRestore">
-    بازیابی اطلاعات
-  </button>
-
-  <div id="aznMessage" class="note" role="status"></div>
-
-  <h3 style="font-size:14px;margin-top:18px">سوابق درآمد</h3>
-  <div id="aznRecords"></div>
+<section class="card"><h3>📒 دفتر ثبت درآمد ناشر</h3><p class="note">فقط مبلغی را ثبت کن که در پنل تپسل دیده‌ای. اطلاعات روی همین دستگاه ذخیره می‌شود؛ پشتیبان بگیر.</p>
+ <div class="bookstats"><div class="bookstat">مجموع ثبت‌شده<b id="total">۰ تومان</b></div><div class="bookstat">در انتظار تسویه<b id="pending">۰ تومان</b></div></div>
+ <label for="amount">مبلغ درآمد (تومان)</label><input id="amount" type="number" min="1" inputmode="numeric" placeholder="مثلاً ۲۵۰۰۰">
+ <label for="date">تاریخ گزارش</label><input id="date" type="date">
+ <label for="payment">وضعیت تسویه</label><select id="payment"><option value="pending">در انتظار تسویه</option><option value="paid">تسویه‌شده</option></select>
+ <button class="full" id="saveRevenue">ثبت درآمد</button><div class="actions"><button class="secondary" id="backup">ساخت پشتیبان</button><button class="secondary" id="copyBackup">کپی پشتیبان</button></div>
+ <label for="backupText">متن پشتیبان و بازیابی</label><textarea id="backupText" rows="5" placeholder="متن پشتیبان را اینجا وارد کن" style="direction:ltr;font-size:11px"></textarea>
+ <button class="secondary full" id="restore">بازیابی اطلاعات</button><div class="note" id="bookMessage"></div><h3 style="font-size:14px">سوابق درآمد</h3><div id="records"></div>
 </section>
-
-<div class="banner-info">
-  📢 تبلیغات بنری در نوار پایین برنامه اندروید،
-  در صورت دریافت موفق از تپسل نمایش داده می‌شوند.
-</div>
-
-<footer class="footer">
-  A.Z.N Earn + A.Z.N Play | نسخه آزمایشی
-</footer>
-
-</div>
-
+<div class="card note" style="text-align:center">📢 تبلیغ بنری در نوار پایین برنامه اندروید، در صورت دریافت موفق از تپسل نمایش داده می‌شود.</div>
+<footer class="footer">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</footer>
+</main>
 <script>
-(function(){
+(()=>{
 "use strict";
-
-const GAME_KEY = "azn_play_game_v1";
-const REVENUE_KEY = "azn_earn_publisher_revenue_v1";
-const $ = id => document.getElementById(id);
-
-const fa = n => new Intl.NumberFormat("fa-IR").format(
-  Math.max(0, Math.floor(Number(n) || 0))
-);
-
-const today = () => {
-  const d = new Date();
-  return d.getFullYear() + "-" +
-    String(d.getMonth()+1).padStart(2,"0") + "-" +
-    String(d.getDate()).padStart(2,"0");
-};
-
-const money = n => new Intl.NumberFormat("fa-IR")
-  .format(Math.round(Number(n)||0)) + " تومان";
-
-/* ---------------- GAME ---------------- */
-
-let game = {
-  score:0,
-  taps:0,
-  best:0,
-  day:today(),
-  dailyTaps:0,
-  missionClaimed:false
-};
-
-try {
-  const saved = JSON.parse(localStorage.getItem(GAME_KEY) || "null");
-  if(saved && typeof saved === "object") {
-    game = {...game,...saved};
-  }
-} catch(e) {}
-
-if(game.day !== today()) {
-  game.day = today();
-  game.dailyTaps = 0;
-  game.missionClaimed = false;
-}
-
-function saveGame() {
-  try {
-    localStorage.setItem(GAME_KEY,JSON.stringify(game));
-  } catch(e) {
-    $("gameStatus").textContent =
-      "ذخیره امتیاز روی دستگاه ممکن نشد.";
-  }
-}
-
-function renderGame() {
-  $("gameScore").textContent = fa(game.score);
-  $("tapCount").textContent = fa(game.taps);
-  $("bestScore").textContent = fa(game.best);
-
-  const level = Math.floor(game.score / 100) + 1;
-  const progress = game.score % 100;
-
-  $("level").textContent = fa(level);
-  $("levelProgressText").textContent =
-    fa(progress) + " از ۱۰۰";
-
-  $("levelProgress").style.width = progress + "%";
-
-  $("missionProgress").textContent =
-    "پیشرفت امروز: " + fa(game.dailyTaps) + " از ۱۰۰";
-
-  $("missionBar").style.width =
-    Math.min(100,game.dailyTaps) + "%";
-
-  $("missionReward").textContent =
-    game.missionClaimed ? "تکمیل شد ✓" : "+۲۵ امتیاز";
-}
-
-function addPoints(points,reason) {
-  game.score += points;
-  game.best = Math.max(game.best,game.score);
-  saveGame();
-  renderGame();
-
-  $("gameStatus").textContent =
-    reason + "؛ " + fa(points) + " امتیاز اضافه شد.";
-}
-
-$("tapButton").addEventListener("click",function(){
-  if(game.day !== today()) {
-    game.day = today();
-    game.dailyTaps = 0;
-    game.missionClaimed = false;
-  }
-
-  game.taps++;
-  game.dailyTaps++;
-  game.score++;
-  game.best = Math.max(game.best,game.score);
-
-  if(game.dailyTaps >= 100 && !game.missionClaimed) {
-    game.missionClaimed = true;
-    game.score += 25;
-    game.best = Math.max(game.best,game.score);
-
-    $("gameStatus").textContent =
-      "🎉 مأموریت روزانه کامل شد؛ ۲۵ امتیاز جایزه گرفتید.";
-  } else {
-    $("gameStatus").textContent =
-      "آفرین! یک امتیاز به دست آوردید.";
-  }
-
-  saveGame();
-  renderGame();
+const $=id=>document.getElementById(id), fa=n=>new Intl.NumberFormat("fa-IR").format(Math.max(0,Math.floor(Number(n)||0)));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const GAME_KEY="azn_play_game_v1",REV_KEY="azn_earn_publisher_revenue_v1";
+let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[]};
+try{g={...g,...JSON.parse(localStorage.getItem(GAME_KEY)||"{}")}}catch(e){}
+if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
+g.achievements=Array.isArray(g.achievements)?g.achievements:[];
+const save=()=>{try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}};
+const defs=[["first","bFirst","🌱 شروع‌کننده"],["hundred","bHundred","💯 صدتایی"],["combo","bCombo","⚡ کمبو استاد"],["level","bLevel","🚀 پیشرو"],["challenge","bChallenge","⏱️ چالش‌گر"],["daily","bDaily","🎯 متعهد"]];
+function unlock(k){if(g.achievements.includes(k))return;g.achievements.push(k);save();const d=defs.find(x=>x[0]===k);if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2]}
+function renderBadges(){defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])))}
+function render(){let lv=Math.floor(g.score/100)+1,p=g.score%100;$("score").textContent=fa(g.score);$("taps").textContent=fa(g.taps);$("best").textContent=fa(g.best);$("level").textContent=fa(lv);$("levelText").textContent=fa(p)+" از ۱۰۰";$("levelBar").style.width=p+"%";$("missionText").textContent="پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";$("missionBar").style.width=Math.min(100,g.dailyTaps)+"%";$("missionReward").textContent=g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";$("combo").textContent="×"+fa(Math.max(1,g.combo));$("challengeBest").textContent=fa(g.challengeBest);renderBadges()}
+function addPoints(n,msg){g.score+=n;g.best=Math.max(g.best,g.score);save();render();$("gameStatus").textContent=msg+"؛ "+fa(n)+" امتیاز اضافه شد."}
+$("tap").addEventListener("click",()=>{
+ if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false}
+ const now=Date.now();g.combo=(now-(g.lastTapAt||0)<=1100)?Math.min(30,g.combo+1):1;g.lastTapAt=now;g.bestCombo=Math.max(g.bestCombo,g.combo);
+ const mult=g.combo>=10?3:g.combo>=5?2:1;g.taps++;g.dailyTaps++;g.score+=mult;g.best=Math.max(g.best,g.score);
+ $("comboHint").textContent=mult>1?"عالی! ضریب امتیاز فعال است":"سریع‌تر ضربه بزن تا ضریب بگیری";
+ if(g.score>=10)unlock("first");if(g.score>=100)unlock("hundred");if(g.combo>=10)unlock("combo");if(Math.floor(g.score/100)+1>=5)unlock("level");
+ if(g.dailyTaps>=100&&!g.missionClaimed){g.missionClaimed=true;g.score+=25;unlock("daily");$("gameStatus").textContent="🎉 مأموریت کامل شد؛ ۲۵ امتیاز جایزه گرفتی."}
+ else $("gameStatus").textContent=mult>1?"🔥 کمبو ×"+fa(mult)+"! عالی پیش می‌ری.":"آفرین! برای کمبو سریع‌تر ضربه بزن.";
+ save();render();if(challengeActive){challengeTaps++;updateChallenge()}
 });
-
-renderGame();
-
-/* ---------------- TAPSELL REWARDED ADS ---------------- */
-
-let completedViews = 0;
-let lastNativeRewardCount = 0;
-
-try {
-  if(window.AndroidAds &&
-     typeof window.AndroidAds.getCompletedAdsCount === "function") {
-    lastNativeRewardCount =
-      Number(window.AndroidAds.getCompletedAdsCount()) || 0;
-    completedViews = lastNativeRewardCount;
-  }
-} catch(e) {}
-
-function renderViews() {
-  $("views").textContent = fa(completedViews);
-  $("viewsSecondary").textContent = fa(completedViews);
-}
-
-renderViews();
-
-const adButton = $("watchButton");
-
-function setAdStatus(message) {
-  $("status").textContent = String(message || "");
-}
-
-function enableAdButton() {
-  adButton.disabled = false;
-}
-
-window.onNativeAdStatus = function(message) {
-  setAdStatus(message);
-  enableAdButton();
-};
-
-window.onRewardedAdReady = function() {
-  setAdStatus("تبلیغ آماده است؛ دکمه مشاهده تبلیغ را بزنید.");
-  enableAdButton();
-};
-
-window.onRewardedAdNotReady = function() {
-  setAdStatus("تبلیغ هنوز آماده نیست؛ چند لحظه دیگر تلاش کنید.");
-  enableAdButton();
-};
-
-window.onRewardedAdOpened = function() {
-  setAdStatus("تبلیغ در حال نمایش است...");
-};
-
-window.onRewardedAdClosed = function() {
-  setAdStatus(
-    "تبلیغ بسته شد؛ فقط در صورت تأیید تپسل امتیاز داده می‌شود."
-  );
-  enableAdButton();
-};
-
-window.onRewardedAdError = function() {
-  setAdStatus("خطا در دریافت یا نمایش تبلیغ. دوباره تلاش کنید.");
-  enableAdButton();
-};
-
-/*
- * این callback فقط آمار را به‌روزرسانی می‌کند.
- * شمارنده پاداش را جلو نمی‌برد تا callback پاداش جدید
- * به اشتباه نادیده گرفته نشود.
- */
-window.onCompletedAdsCount = function(count) {
-  completedViews = Math.max(0,Number(count)||0);
-  renderViews();
-};
-
-/*
- * پاداش فقط در صورت افزایش شمارنده تأییدشده SDK
- * و فقط یک بار برای هر شمارنده جدید اعمال می‌شود.
- */
-window.onAdRewarded = function(count) {
-  const verifiedCount = Math.max(0,Number(count)||0);
-
-  completedViews = verifiedCount;
-  renderViews();
-
-  if(verifiedCount > lastNativeRewardCount) {
-    lastNativeRewardCount = verifiedCount;
-    addPoints(10,"پاداش تبلیغ تأییدشده تپسل");
-  }
-
-  setAdStatus(
-    "پاداش تبلیغ توسط SDK تپسل تأیید شد."
-  );
-  enableAdButton();
-};
-
-window.watchAd = function() {
-  if(!window.AndroidAds ||
-     typeof window.AndroidAds.showRewardedAd !== "function") {
-    setAdStatus("اتصال اندروید به تبلیغات برقرار نیست.");
-    enableAdButton();
-    return;
-  }
-
-  adButton.disabled = true;
-  setAdStatus("در حال درخواست تبلیغ...");
-
-  try {
-    window.AndroidAds.showRewardedAd();
-  } catch(e) {
-    setAdStatus("اجرای تبلیغ با خطا روبه‌رو شد.");
-    enableAdButton();
-  }
-};
-
-adButton.addEventListener("click",window.watchAd);
-
-/* ---------------- REVENUE BOOK ---------------- */
-
-const amountInput = $("aznAmount");
-const dateInput = $("aznDate");
-const paymentInput = $("aznPayment");
-
-let records = [];
-
-try {
-  const old = JSON.parse(localStorage.getItem(REVENUE_KEY)||"[]");
-  if(Array.isArray(old)) records = old;
-} catch(e) {
-  records = [];
-}
-
-dateInput.value = today();
-
-function persistRevenue(show=true) {
-  try {
-    localStorage.setItem(REVENUE_KEY,JSON.stringify(records));
-
-    if(show) {
-      $("aznMessage").textContent =
-        "اطلاعات با موفقیت روی همین دستگاه ذخیره شد.";
-    }
-
-    return true;
-  } catch(e) {
-    $("aznMessage").textContent =
-      "ذخیره‌سازی ناموفق بود؛ از اطلاعات قبلی محافظت کنید و پشتیبان بگیرید.";
-    return false;
-  }
-}
-
-function renderRevenue() {
-  const total = records.reduce(
-    (s,r)=>s+(Number(r.amount)||0),0
-  );
-
-  const day = records.filter(
-    r=>r.date===today()
-  ).reduce((s,r)=>s+(Number(r.amount)||0),0);
-
-  const pending = records.filter(
-    r=>r.status==="pending"
-  ).reduce((s,r)=>s+(Number(r.amount)||0),0);
-
-  $("aznTotal").textContent = money(total);
-  $("aznToday").textContent = money(day);
-  $("aznPending").textContent = money(pending);
-  $("aznCount").textContent = fa(records.length);
-
-  const host = $("aznRecords");
-  host.textContent = "";
-
-  if(!records.length) {
-    host.textContent = "هنوز درآمدی ثبت نشده است.";
-    return;
-  }
-
-  records.slice().reverse().forEach(r=>{
-    const index = records.indexOf(r);
-    const line = document.createElement("div");
-    line.className = "book-row";
-
-    const info = document.createElement("span");
-    info.textContent =
-      r.date + " | " + money(r.amount) + " | " +
-      (r.status==="paid" ? "تسویه‌شده" : "در انتظار تسویه");
-
-    const del = document.createElement("button");
-    del.type = "button";
-    del.textContent = "حذف";
-
-    del.addEventListener("click",()=>{
-      if(confirm("این رکورد حذف شود؟")) {
-        const old = records.slice();
-        records.splice(index,1);
-
-        if(persistRevenue(false)) {
-          renderRevenue();
-        } else {
-          records = old;
-        }
-      }
-    });
-
-    line.append(info,del);
-    host.appendChild(line);
-  });
-}
-
-$("aznSave").addEventListener("click",()=>{
-  const amount = Number(amountInput.value);
-  const date = dateInput.value;
-  const status = paymentInput.value;
-
-  if(!Number.isFinite(amount)||amount<=0||!date) {
-    $("aznMessage").textContent =
-      "مبلغ و تاریخ معتبر وارد کنید.";
-    return;
-  }
-
-  records.push({
-    amount:Math.round(amount),
-    date,
-    status,
-    createdAt:new Date().toISOString()
-  });
-
-  if(persistRevenue()) {
-    amountInput.value = "";
-    renderRevenue();
-  } else {
-    records.pop();
-  }
-});
-
-function createBackup() {
-  return JSON.stringify({
-    app:"A.Z.N Earn",
-    type:"publisher-revenue-manual-backup",
-    version:1,
-    createdAt:new Date().toISOString(),
-    records:records
-  },null,2);
-}
-
-$("aznBackup").addEventListener("click",()=>{
-  $("aznBackupText").value = createBackup();
-  $("aznMessage").textContent =
-    "پشتیبان ساخته شد؛ متن را کپی و در جای امن نگه‌داری کنید.";
-});
-
-$("aznCopyBackup").addEventListener("click",async()=>{
-  const value = createBackup();
-  $("aznBackupText").value = value;
-
-  try {
-    if(navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(value);
-      $("aznMessage").textContent = "متن پشتیبان کپی شد.";
-    } else {
-      throw new Error("clipboard unavailable");
-    }
-  } catch(e) {
-    $("aznBackupText").focus();
-    $("aznBackupText").select();
-    $("aznMessage").textContent =
-      "متن انتخاب شد؛ آن را کپی کنید.";
-  }
-});
-
-$("aznRestore").addEventListener("click",()=>{
-  const raw = $("aznBackupText").value.trim();
-
-  if(!raw) {
-    $("aznMessage").textContent =
-      "ابتدا متن پشتیبان را وارد کنید.";
-    return;
-  }
-
-  let data;
-
-  try {
-    data = JSON.parse(raw);
-  } catch(e) {
-    $("aznMessage").textContent =
-      "متن پشتیبان معتبر نیست.";
-    return;
-  }
-
-  if(!data ||
-     data.app!=="A.Z.N Earn" ||
-     data.type!=="publisher-revenue-manual-backup" ||
-     !Array.isArray(data.records)) {
-    $("aznMessage").textContent =
-      "این فایل، پشتیبان معتبر A.Z.N Earn نیست.";
-    return;
-  }
-
-  const valid = data.records.every(r=>
-    r &&
-    Number.isFinite(Number(r.amount)) &&
-    Number(r.amount)>0 &&
-    typeof r.date==="string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(r.date) &&
-    (r.status==="paid"||r.status==="pending")
-  );
-
-  if(!valid) {
-    $("aznMessage").textContent =
-      "اطلاعات داخل پشتیبان ناقص یا نامعتبر است.";
-    return;
-  }
-
-  if(!confirm(
-    "بازیابی انجام شود؟ سوابق فعلی با اطلاعات پشتیبان جایگزین می‌شوند."
-  )) {
-    return;
-  }
-
-  const previous = records;
-
-  records = data.records.map(r=>({
-    amount:Math.round(Number(r.amount)),
-    date:r.date,
-    status:r.status,
-    createdAt:r.createdAt||""
-  }));
-
-  if(persistRevenue(false)) {
-    renderRevenue();
-    $("aznMessage").textContent =
-      "بازیابی اطلاعات با موفقیت انجام شد.";
-  } else {
-    records = previous;
-    $("aznMessage").textContent =
-      "بازیابی ناموفق بود؛ اطلاعات قبلی حفظ شد.";
-  }
-});
-
-renderRevenue();
-
+let challengeActive=false,challengeTime=30,challengeTaps=0,timer=null;
+function updateChallenge(){$("challengeStatus").textContent="⏳ زمان: "+fa(challengeTime)+" ثانیه | ضربه‌ها: "+fa(challengeTaps)}
+function finishChallenge(){if(!challengeActive)return;challengeActive=false;clearInterval(timer);g.challengeBest=Math.max(g.challengeBest,challengeTaps);unlock("challenge");save();render();let bonus=challengeTaps>=30?20:challengeTaps>=15?10:0;if(bonus)addPoints(bonus,"جایزه چالش");$("challengeStatus").textContent="🏁 تمام شد! "+fa(challengeTaps)+" ضربه؛ "+(bonus?"جایزه "+fa(bonus)+" امتیازی گرفتی.":"برای جایزه بعدی حداقل ۱۵ ضربه بزن.");$("challengeBtn").disabled=false;$("challengeBtn").textContent="⏱ شروع دوباره چالش"}
+$("challengeBtn").addEventListener("click",()=>{if(challengeActive)return;challengeActive=true;challengeTime=30;challengeTaps=0;$("challengeBtn").disabled=true;$("challengeBtn").textContent="چالش در حال اجراست";updateChallenge();timer=setInterval(()=>{challengeTime--;updateChallenge();if(challengeTime<=0)finishChallenge()},1000)});
+render();
+
+/* Native Tapsell bridge: only verified SDK reward grants points. */
+let completedViews=0,lastNativeRewardCount=0;
+try{if(window.AndroidAds&&typeof AndroidAds.getCompletedAdsCount==="function"){lastNativeRewardCount=Number(AndroidAds.getCompletedAdsCount())||0;completedViews=lastNativeRewardCount}}catch(e){}
+function views(){ $("views").textContent=fa(completedViews)}
+views();
+function adStatus(t){$("adStatus").textContent=String(t||"")}
+function enableAd(){ $("watchButton").disabled=false}
+window.onNativeAdStatus=m=>{adStatus(m);enableAd()};
+window.onRewardedAdReady=()=>{adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");enableAd()};
+window.onRewardedAdNotReady=()=>{adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");enableAd()};
+window.onRewardedAdOpened=()=>adStatus("تبلیغ در حال نمایش است...");
+window.onRewardedAdClosed=()=>{adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");enableAd()};
+window.onRewardedAdError=()=>{adStatus("خطا در دریافت یا نمایش تبلیغ.");enableAd()};
+window.onCompletedAdsCount=count=>{completedViews=Math.max(0,Number(count)||0);views()};
+window.onAdRewarded=count=>{let c=Math.max(0,Number(count)||0);completedViews=c;views();if(c>lastNativeRewardCount){lastNativeRewardCount=c;addPoints(10,"پاداش تبلیغ تأییدشده تپسل")}adStatus("پاداش توسط SDK تپسل تأیید شد.");enableAd()};
+$("watchButton").addEventListener("click",()=>{if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){adStatus("اتصال اندروید به تبلیغات برقرار نیست.");return} $("watchButton").disabled=true;adStatus("در حال درخواست تبلیغ...");try{AndroidAds.showRewardedAd()}catch(e){adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");enableAd()}});
+
+/* Manual publisher revenue log; never invents revenue figures. */
+let records=[];try{let x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");if(Array.isArray(x))records=x}catch(e){}
+$("date").value=today();const money=n=>new Intl.NumberFormat("fa-IR").format(Math.round(Number(n)||0))+" تومان";
+function persist(){try{localStorage.setItem(REV_KEY,JSON.stringify(records));return true}catch(e){$("bookMessage").textContent="ذخیره‌سازی ناموفق بود.";return false}}
+function renderBook(){let total=records.reduce((a,r)=>a+Number(r.amount||0),0),pending=records.filter(r=>r.status==="pending").reduce((a,r)=>a+Number(r.amount||0),0);$("total").textContent=money(total);$("pending").textContent=money(pending);$("records").textContent="";if(!records.length){$("records").textContent="هنوز درآمدی ثبت نشده است.";return}records.slice().reverse().forEach(r=>{let ix=records.indexOf(r),line=document.createElement("div");line.className="row";let span=document.createElement("span");span.textContent=r.date+" | "+money(r.amount)+" | "+(r.status==="paid"?"تسویه‌شده":"در انتظار تسویه");let b=document.createElement("button");b.textContent="حذف";b.onclick=()=>{if(confirm("این رکورد حذف شود؟")){let old=records.slice();records.splice(ix,1);if(persist())renderBook();else records=old}};line.append(span,b);$("records").append(line)})}
+$("saveRevenue").onclick=()=>{let amount=Number($("amount").value),date=$("date").value,status=$("payment").value;if(!Number.isFinite(amount)||amount<=0||!date){$("bookMessage").textContent="مبلغ و تاریخ معتبر وارد کن.";return}records.push({amount:Math.round(amount),date,status});if(persist()){$("amount").value="";$("bookMessage").textContent="ثبت شد.";renderBook()}else records.pop()};
+function backupData(){return JSON.stringify({app:"A.Z.N Earn",type:"publisher-revenue-manual-backup",version:1,createdAt:new Date().toISOString(),records},null,2)}
+$("backup").onclick=()=>{$("backupText").value=backupData();$("bookMessage").textContent="پشتیبان ساخته شد؛ متن را در جای امن نگه دار."};
+$("copyBackup").onclick=async()=>{let v=backupData();$("backupText").value=v;try{await navigator.clipboard.writeText(v);$("bookMessage").textContent="پشتیبان کپی شد."}catch(e){$("backupText").focus();$("backupText").select();$("bookMessage").textContent="متن انتخاب شد؛ کپی کن."}};
+$("restore").onclick=()=>{let d;try{d=JSON.parse($("backupText").value)}catch(e){$("bookMessage").textContent="متن پشتیبان معتبر نیست.";return}if(!d||d.app!=="A.Z.N Earn"||d.type!=="publisher-revenue-manual-backup"||!Array.isArray(d.records)||!d.records.every(r=>r&&Number(r.amount)>0&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&(r.status==="paid"||r.status==="pending"))){$("bookMessage").textContent="ساختار پشتیبان معتبر نیست.";return}if(!confirm("سوابق فعلی با پشتیبان جایگزین شوند؟"))return;let old=records;records=d.records.map(r=>({amount:Number(r.amount),date:r.date,status:r.status}));if(persist()){$("bookMessage").textContent="بازیابی انجام شد.";renderBook()}else records=old};
+renderBook();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
