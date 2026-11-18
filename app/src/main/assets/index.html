@@ -113,7 +113,57 @@ let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:
 try{g={...g,...JSON.parse(localStorage.getItem(GAME_KEY)||"{}")}}catch(e){}
 if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
 g.achievements=Array.isArray(g.achievements)?g.achievements:[];
-const save=()=>{try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}};
+
+g.milestones=Array.isArray(g.milestones)?g.milestones:[];
+
+const milestoneDefs=[
+ {score:100,title:"جنگجوی تازه‌کار",icon:"🌱"},
+ {score:200,title:"بازیکن پرتلاش",icon:"⚡"},
+ {score:300,title:"استاد امتیازگیری",icon:"🏆"},
+ {score:400,title:"قهرمان A.Z.N",icon:"👑"}
+];
+
+function renderMilestones(){
+ const list=$("milestoneList");
+ list.textContent="";
+ let unlocked=0;
+
+ milestoneDefs.forEach(m=>{
+  const done=g.score>=m.score;
+  if(done){
+   unlocked++;
+   if(!g.milestones.includes(m.score)){
+    g.milestones.push(m.score);
+    save();
+   }
+  }
+
+  const item=document.createElement("div");
+  item.className="milestone"+(done?" unlocked":"");
+
+  const info=document.createElement("div");
+  const title=document.createElement("b");
+  title.textContent=m.icon+" "+m.title;
+
+  const detail=document.createElement("small");
+  detail.textContent=fa(m.score)+" امتیاز لازم";
+
+  info.append(title,detail);
+
+  const state=document.createElement("span");
+  state.className="state";
+  state.textContent=done?"آزاد شد ✓":"قفل 🔒";
+
+  item.append(info,state);
+  list.append(item);
+ });
+
+ $("milestoneStatus").textContent=
+  unlocked===4
+  ?"👑 تمام جوایز افتخاری آزاد شدند!"
+  :"تعداد جوایز آزادشده: "+fa(unlocked)+" از ۴";
+}
+ const save=()=>{try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}};
 const defs=[["first","bFirst","🌱 شروع‌کننده"],["hundred","bHundred","💯 صدتایی"],["combo","bCombo","⚡ کمبو استاد"],["level","bLevel","🚀 پیشرو"],["challenge","bChallenge","⏱️ چالش‌گر"],["daily","bDaily","🎯 متعهد"]];
 function unlock(k){if(g.achievements.includes(k))return;g.achievements.push(k);save();const d=defs.find(x=>x[0]===k);if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2]}
 function renderBadges(){defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])))}
