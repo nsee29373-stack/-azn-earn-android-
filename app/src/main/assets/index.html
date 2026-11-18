@@ -185,11 +185,86 @@ function renderBadges(){
 }
 
 const milestoneDefs=[
-    {score:100,title:"جنگجوی تازه‌کار",icon:"🌱"},
-    {score:200,title:"بازیکن پرتلاش",icon:"⚡"},
-    {score:300,title:"استاد امتیازگیری",icon:"🏆"},
-    {score:400,title:"قهرمان A.Z.N",icon:"👑"}
+ {score:100,title:"جنگجوی تازه‌کار",icon:"🌱",reward:10},
+ {score:200,title:"بازیکن پرتلاش",icon:"⚡",reward:20},
+ {score:300,title:"استاد امتیازگیری",icon:"🏆",reward:30},
+ {score:400,title:"قهرمان A.Z.N",icon:"👑",reward:50}
 ];
+
+function renderMilestones(){
+ const list=$("milestoneList");
+ list.textContent="";
+ let unlocked=0;
+ let claimed=0;
+
+ milestoneDefs.forEach(m=>{
+  const done=g.score>=m.score;
+  const received=g.claimedMilestones.includes(m.score);
+
+  if(done) unlocked++;
+  if(received) claimed++;
+
+  const item=document.createElement("div");
+  item.className="milestone"+(done?" unlocked":"");
+
+  const info=document.createElement("div");
+  const title=document.createElement("b");
+  title.textContent=m.icon+" "+m.title;
+
+  const detail=document.createElement("small");
+  detail.textContent=fa(m.score)+" امتیاز لازم | جایزه: +"+fa(m.reward);
+
+  info.append(title,detail);
+
+  const action=document.createElement("div");
+
+  if(received){
+   const state=document.createElement("span");
+   state.className="state";
+   state.textContent="دریافت شد ✓";
+   action.append(state);
+  }else if(done){
+   const btn=document.createElement("button");
+   btn.textContent="🎁 دریافت جایزه";
+   btn.addEventListener("click",()=>claimMilestone(m));
+   action.append(btn);
+  }else{
+   const state=document.createElement("span");
+   state.className="state";
+   state.textContent="قفل 🔒";
+   action.append(state);
+  }
+
+  item.append(info,action);
+  list.append(item);
+ });
+
+ $("milestoneStatus").textContent=
+ "آزادشده: "+fa(unlocked)+" از ۴ | دریافت‌شده: "+fa(claimed)+" از ۴";
+}
+
+function claimMilestone(m){
+ if(g.score<m.score){
+  $("milestoneStatus").textContent="امتیاز کافی برای دریافت این جایزه نداری.";
+  return;
+ }
+
+ if(g.claimedMilestones.includes(m.score)){
+  $("milestoneStatus").textContent="این جایزه قبلاً دریافت شده است.";
+  return;
+ }
+
+ g.claimedMilestones.push(m.score);
+ g.score+=m.reward;
+ g.best=Math.max(g.best,g.score);
+
+ save();
+ render();
+
+ $("milestoneStatus").textContent=
+ "🎉 جایزه "+m.title+" با موفقیت دریافت شد! +"+fa(m.reward)+" امتیاز";
+ $("gameStatus").textContent="🎁 جایزه پیشرفت به امتیازت اضافه شد.";
+}
 
 function renderMilestones(){
     const list=$("milestoneList");
