@@ -458,7 +458,10 @@ class MainActivity : AppCompatActivity() {
         fun getCompletedAdsCount(): Int {
             return this@MainActivity.getCompletedAdsCount()
         }
-
+    @JavascriptInterface
+fun getAcknowledgedRewardCount(): Int {
+    return this@MainActivity.getAcknowledgedRewardCount()
+}  
         @JavascriptInterface
         fun showRewardedAd() {
             runOnUiThread {
