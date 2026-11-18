@@ -29,6 +29,43 @@ label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px}input,select,
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #334155;padding:9px 0;font-size:11px}.row button{padding:7px 9px;background:#7f1d1d;color:white;font-size:11px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .secondary{background:#30395f;color:white;border:1px solid #53608d}
 .footer{text-align:center;color:#7f8aad;font-size:11px;margin:22px}
+
+.milestone{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ background:#101831;
+ border:1px solid #343d68;
+ border-radius:13px;
+ padding:12px;
+ margin:9px 0;
+}
+.milestone.unlocked{
+ border-color:#ffd76a;
+ background:#302b35;
+}
+.milestone b{display:block;font-size:12px}
+.milestone small{
+ display:block;
+ color:#aab4d3;
+ font-size:10px;
+ margin-top:5px;
+}
+.milestone .state{
+ color:#aab4d3;
+ font-size:10px;
+ text-align:center;
+}
+.milestone button{
+ padding:9px 12px;
+ font-size:11px;
+ white-space:nowrap;
+}
+.milestone button.claimed{
+ background:#26334a;
+ color:#aab4d3;
+}
 </style>
 </head>
 <body><main class="wrap">
