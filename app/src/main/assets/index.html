@@ -112,17 +112,89 @@ const GAME_KEY="azn_play_game_v1",REV_KEY="azn_earn_publisher_revenue_v1";
 let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[]};
 try{g={...g,...JSON.parse(localStorage.getItem(GAME_KEY)||"{}")}}catch(e){}
 if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
-g.achievements=Array.isArray(g.achievements)?g.achievements:[];
 
+g.achievements=Array.isArray(g.achievements)?g.achievements:[];
 g.milestones=Array.isArray(g.milestones)?g.milestones:[];
 
-const milestoneDefs=[
- {score:100,title:"جنگجوی تازه‌کار",icon:"🌱"},
- {score:200,title:"بازیکن پرتلاش",icon:"⚡"},
- {score:300,title:"استاد امتیازگیری",icon:"🏆"},
- {score:400,title:"قهرمان A.Z.N",icon:"👑"}
+const save=()=>{
+    try{
+        localStorage.setItem(GAME_KEY,JSON.stringify(g));
+    }catch(e){
+        $("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد.";
+    }
+};
+
+const defs=[
+    ["first","bFirst","🌱 شروع‌کننده"],
+    ["hundred","bHundred","💯 صدتایی"],
+    ["combo","bCombo","⚡ کمبو استاد"],
+    ["level","bLevel","🚀 پیشرو"],
+    ["challenge","bChallenge","⏱️ چالش‌گر"],
+    ["daily","bDaily","🎯 متعهد"]
 ];
 
+function unlock(k){
+    if(g.achievements.includes(k))return;
+    g.achievements.push(k);
+    save();
+    const d=defs.find(x=>x[0]===k);
+    if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2];
+}
+
+function renderBadges(){
+    defs.forEach(d=>{
+        $(d[1]).classList.toggle("on",g.achievements.includes(d[0]));
+    });
+}
+
+const milestoneDefs=[
+    {score:100,title:"جنگجوی تازه‌کار",icon:"🌱"},
+    {score:200,title:"بازیکن پرتلاش",icon:"⚡"},
+    {score:300,title:"استاد امتیازگیری",icon:"🏆"},
+    {score:400,title:"قهرمان A.Z.N",icon:"👑"}
+];
+
+function renderMilestones(){
+    const list=$("milestoneList");
+    list.textContent="";
+    let unlocked=0;
+
+    milestoneDefs.forEach(m=>{
+        const done=g.score>=m.score;
+
+        if(done){
+            unlocked++;
+            if(!g.milestones.includes(m.score)){
+                g.milestones.push(m.score);
+                save();
+            }
+        }
+
+        const item=document.createElement("div");
+        item.className="milestone"+(done?" unlocked":"");
+
+        const info=document.createElement("div");
+        const title=document.createElement("b");
+        title.textContent=m.icon+" "+m.title;
+
+        const detail=document.createElement("small");
+        detail.textContent=fa(m.score)+" امتیاز لازم";
+
+        info.append(title,detail);
+
+        const state=document.createElement("span");
+        state.className="state";
+        state.textContent=done?"آزاد شد ✓":"قفل 🔒";
+
+        item.append(info,state);
+        list.append(item);
+    });
+
+    $("milestoneStatus").textContent=
+        unlocked===4
+        ?"👑 تمام جوایز افتخاری آزاد شدند!"
+        :"تعداد جوایز آزادشده: "+fa(unlocked)+" از ۴";
+}
 
 function render(){
     let lv=Math.floor(g.score/100)+1;
@@ -136,55 +208,16 @@ function render(){
     $("levelText").textContent=fa(p)+" از ۱۰۰";
     $("levelBar").style.width=p+"%";
 
-    $("missionText").textContent=
-        "پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";
+    $("missionText").textContent="پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";
+    $("missionBar").style.width=Math.min(100,g.dailyTaps)+"%";
+    $("missionReward").textContent=g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";
 
-    $("missionBar").style.width=
-        Math.min(100,g.dailyTaps)+"%";
-
-    $("missionReward").textContent=
-        g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";
-
-    $("combo").textContent=
-        "×"+fa(Math.max(1,g.combo));
-
-    $("challengeBest").textContent=
-        fa(g.challengeBest);
+    $("combo").textContent="×"+fa(Math.max(1,g.combo));
+    $("challengeBest").textContent=fa(g.challengeBest);
 
     renderBadges();
     renderMilestones();
 }
-
-  const item=document.createElement("div");
-  item.className="milestone"+(done?" unlocked":"");
-
-  const info=document.createElement("div");
-  const title=document.createElement("b");
-  title.textContent=m.icon+" "+m.title;
-
-  const detail=document.createElement("small");
-  detail.textContent=fa(m.score)+" امتیاز لازم";
-
-  info.append(title,detail);
-
-  const state=document.createElement("span");
-  state.className="state";
-  state.textContent=done?"آزاد شد ✓":"قفل 🔒";
-
-  item.append(info,state);
-  list.append(item);
- });
-
- $("milestoneStatus").textContent=
-  unlocked===4
-  ?"👑 تمام جوایز افتخاری آزاد شدند!"
-  :"تعداد جوایز آزادشده: "+fa(unlocked)+" از ۴";
-}
- const save=()=>{try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}};
-const defs=[["first","bFirst","🌱 شروع‌کننده"],["hundred","bHundred","💯 صدتایی"],["combo","bCombo","⚡ کمبو استاد"],["level","bLevel","🚀 پیشرو"],["challenge","bChallenge","⏱️ چالش‌گر"],["daily","bDaily","🎯 متعهد"]];
-function unlock(k){if(g.achievements.includes(k))return;g.achievements.push(k);save();const d=defs.find(x=>x[0]===k);if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2]}
-function renderBadges(){defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])))}
-function render(){let lv=Math.floor(g.score/100)+1,p=g.score%100;$("score").textContent=fa(g.score);$("taps").textContent=fa(g.taps);$("best").textContent=fa(g.best);$("level").textContent=fa(lv);$("levelText").textContent=fa(p)+" از ۱۰۰";$("levelBar").style.width=p+"%";$("missionText").textContent="پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";$("missionBar").style.width=Math.min(100,g.dailyTaps)+"%";$("missionReward").textContent=g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";$("combo").textContent="×"+fa(Math.max(1,g.combo));$("challengeBest").textContent=fa(g.challengeBest);renderBadges()}
 function addPoints(n,msg){g.score+=n;g.best=Math.max(g.best,g.score);save();render();$("gameStatus").textContent=msg+"؛ "+fa(n)+" امتیاز اضافه شد."}
 $("tap").addEventListener("click",()=>{
  if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false}
