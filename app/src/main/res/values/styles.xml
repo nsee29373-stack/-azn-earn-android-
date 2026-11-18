@@ -4,5 +4,32 @@
         <item name="android:colorAccent">#69C7FF</item>
         <item name="android:statusBarColor">#0B1220</item>
         <item name="android:navigationBarColor">#0B1220</item>
+
+.milestone{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ padding:12px;
+ margin:8px 0;
+ border:1px solid #ffffff20;
+ border-radius:12px;
+ background:#101831;
+ font-size:12px;
+}
+.milestone.unlocked{
+ border-color:var(--gold);
+ background:#302b27;
+}
+.milestone small{
+ display:block;
+ color:var(--muted);
+ margin-top:5px;
+}
+.milestone .state{
+ color:var(--gold);
+ font-weight:bold;
+ white-space:nowrap;
+}
     </style>
 </resources>
