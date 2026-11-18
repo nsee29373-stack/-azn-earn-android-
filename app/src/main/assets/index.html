@@ -151,7 +151,7 @@ try{g={...g,...JSON.parse(localStorage.getItem(GAME_KEY)||"{}")}}catch(e){}
 if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
 
 g.achievements=Array.isArray(g.achievements)?g.achievements:[];
-g.milestones=Array.isArray(g.milestones)?g.milestones:[];
+g.claimedMilestones=Array.isArray(g.claimedMilestones)?g.claimedMilestones:[]; 
 
 const save=()=>{
     try{
