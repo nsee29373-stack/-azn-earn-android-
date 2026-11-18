@@ -128,8 +128,97 @@ $("challengeBtn").addEventListener("click",()=>{if(challengeActive)return;challe
 render();
 
 /* Native Tapsell bridge: only verified SDK reward grants points. */
+
 let completedViews=0,lastNativeRewardCount=0;
-try{if(window.AndroidAds&&typeof AndroidAds.getCompletedAdsCount==="function"){lastNativeRewardCount=Number(AndroidAds.getCompletedAdsCount())||0;completedViews=lastNativeRewardCount}}catch(e){}
+
+try{
+    if(window.AndroidAds){
+        if(typeof AndroidAds.getCompletedAdsCount==="function"){
+            completedViews=Number(AndroidAds.getCompletedAdsCount())||0;
+        }
+        if(typeof AndroidAds.getAcknowledgedRewardCount==="function"){
+            lastNativeRewardCount=Number(AndroidAds.getAcknowledgedRewardCount())||0;
+        }
+    }
+}catch(e){}
+
+function views(){
+    $("views").textContent=fa(completedViews);
+}
+views();
+
+function adStatus(t){
+    $("adStatus").textContent=String(t||"");
+}
+
+function enableAd(){
+    $("watchButton").disabled=false;
+}
+
+window.onNativeAdStatus=m=>{
+    adStatus(m);
+    enableAd();
+};
+
+window.onRewardedAdReady=()=>{
+    adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");
+    enableAd();
+};
+
+window.onRewardedAdNotReady=()=>{
+    adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");
+    enableAd();
+};
+
+window.onRewardedAdOpened=()=>{
+    adStatus("تبلیغ در حال نمایش است...");
+};
+
+window.onRewardedAdClosed=()=>{
+    adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");
+    enableAd();
+};
+
+window.onRewardedAdError=()=>{
+    adStatus("خطا در دریافت یا نمایش تبلیغ.");
+    enableAd();
+};
+
+window.onCompletedAdsCount=count=>{
+    completedViews=Math.max(0,Number(count)||0);
+    views();
+};
+
+window.onAdRewarded=count=>{
+    const c=Math.max(0,Number(count)||0);
+
+    completedViews=c;
+    views();
+
+    if(c>lastNativeRewardCount){
+        const newRewards=c-lastNativeRewardCount;
+        lastNativeRewardCount=c;
+
+        addPoints(
+            newRewards*10,
+            "پاداش تبلیغ تأییدشده تپسل"
+        );
+
+        try{
+            if(window.AndroidAds &&
+               typeof AndroidAds.acknowledgeReward==="function"){
+                AndroidAds.acknowledgeReward(c);
+            }
+        }catch(e){
+            adStatus("پاداش ثبت شد؛ تأیید نهایی ذخیره‌سازی در حال پیگیری است.");
+            enableAd();
+            return;
+        }
+    }
+
+    adStatus("پاداش توسط SDK تپسل تأیید شد.");
+    enableAd();
+};
 function views(){ $("views").textContent=fa(completedViews)}
 views();
 function adStatus(t){$("adStatus").textContent=String(t||"")}
