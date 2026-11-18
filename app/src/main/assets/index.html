@@ -127,6 +127,7 @@ function finishChallenge(){if(!challengeActive)return;challengeActive=false;clea
 $("challengeBtn").addEventListener("click",()=>{if(challengeActive)return;challengeActive=true;challengeTime=30;challengeTaps=0;$("challengeBtn").disabled=true;$("challengeBtn").textContent="چالش در حال اجراست";updateChallenge();timer=setInterval(()=>{challengeTime--;updateChallenge();if(challengeTime<=0)finishChallenge()},1000)});
 render();
 
+
 /* Native Tapsell bridge: only verified SDK reward grants points. */
 
 let completedViews=0,lastNativeRewardCount=0;
@@ -219,19 +220,24 @@ window.onAdRewarded=count=>{
     adStatus("پاداش توسط SDK تپسل تأیید شد.");
     enableAd();
 };
-function views(){ $("views").textContent=fa(completedViews)}
-views();
-function adStatus(t){$("adStatus").textContent=String(t||"")}
-function enableAd(){ $("watchButton").disabled=false}
-window.onNativeAdStatus=m=>{adStatus(m);enableAd()};
-window.onRewardedAdReady=()=>{adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");enableAd()};
-window.onRewardedAdNotReady=()=>{adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");enableAd()};
-window.onRewardedAdOpened=()=>adStatus("تبلیغ در حال نمایش است...");
-window.onRewardedAdClosed=()=>{adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");enableAd()};
-window.onRewardedAdError=()=>{adStatus("خطا در دریافت یا نمایش تبلیغ.");enableAd()};
-window.onCompletedAdsCount=count=>{completedViews=Math.max(0,Number(count)||0);views()};
-window.onAdRewarded=count=>{let c=Math.max(0,Number(count)||0);completedViews=c;views();if(c>lastNativeRewardCount){lastNativeRewardCount=c;addPoints(10,"پاداش تبلیغ تأییدشده تپسل")}adStatus("پاداش توسط SDK تپسل تأیید شد.");enableAd()};
-$("watchButton").addEventListener("click",()=>{if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){adStatus("اتصال اندروید به تبلیغات برقرار نیست.");return} $("watchButton").disabled=true;adStatus("در حال درخواست تبلیغ...");try{AndroidAds.showRewardedAd()}catch(e){adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");enableAd()}});
+
+$("watchButton").addEventListener("click",()=>{
+    if(!window.AndroidAds ||
+       typeof AndroidAds.showRewardedAd!=="function"){
+        adStatus("اتصال اندروید به تبلیغات برقرار نیست.");
+        return;
+    }
+
+    $("watchButton").disabled=true;
+    adStatus("در حال درخواست تبلیغ...");
+
+    try{
+        AndroidAds.showRewardedAd();
+    }catch(e){
+        adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");
+        enableAd();
+    }
+});
 
 /* Manual publisher revenue log; never invents revenue figures. */
 let records=[];try{let x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");if(Array.isArray(x))records=x}catch(e){}
