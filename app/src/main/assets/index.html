@@ -123,20 +123,37 @@ const milestoneDefs=[
  {score:400,title:"قهرمان A.Z.N",icon:"👑"}
 ];
 
-function renderMilestones(){
- const list=$("milestoneList");
- list.textContent="";
- let unlocked=0;
 
- milestoneDefs.forEach(m=>{
-  const done=g.score>=m.score;
-  if(done){
-   unlocked++;
-   if(!g.milestones.includes(m.score)){
-    g.milestones.push(m.score);
-    save();
-   }
-  }
+function render(){
+    let lv=Math.floor(g.score/100)+1;
+    let p=g.score%100;
+
+    $("score").textContent=fa(g.score);
+    $("taps").textContent=fa(g.taps);
+    $("best").textContent=fa(g.best);
+    $("level").textContent=fa(lv);
+
+    $("levelText").textContent=fa(p)+" از ۱۰۰";
+    $("levelBar").style.width=p+"%";
+
+    $("missionText").textContent=
+        "پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";
+
+    $("missionBar").style.width=
+        Math.min(100,g.dailyTaps)+"%";
+
+    $("missionReward").textContent=
+        g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";
+
+    $("combo").textContent=
+        "×"+fa(Math.max(1,g.combo));
+
+    $("challengeBest").textContent=
+        fa(g.challengeBest);
+
+    renderBadges();
+    renderMilestones();
+}
 
   const item=document.createElement("div");
   item.className="milestone"+(done?" unlocked":"");
