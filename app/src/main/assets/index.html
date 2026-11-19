@@ -304,7 +304,7 @@ $("watchButton").addEventListener("click",()=>{
 
 /* Supabase: حساب، جلسات بازی و درخواست برداشت */
 const SUPABASE_URL="https://mzyhwknkfravyfgismmn.supabase.co";
-const SUPABASE_KEY="sb_publishable_quIHzAWNxQUpKSEaUFtfnA_w4B4M7DE";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16eWh3a25rZnJhdnlmZ2lzbW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0NzQ2MzYsImV4cCI6MjExMDA1MDYzNn0.mrOV_LwuhgPid7RA6Ho0CYwC5oZTblLWPD15mqjpAy0";
 let cloudClient=null,cloudUser=null,cloudSessionId=null,cloudTaps=0,pendingCloudTaps=0,cloudStartPromise=null,cloudBusy=false;
 function cloudMessage(t){$("cloudStatus").textContent=String(t||"")}
 function payoutMessage(t){$("payoutStatus").textContent=String(t||"")}
