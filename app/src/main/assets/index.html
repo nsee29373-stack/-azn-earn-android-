@@ -412,15 +412,84 @@ async function submitPayout(){
  }catch(e){payoutMessage("ثبت درخواست ناموفق: "+(e.message||"موجودی یا دسترسی حساب را بررسی کن."))}
  finally{cloudBusy=false;$("payoutSubmit").disabled=false}
 }
-try{
- if(window.supabase&&window.supabase.createClient){
-  cloudClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+async function loadSupabaseSDK(){
+ let sdk=window.supabase;
+ if(sdk&&typeof sdk.createClient==="function")return sdk;
+
+ const urls=[
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+  "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
+ ];
+
+ for(const url of urls){
+  try{
+   await new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src=url;
+    script.async=true;
+    script.onload=resolve;
+    script.onerror=()=>reject(new Error("بارگذاری ناموفق"));
+    document.head.appendChild(script);
+   });
+   sdk=window.supabase;
+   if(sdk&&typeof sdk.createClient==="function")return sdk;
+  }catch(e){}
+ }
+ throw new Error("کتابخانه Supabase از هیچ‌کدام از منابع بارگذاری نشد؛ اینترنت گوشی را بررسی کن.");
+}
+
+async function initializeCloud(){
+ try{
+  const sdk=await loadSupabaseSDK();
+
+  cloudClient=sdk.createClient(
+   SUPABASE_URL,
+   SUPABASE_KEY,
+   {
+    auth:{
+     persistSession:true,
+     autoRefreshToken:true,
+     detectSessionInUrl:false
+    }
+   }
+  );
+
+  if(!cloudClient||!cloudClient.auth){
+   throw new Error("ساخت اتصال Supabase ناموفق بود.");
+  }
+
   cloudMessage("اتصال آماده است؛ برای استفاده از کیف پول وارد حساب شو.");
+
   cloudClient.auth.onAuthStateChange((event,session)=>{
    setCloudUser(session&&session.user?session.user:null);
-   if(session&&session.user)Promise.resolve().then(refreshCloudWallet);
-   if(event==="SIGNED_OUT"){cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0}
+
+   if(session&&session.user){
+    Promise.resolve().then(refreshCloudWallet);
+   }
+
+   if(event==="SIGNED_OUT"){
+    cloudSessionId=null;
+    cloudTaps=0;
+    pendingCloudTaps=0;
+   }
   });
+
+  const {data,error}=await cloudClient.auth.getSession();
+  if(error)throw error;
+
+  const user=data&&data.session?data.session.user:null;
+  setCloudUser(user||null);
+
+  if(user)await refreshCloudWallet();
+
+ }catch(e){
+  cloudClient=null;
+  cloudMessage("اتصال برقرار نشد: "+(e.message||"اینترنت یا کتابخانه اتصال را بررسی کن."));
+ }
+}
+
+initializeCloud();
+
   cloudClient.auth.getSession().then(({data,error})=>{
    if(error)throw error;const user=data.session&&data.session.user;setCloudUser(user||null);if(user)refreshCloudWallet();
   }).catch(e=>cloudMessage("دریافت وضعیت حساب ناموفق: "+(e.message||"")));
