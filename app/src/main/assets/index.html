@@ -487,14 +487,8 @@ async function initializeCloud(){
   cloudMessage("اتصال برقرار نشد: "+(e.message||"اینترنت یا کتابخانه اتصال را بررسی کن."));
  }
 }
-
 initializeCloud();
 
-  cloudClient.auth.getSession().then(({data,error})=>{
-   if(error)throw error;const user=data.session&&data.session.user;setCloudUser(user||null);if(user)refreshCloudWallet();
-  }).catch(e=>cloudMessage("دریافت وضعیت حساب ناموفق: "+(e.message||"")));
- }else cloudMessage("کتابخانه Supabase بارگذاری نشد؛ اینترنت را بررسی کن.");
-}catch(e){cloudMessage("راه‌اندازی اتصال ناموفق: "+(e.message||""))}
 $("cloudSignUp").addEventListener("click",cloudSignUp);
 $("cloudSignIn").addEventListener("click",cloudSignIn);
 $("cloudSignOut").addEventListener("click",cloudSignOut);
