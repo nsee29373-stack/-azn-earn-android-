@@ -900,5 +900,87 @@ render();
 renderRecords();
 })();
 </script>
+
+<script>
+(function(){
+const main=document.querySelector("main.wrap");
+if(!main)return;
+
+const cards=[...main.querySelectorAll(":scope > .card, :scope > section.card")];
+const findCard=(prefix)=>{
+return cards.find(c=>{
+const h=c.querySelector("h3");
+return h&&h.textContent.trim().startsWith(prefix);
+});
+};
+
+const game=main.querySelector(".game");
+const badges=findCard("🏅");
+const mission=findCard("🎯");
+const ad=findCard("🎁 پاداش تبلیغ");
+const publisher=findCard("💰");
+const milestones=findCard("🎁 جوایز");
+const revenue=findCard("📒");
+const wallet=main.querySelector("#cloudAccount");
+const banner=cards.find(c=>c.classList.contains("note"));
+
+const groups={
+home:[game],
+tasks:[badges,mission,milestones],
+earn:[ad,publisher,revenue,banner],
+wallet:[wallet]
+};
+
+Object.entries(groups).forEach(([group,items])=>{
+items.filter(Boolean).forEach(card=>{
+card.classList.add("azn-panel");
+card.dataset.aznPanel=group;
+});
+});
+
+const shortcuts=document.createElement("div");
+shortcuts.className="azn-shortcuts";
+shortcuts.innerHTML=
+'<button type="button" data-go="tasks"><span>🏆</span>جوایز و مأموریت</button>'+
+'<button type="button" data-go="earn"><span>🎁</span>تبلیغ و درآمد</button>'+
+'<button type="button" data-go="wallet"><span>💳</span>کیف پول</button>';
+
+const header=main.querySelector(".head");
+header.after(shortcuts);
+
+const nav=document.createElement("nav");
+nav.className="azn-nav";
+nav.innerHTML=
+'<button data-tab="home"><span>⌂</span><small>خانه</small></button>'+
+'<button data-tab="tasks"><span>🏆</span><small>جوایز</small></button>'+
+'<button data-tab="earn"><span>🎁</span><small>درآمد</small></button>'+
+'<button data-tab="wallet"><span>👤</span><small>حساب</small></button>';
+
+main.append(nav);
+
+function showPage(name){
+Object.entries(groups).forEach(([group,items])=>{
+items.filter(Boolean).forEach(card=>{
+card.classList.toggle("active",group===name);
+card.scrollTop=0;
+});
+});
+shortcuts.hidden=name!=="home";
+nav.querySelectorAll("[data-tab]").forEach(button=>{
+button.classList.toggle("selected",button.dataset.tab===name);
+});
+}
+
+nav.querySelectorAll("[data-tab]").forEach(button=>{
+button.addEventListener("click",()=>showPage(button.dataset.tab));
+});
+shortcuts.querySelectorAll("[data-go]").forEach(button=>{
+button.addEventListener("click",()=>showPage(button.dataset.go));
+});
+
+showPage("home");
+})();
+</script>
 </body>
 </html>
+
