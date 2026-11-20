@@ -1,1 +1,206 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b1024">
+<title>A.Z.N Earn | A.Z.N Play</title>
+<style>
+:root{--bg:#0b1024;--panel:#171d3b;--line:#343d68;--txt:#f8faff;--muted:#aab4d3;--cyan:#42e8dc;--gold:#ffd76a}
+*{box-sizing:border-box}body{margin:0;padding:14px;background:radial-gradient(circle at 15% 0%,#29215a,#10152f 40%,var(--bg) 78%);font-family:Tahoma,Arial,sans-serif;color:var(--txt)}
+.wrap{max-width:520px;margin:auto}.head{text-align:center;padding:16px}.head .logo{font-size:40px}h1{color:#8deaff;margin:6px}h2,h3{margin:8px 0 12px}.muted,.note{color:var(--muted);font-size:12px;line-height:1.9}
+.card{background:linear-gradient(145deg,#1f274e,#131935);border:1px solid var(--line);border-radius:19px;padding:16px;margin:13px 0;box-shadow:0 10px 25px #05081766}
+.game{background:linear-gradient(145deg,#26306a,#38245f 58%,#153f63);border-color:#6876c7}
+.top{display:flex;justify-content:space-between;align-items:center}.pill{font-size:10px;background:#ffffff20;border-radius:20px;padding:6px 9px}
+.score{text-align:center;font-size:40px;font-weight:bold;text-shadow:0 0 18px #62dfff;margin:10px}.scorelabel{text-align:center;font-size:12px;color:#d7e4ff}
+button{font-family:inherit;border:0;border-radius:13px;padding:13px;font-size:14px;font-weight:bold;background:linear-gradient(100deg,var(--cyan),#79baff);color:#081126;cursor:pointer}
+button:disabled{opacity:.55}.tap{display:block;width:min(210px,72%);aspect-ratio:1;border-radius:50%;margin:18px auto;color:white;font-size:22px;border:5px solid #ffffff55;background:radial-gradient(circle at 35% 25%,#b0fff7,#4c9cff 45%,#8149e8 78%);box-shadow:0 0 0 8px #ffffff12,0 12px 32px #050a2b99;touch-action:manipulation}
+.stats,.extras,.bookstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat,.extra,.bookstat{background:#101631aa;border:1px solid #ffffff1c;border-radius:12px;padding:10px 4px;text-align:center}.stat b,.extra b{display:block;font-size:18px;margin-bottom:5px}.stat span,.extra small{font-size:10px;color:#d0dafa}
+.extras{grid-template-columns:1fr 1fr;margin-top:10px}.extra b{color:var(--gold);font-size:20px}
+.progress{height:9px;background:#0c1430;border-radius:20px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),#9c83ff);transition:width .2s}
+.status{background:#101831;border-radius:11px;padding:11px;margin-top:10px;color:#a9e8ff;font-size:12px;line-height:1.9;text-align:center}
+.full{width:100%;margin-top:10px}.challenge{width:100%;margin-top:10px;background:linear-gradient(100deg,#ffd76a,#ff9f6b)}
+.mission{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#111831;border-radius:12px;padding:12px}.mission small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.reward{color:var(--gold);font-weight:bold;white-space:nowrap}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.badgeitem{background:#10172e;border:1px solid #ffffff1c;border-radius:12px;padding:10px 4px;text-align:center;opacity:.45}.badgeitem.on{opacity:1;border-color:var(--gold);background:#3b2e22}.badgeitem span{display:block;font-size:22px}.badgeitem b{display:block;font-size:10px}.badgeitem small{font-size:9px;color:var(--muted)}
+.publisher{background:#111831;border-radius:12px;padding:11px;color:#ffd77a;font-size:12px;line-height:1.9}.link{display:block;text-align:center;text-decoration:none;background:#167cc0;color:white;padding:13px;border-radius:12px;font-weight:bold;margin-top:12px}
+.bookstats{grid-template-columns:1fr 1fr}.bookstat{text-align:right;font-size:11px;color:var(--muted)}.bookstat b{display:block;color:white;font-size:15px;margin-top:5px}
+label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px}input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:#0f172a;color:white;font:inherit}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #334155;padding:9px 0;font-size:11px}.row button{padding:7px 9px;background:#7f1d1d;color:white;font-size:11px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.secondary{background:#30395f;color:white;border:1px solid #53608d}
+.footer{text-align:center;color:#7f8aad;font-size:11px;margin:22px}
 
+/* A.Z.N premium one-screen dashboard */
+body{padding:0;background:radial-gradient(ellipse at 50% -10%,#302078 0,#111943 42%,#070d27 100%);min-height:100dvh;overflow-x:hidden}
+.wrap{width:100%;max-width:520px;min-height:100dvh;margin:auto;padding:10px 13px 86px;position:relative}
+.head{display:flex;align-items:center;justify-content:space-between;text-align:right;padding:5px 3px 12px;gap:10px}
+.head .logo{font-size:30px;filter:drop-shadow(0 0 12px #ffcb48)}
+.head h1{font-size:25px;margin:0;color:#fff;text-shadow:0 0 15px #36cfff;direction:ltr;white-space:nowrap}
+.head .muted{font-size:10px;margin-top:3px}
+.wallet-mini{background:linear-gradient(135deg,#172d70,#20134d);border:1px solid #657bff;border-radius:18px;padding:7px 12px;min-width:118px;text-align:center;box-shadow:0 0 18px #443dff55}
+.wallet-mini small{display:block;color:#d9e5ff;font-size:10px}.wallet-mini b{font-size:19px;color:#ffdc38}
+.home-page{display:block}
+.page{display:none!important}.page.active{display:block!important}
+.ad-hero{position:relative;overflow:hidden;margin:5px 0 12px;padding:15px 14px 13px;border-radius:27px;border:1.5px solid #4eabff;background:radial-gradient(circle at 10% 15%,#5422b9 0,#20115c 42%,#0c1d55 100%);box-shadow:0 0 0 2px #9d37ff55,0 0 24px #2c8fff77,inset 0 0 25px #7e38ff33}
+.ad-hero:before{content:'📣';position:absolute;left:8px;top:48px;font-size:76px;opacity:.92;filter:drop-shadow(0 0 13px #ff4e9c);transform:rotate(-12deg)}
+.ad-head{position:relative;z-index:1;min-height:94px;padding-right:72px}
+.ad-head h2{font-size:21px;color:#fff;margin:8px 0;text-shadow:0 0 12px #b85dff}
+.ad-head p{font-size:11px;color:#dbe5ff;margin:0;line-height:1.8}
+.ad-live{display:inline-block;border-radius:30px;padding:5px 11px;background:linear-gradient(90deg,#12c84a,#54f16e);color:#fff;font-size:11px;font-weight:bold;box-shadow:0 0 13px #17e45b77}
+.ad-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:12px 0 10px;padding-top:10px;border-top:1px solid #7aaaff66;position:relative;z-index:1}
+.ad-stat{text-align:center;border-left:1px solid #55c9ff66}.ad-stat:last-child{border-left:0}.ad-stat small{display:block;color:#e4eaff;font-size:9px;line-height:1.6}.ad-stat b{display:block;font-size:19px;color:#fff;margin-top:3px}.ad-stat .green{color:#49f77b}
+.ad-cta{width:100%;border-radius:40px;padding:13px 8px;background:linear-gradient(100deg,#ffe34c,#ff9d00);color:#25103d;font-size:16px;box-shadow:0 0 17px #ffbd28aa;border:2px solid #fff2a8}
+.ad-foot{text-align:center;color:#fff;font-size:10px;margin-top:8px}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.feature{border-radius:22px;min-height:100px;padding:12px;border:1px solid #6f89ff;background:linear-gradient(140deg,#113b9b,#101c59 70%,#1c1455);box-shadow:0 5px 18px #02071999;display:flex;align-items:center;justify-content:space-between;gap:5px}
+.feature.tournament{background:linear-gradient(140deg,#7310a8,#32105c 75%,#17174f);border-color:#df65ff}
+.feature .emoji{font-size:38px;filter:drop-shadow(0 0 8px #55baff)}.feature b{display:block;font-size:14px;color:#fff}.feature small{display:block;color:#dce5ff;font-size:10px;margin-top:5px}.feature button{padding:7px 12px;margin-top:8px;font-size:11px;border-radius:25px;background:linear-gradient(90deg,#8a12e8,#4e35ff);color:#fff}
+.shortcut-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0 12px}
+.shortcut{border:1px solid #4559a9;border-radius:17px;padding:9px 3px 8px;text-align:center;background:linear-gradient(150deg,#192b68,#11183f);box-shadow:0 4px 13px #02071988;min-width:0}
+.shortcut span{display:block;font-size:25px}.shortcut b{display:block;font-size:10px;color:#fff;margin:5px 0}.shortcut button{font-size:9px;padding:6px 4px;width:92%;border-radius:20px;background:linear-gradient(90deg,#8b16e9,#4b38ff);color:#fff}
+.bottom-nav{position:fixed;z-index:50;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#101c4aee,#080e2bf7);border:1px solid #486dff;border-bottom:0;border-radius:24px 24px 0 0;box-shadow:0 -5px 24px #020617aa;backdrop-filter:blur(12px)}
+.bottom-nav button{background:transparent;color:#cbd8ff;padding:5px 2px;font-size:9px;border-radius:13px}.bottom-nav button span{display:block;font-size:20px;margin-bottom:3px}.bottom-nav button.active{background:linear-gradient(135deg,#1455c9,#25117b);color:#65f3ff;box-shadow:0 0 15px #328bff88}
+/* Detail pages keep every original game, reward, Tapsell and revenue control */
+.page.card{margin-top:8px}.page .tap{width:min(165px,58%);margin:10px auto}.page .score{font-size:32px}
+@media(max-height:760px){.wrap{padding-top:6px}.head{padding-bottom:6px}.ad-hero{padding:10px 12px}.ad-head{min-height:76px}.ad-head h2{font-size:18px}.ad-hero:before{font-size:62px;top:43px}.ad-stats{margin:7px 0}.feature{min-height:88px;padding:8px}.shortcut{padding:6px 2px}.shortcut span{font-size:21px}}
+@media(max-width:360px){.head h1{font-size:21px}.wallet-mini{min-width:100px}.ad-head{padding-right:60px}.ad-head h2{font-size:18px}.ad-hero:before{font-size:60px}.ad-stat small{font-size:8px}.feature .emoji{font-size:30px}.shortcut b{font-size:9px}}
+
+
+/* Authentication and calming background music controls */
+.auth-chip{display:flex;align-items:center;gap:7px;margin:0 0 10px;padding:9px 12px;border:1px solid #5267b5;border-radius:16px;background:#121d48}
+.auth-chip button{padding:8px 11px;font-size:11px}.auth-chip .who{font-size:11px;color:#dce8ff;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-box{background:linear-gradient(145deg,#172451,#111735);border:1px solid #5267a8;border-radius:18px;padding:14px;margin:10px 0}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.auth-tabs button{padding:10px}.auth-tabs button.selected{background:linear-gradient(90deg,#42e8dc,#79baff)}
+.auth-message{font-size:11px;line-height:1.8;color:#a9e8ff;margin-top:8px;min-height:20px}
+.music-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#101831;border:1px solid #3d568f;border-radius:14px;padding:12px;margin-top:10px}
+.switch{width:54px;height:30px;border-radius:30px;background:#46516e;position:relative;padding:0;flex:none}
+.switch:after{content:'';position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.switch.on{background:#12b981}.switch.on:after{right:28px}
+
+</style>
+</head>
+<body><main class="wrap">
+<header class="head"><div style="display:flex;align-items:center;gap:8px"><div class="logo">👑</div><div><h1>A.Z.N Earn</h1><div class="muted">بازی کن، رکورد بزن، جایزه بگیر</div></div></div><div class="wallet-mini"><small>⭐ امتیاز شما</small><b id="homeScore">۰</b></div></header>
+<div class="auth-chip"><span>👤</span><span class="who" id="authSummary">برای ذخیره امن پیشرفت، وارد حساب شو</span><button type="button" id="authOpen">ورود / ثبت‌نام</button></div>
+
+<section class="home-page" id="homePage">
+ <div class="ad-hero">
+  <div class="ad-head"><span class="ad-live">✓ فعال</span><h2>مرکز تبلیغات A.Z.N</h2><p>با تماشای تبلیغ، امتیاز بگیر و پیشرفت کن!</p></div>
+  <div class="ad-stats">
+   <div class="ad-stat"><small>بازدیدهای تأییدشده</small><b class="green" id="homeViews">۰</b></div>
+   <div class="ad-stat"><small>تبلیغات تکمیل‌شده</small><b id="homeCompleted">۰</b></div>
+   <div class="ad-stat"><small>اتصال تپسل</small><b class="green" id="homeAdConnection">بررسی</b></div>
+  </div>
+  <button class="ad-cta" id="homeWatchButton">▶ ورود به مرکز تبلیغات</button>
+  <div class="ad-foot" id="homeAdStatus">🎁 مشاهده تبلیغ و دریافت امتیاز</div>
+ </div>
+ <div class="feature-grid">
+  <div class="feature" data-go="game"><div><b>بازی اصلی</b><small>هیجان و سرگرمی</small><button type="button">شروع بازی ❯</button></div><span class="emoji">🎮</span></div>
+  <div class="feature tournament" data-go="mission"><div><b>مسابقات روزانه</b><small>بازی کن و جایزه ببر</small><button type="button">ورود ❯</button></div><span class="emoji">🏆</span></div>
+ </div>
+ <div class="shortcut-grid">
+  <div class="shortcut" data-go="badges"><span>🎁</span><b>جوایز پیشرفت</b><button type="button">مشاهده</button></div>
+  <div class="shortcut" data-go="mission"><span>📋</span><b>ماموریت‌ها</b><button type="button">انجام</button></div>
+  <div class="shortcut" data-go="book"><span>👛</span><b>کیف پول</b><button type="button">جزئیات</button></div>
+  <div class="shortcut" data-go="publisher"><span>📈</span><b>آمار و تحلیل</b><button type="button">مشاهده</button></div>
+ </div>
+</section>
+<nav class="bottom-nav" aria-label="منوی اصلی">
+ <button type="button" data-nav="settings"><span>⚙️</span>تنظیمات</button>
+ <button type="button" data-nav="publisher"><span>ⓘ</span>درباره ما</button>
+ <button type="button" class="active" data-nav="home"><span>🏠</span>خانه</button>
+ <button type="button" data-nav="support"><span>🎧</span>پشتیبانی</button>
+ <button type="button" data-nav="menu"><span>☰</span>منو</button>
+</nav>
+
+<section class="card game page" data-page="game">
+ <div class="top"><div><small style="color:var(--cyan)">بازی و سرگرمی</small><h2>🎮 A.Z.N Play</h2></div><span class="pill">نسخه آزمایشی</span></div>
+ <p class="muted" style="color:#d7defb">با ضربه‌های سریع کمبو بساز، مرحله بالا برو و رکوردت را بشکن!</p>
+ <div class="score" id="score">۰</div><div class="scorelabel">امتیاز بازی</div>
+ <button class="tap" id="tap">ضربه بزن! ✨</button>
+ <div class="stats">
+  <div class="stat"><b id="taps">۰</b><span>کل ضربه‌ها</span></div>
+  <div class="stat"><b id="level">۱</b><span>مرحله</span></div>
+  <div class="stat"><b id="best">۰</b><span>بهترین امتیاز</span></div>
+ </div>
+ <div class="top" style="font-size:11px;margin-top:14px"><span>پیشرفت مرحله</span><span id="levelText">۰ از ۱۰۰</span></div><div class="progress"><i id="levelBar"></i></div>
+ <div class="extras">
+  <div class="extra"><small>🔥 کمبوی فعلی</small><b id="combo">×۱</b><small id="comboHint">سریع ضربه بزن!</small></div>
+  <div class="extra"><small>🏆 رکورد چالش</small><b id="challengeBest">۰</b><small>ضربه در ۳۰ ثانیه</small></div>
+ </div>
+ <button class="challenge" id="challengeBtn">⏱ شروع چالش ۳۰ ثانیه‌ای</button>
+ <div class="status" id="challengeStatus">در ۳۰ ثانیه تا می‌توانی ضربه بزن و رکوردت را ثبت کن.</div>
+ <div class="status" id="gameStatus">برای شروع روی دکمه بزرگ بزن.</div>
+</section>
+
+<section class="card page" data-page="badges"><h3>🏅 کلکسیون افتخارات</h3><p class="note">با پیشرفت در بازی نشان‌های تازه آزاد کن.</p>
+ <div class="badges">
+  <div class="badgeitem" id="bFirst"><span>🌱</span><b>شروع‌کننده</b><small>۱۰ امتیاز</small></div>
+  <div class="badgeitem" id="bHundred"><span>💯</span><b>صدتایی</b><small>۱۰۰ امتیاز</small></div>
+  <div class="badgeitem" id="bCombo"><span>⚡</span><b>کمبو استاد</b><small>کمبوی ۱۰</small></div>
+  <div class="badgeitem" id="bLevel"><span>🚀</span><b>پیشرو</b><small>مرحله ۵</small></div>
+  <div class="badgeitem" id="bChallenge"><span>⏱️</span><b>چالش‌گر</b><small>یک چالش</small></div>
+  <div class="badgeitem" id="bDaily"><span>🎯</span><b>متعهد</b><small>مأموریت روزانه</small></div>
+ </div><div class="status" id="badgeStatus">هنوز نشانی آزاد نشده؛ ادامه بده!</div>
+</section>
+
+<section class="card page" data-page="mission"><h3>🎯 مأموریت روزانه</h3>
+ <div class="mission"><div><b>۱۰۰ ضربه در یک روز</b><small id="missionText">پیشرفت امروز: ۰ از ۱۰۰</small></div><div class="reward" id="missionReward">+۲۵ امتیاز</div></div>
+ <div class="progress"><i id="missionBar"></i></div>
+ <p class="note">با تکمیل مأموریت، ۲۵ امتیاز بازی می‌گیری. این امتیاز فعلاً آزمایشی و غیرقابل برداشت است.</p>
+</section>
+
+<section class="card page" data-page="ads"><h3>🎁 پاداش تبلیغ تپسل</h3>
+ <p class="note">فقط پس از تکمیل واقعی تبلیغ و تأیید پاداش توسط SDK، ۱۰ امتیاز بازی اضافه می‌شود. باز کردن یا بستن تبلیغ پاداش ندارد.</p>
+ <button class="full" id="watchButton">مشاهده تبلیغ و دریافت امتیاز</button><div class="status" id="adStatus">در حال بررسی اتصال تبلیغات...</div>
+ <p class="muted">تبلیغ‌های پاداش‌دار تأییدشده: <b id="views">۰</b></p>
+</section>
+
+<section class="card page" data-page="publisher"><h3>💰 درآمد ناشر تپسل</h3><div class="publisher">مبلغ واقعی درآمد ناشر فقط از گزارش مالی رسمی تپسل قابل تأیید است. آمار بازی و SDK به‌تنهایی موجودی مالی نیستند.</div>
+ <div class="stats" style="margin-top:12px"><div class="stat"><span>درآمد امروز</span><b>پنل ناشر</b></div><div class="stat"><span>درآمد کل</span><b>پنل ناشر</b></div><div class="stat"><span>تسویه</span><b>پنل ناشر</b></div></div>
+ <a class="link" href="https://dashboard.tapsell.ir" target="_blank" rel="noopener">ورود به پنل رسمی تپسل</a>
+ <p class="note">امتیاز بازی با درآمد نقدی ناشر متفاوت است؛ درآمد ساختگی نمایش داده نمی‌شود.</p>
+</section>
+
+<section class="card page" data-page="book"><h3>📒 دفتر ثبت درآمد ناشر</h3><p class="note">فقط مبلغی را ثبت کن که در پنل تپسل دیده‌ای. اطلاعات روی همین دستگاه ذخیره می‌شود؛ پشتیبان بگیر.</p>
+ <div class="bookstats"><div class="bookstat">مجموع ثبت‌شده<b id="total">۰ تومان</b></div><div class="bookstat">در انتظار تسویه<b id="pending">۰ تومان</b></div></div>
+ <label for="amount">مبلغ درآمد (تومان)</label><input id="amount" type="number" min="1" inputmode="numeric" placeholder="مثلاً ۲۵۰۰۰">
+ <label for="date">تاریخ گزارش</label><input id="date" type="date">
+ <label for="payment">وضعیت تسویه</label><select id="payment"><option value="pending">در انتظار تسویه</option><option value="paid">تسویه‌شده</option></select>
+ <button class="full" id="saveRevenue">ثبت درآمد</button><div class="actions"><button class="secondary" id="backup">ساخت پشتیبان</button><button class="secondary" id="copyBackup">کپی پشتیبان</button></div>
+ <label for="backupText">متن پشتیبان و بازیابی</label><textarea id="backupText" rows="5" placeholder="متن پشتیبان را اینجا وارد کن" style="direction:ltr;font-size:11px"></textarea>
+ <button class="secondary full" id="restore">بازیابی اطلاعات</button><div class="note" id="bookMessage"></div><h3 style="font-size:14px">سوابق درآمد</h3><div id="records"></div>
+</section>
+<section class="card page" data-page="menu"><h3>☰ منوی برنامه</h3><div class="actions"><button data-go="game">بازی اصلی</button><button data-go="ads">تبلیغات</button><button data-go="publisher">درآمد تپسل</button><button data-go="book">دفتر درآمد</button><button data-go="badges">جوایز</button><button data-go="mission">ماموریت‌ها</button><button data-go="account">ورود / ثبت‌نام</button><button data-go="settings">تنظیمات و موسیقی</button></div><p class="note">📢 تبلیغ بنری در نوار پایین برنامه اندروید، در صورت دریافت موفق از تپسل نمایش داده می‌شود.</p></section>
+<section class="card page" data-page="settings"><h3>⚙️ تنظیمات برنامه</h3>
+ <div class="music-row"><div><b>🎵 موسیقی آرامش‌بخش</b><div class="note" id="musicStateText">برای شروع پخش، یک‌بار روی دکمه روشن بزن.</div></div><button type="button" class="switch" id="musicToggle" aria-label="روشن یا خاموش کردن موسیقی" aria-pressed="false"></button></div>
+ <p class="note">موسیقی به‌صورت صدای محیطی ملایم داخل برنامه ساخته می‌شود و فایل یا اینترنت مصرف نمی‌کند. انتخاب شما ذخیره می‌شود. پخش صدا پس از اولین لمس کاربر آغاز می‌شود.</p>
+ <button type="button" class="secondary full" id="musicStop">قطع موسیقی</button>
+ <p class="note">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</p></section>
+<section class="card page" data-page="support"><h3>🎧 پشتیبانی</h3><p class="note">برای راهنمایی و پشتیبانی، از مسیر ارتباطی برنامه استفاده کن.</p></section>
+<section class="card page" data-page="account"><h3>👤 حساب کاربری A.Z.N</h3>
+ <div class="auth-box"><div class="auth-tabs"><button type="button" id="authTabLogin" class="selected">ورود</button><button type="button" id="authTabSignup" class="secondary">ایجاد حساب</button></div>
+ <label for="authEmail">ایمیل</label><input id="authEmail" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com">
+ <label for="authPassword">رمز عبور</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="حداقل ۶ کاراکتر">
+ <label for="authDisplayName" id="authNameLabel" style="display:none">نام نمایشی</label><input id="authDisplayName" type="text" autocomplete="nickname" placeholder="نام نمایشی (اختیاری)" style="display:none">
+ <button type="button" class="full" id="authSubmit">ورود به حساب</button>
+ <button type="button" class="secondary full" id="authLogout" style="display:none">خروج از حساب</button>
+ <div class="auth-message" id="authMessage" role="status" aria-live="polite">برای ورود یا ساخت حساب از ایمیل معتبر استفاده کن.</div></div>
+ <p class="note">حساب‌ها در Supabase پروژه AZN-Play مدیریت می‌شوند. کلید استفاده‌شده باید کلید عمومی anon باشد؛ هرگز service_role را در برنامه قرار نده.</p>
+ </section>
+<footer class="footer">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</footer>
+</main>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* Supabase Auth: use the project's PUBLIC anon JWT key only. */
+const SUPABASE_URL="https://mzyhwknkfravyfgismmn.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_quIHzAWNxQUpKSEaUFtfnA_wB4wM7DE";
+let cloudClient=null,authMode="login",authUser=null;
+function authMsg(t){const e=document.getElementById("authMessage");if(e)e.textContent=t;}
+function authSummary(t){const e=document.getElementById("authSummary");if(e)e.textContent=t;}
+function setAuthMode(mode){authMode=mode;const login=mode==="login";$("authTabLogin").classList.toggle("selected",login);$("authTabSignup").classList.toggle("selected",!login);$("authTabSignup").classList.toggle("secondary",login);$("authTabLogin").classList.toggle("secondary",!login);$("authNameLabel").style.display=login?"none":"block";$("authDisplayName").style.display=login?"none":"block";$("authSubmit").textContent=login?"ورود به حساب":"ایجاد حساب کاربری";$("authPassword").autocomplete=login?"current-password":"new-password";authMsg(login?"ایمیل و رمز عبور خود را وارد کن.":"برای ساخت حساب، ایمیل معتبر و رمز حداقل ۶ کاراکتری وارد کن.");}
+function renderAuth(){if(authUser){authSummary(authUser.email||"حساب متصل است");$("authLogout").style.display="block";$("authSubmit").style.display="none";authMsg("با موفقیت وارد حساب شده‌ای.");}else{authSummary("برای ذخیره امن پیشرفت، وارد حساب شو");$("authLogout").style.display="none";$("authSubmit").style.display="block";}}
+function initSupabaseAuth(){
+ if(!SUPABASE_URL||!SUPABASE_ANON_KEY||!SUPABASE_ANON_KEY.startsWith("sb_publishable_")){
+  auth
