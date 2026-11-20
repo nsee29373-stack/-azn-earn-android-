@@ -201,4 +201,5 @@ function authSummary(t){const e=document.getElementById("authSummary");if(e)e.te
 function setAuthMode(mode){authMode=mode;const login=mode==="login";$("authTabLogin").classList.toggle("selected",login);$("authTabSignup").classList.toggle("selected",!login);$("authTabSignup").classList.toggle("secondary",login);$("authTabLogin").classList.toggle("secondary",!login);$("authNameLabel").style.display=login?"none":"block";$("authDisplayName").style.display=login?"none":"block";$("authSubmit").textContent=login?"ورود به حساب":"ایجاد حساب کاربری";$("authPassword").autocomplete=login?"current-password":"new-password";authMsg(login?"ایمیل و رمز عبور خود را وارد کن.":"برای ساخت حساب، ایمیل معتبر و رمز حداقل ۶ کاراکتری وارد کن.");}
 function renderAuth(){if(authUser){authSummary(authUser.email||"حساب متصل است");$("authLogout").style.display="block";$("authSubmit").style.display="none";authMsg("با موفقیت وارد حساب شده‌ای.");}else{authSummary("برای ذخیره امن پیشرفت، وارد حساب شو");$("authLogout").style.display="none";$("authSubmit").style.display="block";}}
 function initSupabaseAuth(){
- if(!SUPABASE_URL||!SUPABASE_ANON_KEY||!SUPABASE_ANON_KEY.startsWith("sb_p
+ if(!SUPABASE_URL||!SUPABASE_ANON_KEY||!SUPABASE_ANON_KEY.startsWith("sb_publishable_")){
+  authMsg("کلید عمومی
