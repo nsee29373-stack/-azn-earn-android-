@@ -1,40 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-- name: Build AZN APK
-  run: gradle assembleRelease
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+    <application
+        android:allowBackup="true"
+        android:label="AZN Earn"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:supportsRtl="true">
 
-permissions:
-  contents: read
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+        </activity>
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+    </application>
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
-
-     - name: Build AZN APK
-  run: gradle assembleRelease 
-
-      - name: Upload APK
-  uses: actions/upload-artifact@v4
-  with:
-    name: AZN-Android-APK
-    path: app/build/outputs/apk/release/app-release-unsigned.apk
+</manifest>
