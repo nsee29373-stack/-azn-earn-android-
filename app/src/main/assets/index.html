@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
@@ -9,21 +8,27 @@
 <style>
 :root{--bg:#0b1024;--panel:#171d3b;--line:#343d68;--txt:#f8faff;--muted:#aab4d3;--cyan:#42e8dc;--gold:#ffd76a}
 *{box-sizing:border-box}
-body{margin:0;padding:14px;background:radial-gradient(circle at 15% 0%,#29215a,#10152f 40%,var(--bg) 78%);font-family:Tahoma,Arial,sans-serif;color:var(--txt)}
-.wrap{max-width:520px;margin:auto}
-.head{text-align:center;padding:16px}
-.logo{font-size:40px}
-h1{color:#8deaff;margin:6px}
-h2,h3{margin:8px 0 12px}
+body{margin:0;padding:0;background:radial-gradient(ellipse at 50% -10%,#302078 0,#111943 42%,#070d27 100%);min-height:100dvh;overflow-x:hidden;font-family:Tahoma,Arial,sans-serif;color:var(--txt)}
+.wrap{width:100%;max-width:520px;min-height:100dvh;margin:auto;padding:10px 13px 86px;position:relative}
+.head{display:flex;align-items:center;justify-content:space-between;text-align:right;padding:5px 3px 12px;gap:10px}
+.head .logo{font-size:30px;filter:drop-shadow(0 0 12px #ffcb48)}
+.head h1{font-size:25px;margin:0;color:#fff;text-shadow:0 0 15px #36cfff;direction:ltr;white-space:nowrap}
+.head .muted{font-size:10px;margin-top:3px}
 .muted,.note{color:var(--muted);font-size:12px;line-height:1.9}
+.wallet-mini{background:linear-gradient(135deg,#172d70,#20134d);border:1px solid #657bff;border-radius:18px;padding:7px 12px;min-width:118px;text-align:center;box-shadow:0 0 18px #443dff55}
+.wallet-mini small{display:block;color:#d9e5ff;font-size:10px}
+.wallet-mini b{font-size:19px;color:#ffdc38}
+button{font-family:inherit;border:0;border-radius:13px;padding:13px;font-size:14px;font-weight:bold;background:linear-gradient(100deg,var(--cyan),#79baff);color:#081126;cursor:pointer}
+button:disabled{opacity:.55}
+.home-page{display:block}
+.page{display:none!important}
+.page.active{display:block!important}
 .card{background:linear-gradient(145deg,#1f274e,#131935);border:1px solid var(--line);border-radius:19px;padding:16px;margin:13px 0;box-shadow:0 10px 25px #05081766}
 .game{background:linear-gradient(145deg,#26306a,#38245f 58%,#153f63);border-color:#6876c7}
-.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.top{display:flex;justify-content:space-between;align-items:center}
 .pill{font-size:10px;background:#ffffff20;border-radius:20px;padding:6px 9px}
 .score{text-align:center;font-size:40px;font-weight:bold;text-shadow:0 0 18px #62dfff;margin:10px}
 .scorelabel{text-align:center;font-size:12px;color:#d7e4ff}
-button{font-family:inherit;border:0;border-radius:13px;padding:13px;font-size:14px;font-weight:bold;background:linear-gradient(100deg,var(--cyan),#79baff);color:#081126;cursor:pointer}
-button:disabled{opacity:.55;cursor:not-allowed}
 .tap{display:block;width:min(210px,72%);aspect-ratio:1;border-radius:50%;margin:18px auto;color:white;font-size:22px;border:5px solid #ffffff55;background:radial-gradient(circle at 35% 25%,#b0fff7,#4c9cff 45%,#8149e8 78%);box-shadow:0 0 0 8px #ffffff12,0 12px 32px #050a2b99;touch-action:manipulation}
 .stats,.extras,.bookstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat,.extra,.bookstat{background:#101631aa;border:1px solid #ffffff1c;border-radius:12px;padding:10px 4px;text-align:center}
@@ -33,7 +38,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .extra b{color:var(--gold);font-size:20px}
 .progress{height:9px;background:#0c1430;border-radius:20px;overflow:hidden;margin:10px 0}
 .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),#9c83ff);transition:width .2s}
-.status{background:#101831;border-radius:11px;padding:11px;margin-top:10px;color:#a9e8ff;font-size:12px;line-height:1.9;text-align:center;overflow-wrap:anywhere}
+.status{background:#101831;border-radius:11px;padding:11px;margin-top:10px;color:#a9e8ff;font-size:12px;line-height:1.9;text-align:center}
 .full{width:100%;margin-top:10px}
 .challenge{width:100%;margin-top:10px;background:linear-gradient(100deg,#ffd76a,#ff9f6b)}
 .mission{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#111831;border-radius:12px;padding:12px}
@@ -54,73 +59,123 @@ label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px}
 input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:#0f172a;color:white;font:inherit}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #334155;padding:9px 0;font-size:11px}
 .row button{padding:7px 9px;background:#7f1d1d;color:white;font-size:11px}
-.actions,.cloud-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .secondary{background:#30395f;color:white;border:1px solid #53608d}
 .footer{text-align:center;color:#7f8aad;font-size:11px;margin:22px}
-.milestone{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#101831;border:1px solid #343d68;border-radius:13px;padding:12px;margin:9px 0}
-.milestone.unlocked{border-color:#ffd76a;background:#302b35}
-.milestone b{display:block;font-size:12px}
-.milestone small{display:block;color:#aab4d3;font-size:10px;margin-top:5px}
-.milestone .state{color:#aab4d3;font-size:10px;text-align:center}
-.milestone button{padding:9px 12px;font-size:11px;white-space:nowrap}
-.cloud-user{font-size:12px;color:#a9e8ff;direction:ltr;text-align:center;overflow-wrap:anywhere}
-.cloud-help{font-size:11px;color:var(--muted);line-height:1.9}
-.cloud-divider{border:0;border-top:1px solid #343d68;margin:14px 0}
-[hidden]{display:none!important}
 
-/* A.Z.N EARN - PREMIUM MOBILE DESIGN */
-:root{--bg:#070b2b;--panel:#111b52;--line:#315dff;--txt:#fff;--muted:#c3d0ff;--cyan:#00eaff;--gold:#ffd21f}
-*{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0;overflow:hidden}
-body{padding:0;background:radial-gradient(ellipse at 50% 0%,#342080,#10134c 45%,#050925);font-family:Tahoma,Arial,sans-serif;color:white}
-.wrap{width:100%;max-width:520px;height:100dvh;margin:auto;padding:env(safe-area-inset-top) 12px calc(76px + env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden}
-.head{flex:0 0 auto;padding:8px 3px;display:flex;align-items:center;justify-content:center;gap:8px}
-.logo{font-size:28px;filter:drop-shadow(0 0 10px #ffd21f)}
-h1{font-size:25px;margin:0;color:#ffdc4a;text-shadow:0 0 14px #ff9d00}
-.azn-shortcuts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 10px;flex-shrink:0}
-.azn-shortcuts button{padding:9px 3px;border-radius:15px;background:linear-gradient(145deg,#173dbe,#5017a7);border:1px solid #20eaff;color:white;box-shadow:0 0 12px #174bff88;font-size:10px}
-.azn-shortcuts span{display:block;font-size:21px;margin-bottom:3px}
-.azn-panel{display:none!important;margin:0!important;padding:12px!important;border-radius:20px!important;border:1px solid #278cff!important;background:linear-gradient(150deg,#122b77,#21105c 60%,#071c55)!important;box-shadow:0 0 16px #164cff88,0 0 28px #9c24ff33!important;overflow-y:auto;flex:1 1 auto;min-height:0}
-.azn-panel.active{display:block!important}
-.azn-panel h2,.azn-panel h3{color:white;text-shadow:0 0 8px #28cfff;font-size:15px}
-.azn-panel .muted,.azn-panel .note{color:#c9d8ff}
-.game{background:radial-gradient(circle at 50% 0%,#2949b9,#25106b 65%,#091a55)!important;border:1px solid #31eaff!important}
-.game .score{font-size:40px;color:#ffdf36;text-shadow:0 0 14px #ff9d00;margin:5px}
-.game .tap{width:clamp(115px,32vw,150px);margin:9px auto;border:4px solid #fff9;background:radial-gradient(circle at 30% 22%,#fff6a6,#ffba16 38%,#ff7900 65%,#a40bdc);box-shadow:0 0 0 5px #ffffff18,0 0 28px #ffb300,0 0 45px #7b20ff;color:#37105b;font-weight:900}
-.game .stat{background:#071b55;border:1px solid #39cfff}
-.game .stat b{color:#ffe05b}
-.azn-nav{position:fixed;z-index:99;bottom:env(safe-area-inset-bottom);left:50%;transform:translateX(-50%);width:min(496px,calc(100% - 18px));height:62px;padding:5px 8px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-radius:22px;border:1px solid #12dfff;background:linear-gradient(100deg,#071a5af5,#24105df5);box-shadow:0 0 18px #087dffbb,0 0 28px #9d26ff55}
-.azn-nav button{background:transparent;color:#b9c9ff;padding:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.azn-nav button span{font-size:20px}
-.azn-nav button small{font-size:10px}
-.azn-nav button.selected{color:#ffe04a;background:#ffffff12}
-.azn-panel .status{background:#071947;border:1px solid #2557bd;color:#c9f8ff}
-.azn-panel .mission,.azn-panel .stat,.azn-panel .bookstat,.azn-panel .milestone{background:#09194b;border-color:#315bcb}
-.azn-panel .link{background:linear-gradient(90deg,#087df0,#7c20dd)}
-.azn-panel input,.azn-panel select,.azn-panel textarea{background:#08163f;border-color:#3976d9}
-.azn-panel .badgeitem{background:#0a194a}
-.azn-panel .badgeitem.on{background:#4a2c14;border-color:#ffd21f}
-.footer{display:none}
-@media(max-height:700px){
-.head{padding:3px}
-.logo{font-size:22px}
-h1{font-size:21px}
-.azn-shortcuts{margin:2px 0 6px}
-.azn-shortcuts button{padding:6px 2px}
-.game .tap{width:108px;margin:5px auto}
+/* صفحه اصلی حرفه‌ای */
+.ad-hero{position:relative;overflow:hidden;margin:5px 0 12px;padding:15px 14px 13px;border-radius:27px;border:1.5px solid #4eabff;background:radial-gradient(circle at 10% 15%,#5422b9 0,#20115c 42%,#0c1d55 100%);box-shadow:0 0 0 2px #9d37ff55,0 0 24px #2c8fff77,inset 0 0 25px #7e38ff33}
+.ad-hero:before{content:'📣';position:absolute;left:8px;top:48px;font-size:76px;opacity:.92;filter:drop-shadow(0 0 13px #ff4e9c);transform:rotate(-12deg)}
+.ad-head{position:relative;z-index:1;min-height:94px;padding-right:72px}
+.ad-head h2{font-size:21px;color:#fff;margin:8px 0;text-shadow:0 0 12px #b85dff}
+.ad-head p{font-size:11px;color:#dbe5ff;margin:0;line-height:1.8}
+.ad-live{display:inline-block;border-radius:30px;padding:5px 11px;background:linear-gradient(90deg,#12c84a,#54f16e);color:#fff;font-size:11px;font-weight:bold;box-shadow:0 0 13px #17e45b77}
+.ad-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:12px 0 10px;padding-top:10px;border-top:1px solid #7aaaff66;position:relative;z-index:1}
+.ad-stat{text-align:center;border-left:1px solid #55c9ff66}
+.ad-stat:last-child{border-left:0}
+.ad-stat small{display:block;color:#e4eaff;font-size:9px;line-height:1.6}
+.ad-stat b{display:block;font-size:19px;color:#fff;margin-top:3px}
+.ad-stat .green{color:#49f77b}
+.ad-cta{width:100%;border-radius:40px;padding:13px 8px;background:linear-gradient(100deg,#ffe34c,#ff9d00);color:#25103d;font-size:16px;box-shadow:0 0 17px #ffbd28aa;border:2px solid #fff2a8}
+.ad-foot{text-align:center;color:#fff;font-size:10px;margin-top:8px}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.feature{border-radius:22px;min-height:100px;padding:12px;border:1px solid #6f89ff;background:linear-gradient(140deg,#113b9b,#101c59 70%,#1c1455);box-shadow:0 5px 18px #02071999;display:flex;align-items:center;justify-content:space-between;gap:5px}
+.feature.tournament{background:linear-gradient(140deg,#7310a8,#32105c 75%,#17174f);border-color:#df65ff}
+.feature .emoji{font-size:38px;filter:drop-shadow(0 0 8px #55baff)}
+.feature b{display:block;font-size:14px;color:#fff}
+.feature small{display:block;color:#dce5ff;font-size:10px;margin-top:5px}
+.feature button{padding:7px 12px;margin-top:8px;font-size:11px;border-radius:25px;background:linear-gradient(90deg,#8a12e8,#4e35ff);color:#fff}
+.shortcut-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0 12px}
+.shortcut{border:1px solid #4559a9;border-radius:17px;padding:9px 3px 8px;text-align:center;background:linear-gradient(150deg,#192b68,#11183f);box-shadow:0 4px 13px #02071988;min-width:0}
+.shortcut span{display:block;font-size:25px}
+.shortcut b{display:block;font-size:10px;color:#fff;margin:5px 0}
+.shortcut button{font-size:9px;padding:6px 4px;width:92%;border-radius:20px;background:linear-gradient(90deg,#8b16e9,#4b38ff);color:#fff}
+.bottom-nav{position:fixed;z-index:50;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#101c4aee,#080e2bf7);border:1px solid #486dff;border-bottom:0;border-radius:24px 24px 0 0;box-shadow:0 -5px 24px #020617aa;backdrop-filter:blur(12px)}
+.bottom-nav button{background:transparent;color:#cbd8ff;padding:5px 2px;font-size:9px;border-radius:13px}
+.bottom-nav button span{display:block;font-size:20px;margin-bottom:3px}
+.bottom-nav button.active{background:linear-gradient(135deg,#1455c9,#25117b);color:#65f3ff;box-shadow:0 0 15px #328bff88}
+.page.card{margin-top:8px}
+.page .tap{width:min(165px,58%);margin:10px auto}
+.page .score{font-size:32px}
+@media(max-height:760px){
+.wrap{padding-top:6px}
+.head{padding-bottom:6px}
+.ad-hero{padding:10px 12px}
+.ad-head{min-height:76px}
+.ad-head h2{font-size:18px}
+.ad-hero:before{font-size:62px;top:43px}
+.ad-stats{margin:7px 0}
+.feature{min-height:88px;padding:8px}
+.shortcut{padding:6px 2px}
+.shortcut span{font-size:21px}
+}
+@media(max-width:360px){
+.head h1{font-size:21px}
+.wallet-mini{min-width:100px}
+.ad-head{padding-right:60px}
+.ad-head h2{font-size:18px}
+.ad-hero:before{font-size:60px}
+.ad-stat small{font-size:8px}
+.feature .emoji{font-size:30px}
+.shortcut b{font-size:9px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <main class="wrap">
+
 <header class="head">
- <div class="logo">💎</div>
- <h1>A.Z.N Earn</h1>
- <div class="muted">بازی کن، رکورد بزن، افتخار جمع کن</div>
+ <div style="display:flex;align-items:center;gap:8px">
+  <div class="logo">👑</div>
+  <div><h1>A.Z.N Earn</h1><div class="muted">بازی کن، رکورد بزن، جایزه بگیر</div></div>
+ </div>
+ <div class="wallet-mini"><small>⭐ امتیاز شما</small><b id="homeScore">۰</b></div>
 </header>
 
-<section class="card game">
+<section class="home-page" id="homePage">
+ <div class="ad-hero">
+  <div class="ad-head">
+   <span class="ad-live">✓ فعال</span>
+   <h2>مرکز تبلیغات A.Z.N</h2>
+   <p>با تماشای تبلیغ، امتیاز بگیر و پیشرفت کن!</p>
+  </div>
+  <div class="ad-stats">
+   <div class="ad-stat"><small>بازدیدهای تأییدشده</small><b class="green" id="homeViews">۰</b></div>
+   <div class="ad-stat"><small>تبلیغات تکمیل‌شده</small><b id="homeCompleted">۰</b></div>
+   <div class="ad-stat"><small>اتصال تپسل</small><b class="green" id="homeAdConnection">بررسی</b></div>
+  </div>
+  <button class="ad-cta" id="homeWatchButton">▶ ورود به مرکز تبلیغات</button>
+  <div class="ad-foot" id="homeAdStatus">🎁 مشاهده تبلیغ و دریافت امتیاز</div>
+ </div>
+
+ <div class="feature-grid">
+  <div class="feature" data-go="game">
+   <div><b>بازی اصلی</b><small>هیجان و سرگرمی</small><button type="button">شروع بازی ❯</button></div>
+   <span class="emoji">🎮</span>
+  </div>
+  <div class="feature tournament" data-go="mission">
+   <div><b>مسابقات روزانه</b><small>بازی کن و جایزه ببر</small><button type="button">ورود ❯</button></div>
+   <span class="emoji">🏆</span>
+  </div>
+ </div>
+
+ <div class="shortcut-grid">
+  <div class="shortcut" data-go="badges"><span>🎁</span><b>جوایز پیشرفت</b><button type="button">مشاهده</button></div>
+  <div class="shortcut" data-go="mission"><span>📋</span><b>ماموریت‌ها</b><button type="button">انجام</button></div>
+  <div class="shortcut" data-go="book"><span>👛</span><b>کیف پول</b><button type="button">جزئیات</button></div>
+  <div class="shortcut" data-go="publisher"><span>📈</span><b>آمار و تحلیل</b><button type="button">مشاهده</button></div>
+ </div>
+</section>
+
+<nav class="bottom-nav" aria-label="منوی اصلی">
+ <button type="button" data-nav="settings"><span>⚙️</span>تنظیمات</button>
+ <button type="button" data-nav="publisher"><span>ⓘ</span>درباره ما</button>
+ <button type="button" class="active" data-nav="home"><span>🏠</span>خانه</button>
+ <button type="button" data-nav="support"><span>🎧</span>پشتیبانی</button>
+ <button type="button" data-nav="menu"><span>☰</span>منو</button>
+</nav>
+
+<section class="card game page" data-page="game">
  <div class="top"><div><small style="color:var(--cyan)">بازی و سرگرمی</small><h2>🎮 A.Z.N Play</h2></div><span class="pill">نسخه آزمایشی</span></div>
  <p class="muted" style="color:#d7defb">با ضربه‌های سریع کمبو بساز، مرحله بالا برو و رکوردت را بشکن!</p>
  <div class="score" id="score">۰</div><div class="scorelabel">امتیاز بازی</div>
@@ -141,8 +196,9 @@ h1{font-size:21px}
  <div class="status" id="gameStatus">برای شروع روی دکمه بزرگ بزن.</div>
 </section>
 
-<section class="card">
- <h3>🏅 کلکسیون افتخارات</h3><p class="note">با پیشرفت در بازی نشان‌های تازه آزاد کن.</p>
+<section class="card page" data-page="badges">
+ <h3>🏅 کلکسیون افتخارات</h3>
+ <p class="note">با پیشرفت در بازی نشان‌های تازه آزاد کن.</p>
  <div class="badges">
   <div class="badgeitem" id="bFirst"><span>🌱</span><b>شروع‌کننده</b><small>۱۰ امتیاز</small></div>
   <div class="badgeitem" id="bHundred"><span>💯</span><b>صدتایی</b><small>۱۰۰ امتیاز</small></div>
@@ -154,41 +210,34 @@ h1{font-size:21px}
  <div class="status" id="badgeStatus">هنوز نشانی آزاد نشده؛ ادامه بده!</div>
 </section>
 
-<section class="card">
+<section class="card page" data-page="mission">
  <h3>🎯 مأموریت روزانه</h3>
  <div class="mission"><div><b>۱۰۰ ضربه در یک روز</b><small id="missionText">پیشرفت امروز: ۰ از ۱۰۰</small></div><div class="reward" id="missionReward">+۲۵ امتیاز</div></div>
  <div class="progress"><i id="missionBar"></i></div>
- <p class="note">با تکمیل مأموریت، ۲۵ امتیاز بازی می‌گیری. این امتیاز آزمایشی و غیرقابل برداشت است.</p>
+ <p class="note">با تکمیل مأموریت، ۲۵ امتیاز بازی می‌گیری. این امتیاز فعلاً آزمایشی و غیرقابل برداشت است.</p>
 </section>
 
-<section class="card">
+<section class="card page" data-page="ads">
  <h3>🎁 پاداش تبلیغ تپسل</h3>
- <p class="note">فقط پس از تکمیل واقعی تبلیغ و تأیید پاداش توسط SDK، ۱۰ امتیاز بازی اضافه می‌شود.</p>
+ <p class="note">فقط پس از تکمیل واقعی تبلیغ و تأیید پاداش توسط SDK، ۱۰ امتیاز بازی اضافه می‌شود. باز کردن یا بستن تبلیغ پاداش ندارد.</p>
  <button class="full" id="watchButton">مشاهده تبلیغ و دریافت امتیاز</button>
  <div class="status" id="adStatus">در حال بررسی اتصال تبلیغات...</div>
  <p class="muted">تبلیغ‌های پاداش‌دار تأییدشده: <b id="views">۰</b></p>
 </section>
 
-<section class="card">
+<section class="card page" data-page="publisher">
  <h3>💰 درآمد ناشر تپسل</h3>
- <div class="publisher">مبلغ واقعی درآمد ناشر فقط از گزارش مالی رسمی تپسل قابل تأیید است.</div>
+ <div class="publisher">مبلغ واقعی درآمد ناشر فقط از گزارش مالی رسمی تپسل قابل تأیید است. آمار بازی و SDK به‌تنهایی موجودی مالی نیستند.</div>
  <div class="stats" style="margin-top:12px">
   <div class="stat"><span>درآمد امروز</span><b>پنل ناشر</b></div>
   <div class="stat"><span>درآمد کل</span><b>پنل ناشر</b></div>
   <div class="stat"><span>تسویه</span><b>پنل ناشر</b></div>
  </div>
  <a class="link" href="https://dashboard.tapsell.ir" target="_blank" rel="noopener">ورود به پنل رسمی تپسل</a>
- <p class="note">امتیاز بازی با درآمد نقدی ناشر متفاوت است.</p>
+ <p class="note">امتیاز بازی با درآمد نقدی ناشر متفاوت است؛ درآمد ساختگی نمایش داده نمی‌شود.</p>
 </section>
 
-<section class="card">
- <h3>🎁 جوایز پیشرفت بازی</h3>
- <p class="note">با رسیدن به امتیازهای بالاتر، جایزه را آزاد کن و با زدن دکمه دریافت، امتیازش را بگیر.</p>
- <div id="milestoneList"></div>
- <div class="status" id="milestoneStatus">هنوز جایزه جدیدی آزاد نشده است.</div>
-</section>
-
-<section class="card">
+<section class="card page" data-page="book">
  <h3>📒 دفتر ثبت درآمد ناشر</h3>
  <p class="note">فقط مبلغی را ثبت کن که در پنل تپسل دیده‌ای. اطلاعات روی همین دستگاه ذخیره می‌شود؛ پشتیبان بگیر.</p>
  <div class="bookstats">
@@ -201,155 +250,95 @@ h1{font-size:21px}
  <select id="payment"><option value="pending">در انتظار تسویه</option><option value="paid">تسویه‌شده</option></select>
  <button class="full" id="saveRevenue">ثبت درآمد</button>
  <div class="actions"><button class="secondary" id="backup">ساخت پشتیبان</button><button class="secondary" id="copyBackup">کپی پشتیبان</button></div>
- <label for="backupText">متن پشتیبان و بازیابی</label><textarea id="backupText" rows="5" placeholder="متن پشتیبان را اینجا وارد کن" style="direction:ltr;font-size:11px"></textarea>
+ <label for="backupText">متن پشتیبان و بازیابی</label>
+ <textarea id="backupText" rows="5" placeholder="متن پشتیبان را اینجا وارد کن" style="direction:ltr;font-size:11px"></textarea>
  <button class="secondary full" id="restore">بازیابی اطلاعات</button>
  <div class="note" id="bookMessage"></div>
  <h3 style="font-size:14px">سوابق درآمد</h3><div id="records"></div>
 </section>
 
-<section class="card" id="cloudAccount">
- <h3>☁️ حساب کاربری و کیف پول A.Z.N</h3>
- <p class="note">با ایمیل ثبت‌نام یا وارد شو. امتیازهای بازی خودکار به پول قابل برداشت تبدیل نمی‌شوند.</p>
- <div class="status" id="cloudStatus">در حال آماده‌سازی اتصال امن...</div>
- <div id="cloudAuthBox">
-  <label for="cloudName">نام نمایشی (هنگام ثبت‌نام)</label><input id="cloudName" type="text" maxlength="40" autocomplete="nickname" placeholder="نام نمایشی">
-  <label for="cloudEmail">ایمیل</label><input id="cloudEmail" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com">
-  <label for="cloudPassword">رمز عبور</label><input id="cloudPassword" type="password" autocomplete="current-password" minlength="8" placeholder="حداقل ۸ نویسه">
-  <div class="cloud-actions"><button id="cloudSignIn">ورود</button><button id="cloudSignUp" class="secondary">ساخت حساب</button></div>
+<section class="card page" data-page="menu">
+ <h3>☰ منوی برنامه</h3>
+ <div class="actions">
+  <button data-go="game">بازی اصلی</button><button data-go="ads">تبلیغات</button>
+  <button data-go="publisher">درآمد تپسل</button><button data-go="book">دفتر درآمد</button>
+  <button data-go="badges">جوایز</button><button data-go="mission">ماموریت‌ها</button>
  </div>
- <div id="cloudSignedBox" hidden>
-  <div class="cloud-user" id="cloudUserEmail"></div>
-  <div class="cloud-actions"><button id="cloudRefresh" class="secondary">به‌روزرسانی کیف پول</button><button id="cloudSignOut" class="secondary">خروج از حساب</button></div>
- </div>
- <hr class="cloud-divider">
- <h3>💳 موجودی ثبت‌شده</h3>
- <div class="bookstats">
-  <div class="bookstat">موجودی ثبت‌شده<b id="cloudBalance">۰ ریال</b></div>
-  <div class="bookstat">قابل درخواست<b id="cloudAvailable">۰ ریال</b></div>
- </div>
- <p class="cloud-help">این موجودی فقط از تراکنش‌های ثبت‌شده در پایگاه داده خوانده می‌شود. امتیازهای محلی بازی و پاداش تپسل در آن منظور نمی‌شوند.</p>
- <hr class="cloud-divider">
- <h3>📨 ثبت درخواست برداشت</h3>
- <label for="payoutMethod">روش درخواست</label>
- <select id="payoutMethod"><option value="bank_card">کارت بانکی</option><option value="gift_or_topup">شارژ یا کارت هدیه</option></select>
- <label for="payoutAmount">مبلغ درخواست (ریال)</label><input id="payoutAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="مبلغ به ریال">
- <label for="payoutReference">شناسه پیگیری / توضیح مقصد</label><input id="payoutReference" type="text" minlength="8" maxlength="200" placeholder="حداقل ۸ نویسه؛ شماره کامل کارت را وارد نکن">
- <button class="full" id="payoutSubmit">ثبت درخواست</button>
- <p class="cloud-help">این بخش فقط درخواست را ثبت می‌کند و انتقال وجه خودکار انجام نمی‌دهد. شماره کامل کارت، رمز یا CVV2 را وارد نکن.</p>
- <div class="status" id="payoutStatus">برای مشاهده کیف پول وارد حساب شو.</div>
- <h3 style="font-size:14px;margin-top:14px">📋 درخواست‌های اخیر</h3><div id="payoutHistory" class="cloud-help">هنوز اطلاعاتی دریافت نشده است.</div>
+ <p class="note">📢 تبلیغ بنری در نوار پایین برنامه اندروید، در صورت دریافت موفق از تپسل نمایش داده می‌شود.</p>
 </section>
 
-<div class="card note" style="text-align:center">📢 تبلیغ بنری در نوار پایین برنامه اندروید، در صورت دریافت موفق از تپسل نمایش داده می‌شود.</div>
+<section class="card page" data-page="settings">
+ <h3>⚙️ تنظیمات</h3><p class="note">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</p>
+</section>
+
+<section class="card page" data-page="support">
+ <h3>🎧 پشتیبانی</h3><p class="note">برای راهنمایی و پشتیبانی، از مسیر ارتباطی برنامه استفاده کن.</p>
+</section>
+
 <footer class="footer">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</footer>
 </main>
 
 <script>
 (()=>{
 "use strict";
+
 const $=id=>document.getElementById(id);
 const fa=n=>new Intl.NumberFormat("fa-IR").format(Math.max(0,Math.floor(Number(n)||0)));
-const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
-const GAME_KEY="azn_play_game_v1",REV_KEY="azn_earn_publisher_revenue_v1";
+const today=()=>{
+ const d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+};
 
-let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[],claimedMilestones:[],rewardedCount:0};
+function showPage(name){
+ const home=name==="home";
+ $("homePage").style.display=home?"block":"none";
+ document.querySelectorAll("[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===name));
+ document.querySelectorAll("[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));
+ window.scrollTo(0,0);
+}
 
-try{
- const old=JSON.parse(localStorage.getItem(GAME_KEY)||"{}");
- if(old&&typeof old==="object"&&!Array.isArray(old))g={...g,...old};
-}catch(e){}
+document.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click",()=>showPage(el.dataset.go)));
+document.querySelectorAll("[data-nav]").forEach(el=>el.addEventListener("click",()=>showPage(el.dataset.nav)));
 
-g.achievements=Array.isArray(g.achievements)?g.achievements:[];
-g.claimedMilestones=Array.isArray(g.claimedMilestones)?g.claimedMilestones:[];
-g.score=Math.max(0,Number(g.score)||0);
-g.taps=Math.max(0,Number(g.taps)||0);
-g.best=Math.max(g.score,Number(g.best)||0);
-g.dailyTaps=Math.max(0,Number(g.dailyTaps)||0);
-g.rewardedCount=Math.max(0,Math.floor(Number(g.rewardedCount)||0));
+const GAME_KEY="azn_play_game_v1";
+const REV_KEY="azn_earn_publisher_revenue_v1";
 
+let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[]};
+
+try{g={...g,...JSON.parse(localStorage.getItem(GAME_KEY)||"{}")}}catch(e){}
 if(g.day!==today()){
  g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0;
 }
+g.achievements=Array.isArray(g.achievements)?g.achievements:[];
 
 const save=()=>{
- try{
-  localStorage.setItem(GAME_KEY,JSON.stringify(g));
-  return true;
- }catch(e){
-  $("gameStatus").textContent="ذخیره‌سازی روی دستگاه ناموفق بود؛ فضای ذخیره‌سازی را بررسی کن.";
-  return false;
- }
+ try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}
+ catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}
 };
 
-const defs=[["first","bFirst","🌱 شروع‌کننده"],["hundred","bHundred","💯 صدتایی"],["combo","bCombo","⚡ کمبو استاد"],["level","bLevel","🚀 پیشرو"],["challenge","bChallenge","⏱️ چالش‌گر"],["daily","bDaily","🎯 متعهد"]];
+const defs=[
+ ["first","bFirst","🌱 شروع‌کننده"],
+ ["hundred","bHundred","💯 صدتایی"],
+ ["combo","bCombo","⚡ کمبو استاد"],
+ ["level","bLevel","🚀 پیشرو"],
+ ["challenge","bChallenge","⏱️ چالش‌گر"],
+ ["daily","bDaily","🎯 متعهد"]
+];
+
 function unlock(k){
  if(g.achievements.includes(k))return;
  g.achievements.push(k);save();
  const d=defs.find(x=>x[0]===k);
  if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2];
 }
+
 function renderBadges(){
  defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])));
 }
 
-const milestoneDefs=[
- {score:100,title:"جنگجوی تازه‌کار",icon:"🌱",reward:10},
- {score:200,title:"بازیکن پرتلاش",icon:"⚡",reward:20},
- {score:300,title:"استاد امتیازگیری",icon:"🏆",reward:30},
- {score:400,title:"قهرمان A.Z.N",icon:"👑",reward:50}
-];
-
-function renderMilestones(){
- const list=$("milestoneList");list.textContent="";
- let unlocked=0,claimed=0;
- milestoneDefs.forEach(m=>{
-  const done=g.score>=m.score,received=g.claimedMilestones.includes(m.score);
-  if(done)unlocked++;
-  if(received)claimed++;
-  const item=document.createElement("div");
-  item.className="milestone"+(done?" unlocked":"");
-  const info=document.createElement("div");
-  const title=document.createElement("b");
-  const detail=document.createElement("small");
-  title.textContent=m.icon+" "+m.title;
-  detail.textContent=fa(m.score)+" امتیاز لازم | جایزه: +"+fa(m.reward);
-  info.append(title,detail);
-  const action=document.createElement("div");
-  if(received){
-   const state=document.createElement("span");
-   state.className="state";state.textContent="دریافت شد ✓";action.append(state);
-  }else if(done){
-   const btn=document.createElement("button");
-   btn.textContent="🎁 دریافت جایزه";
-   btn.addEventListener("click",()=>claimMilestone(m));
-   action.append(btn);
-  }else{
-   const state=document.createElement("span");
-   state.className="state";state.textContent="قفل 🔒";action.append(state);
-  }
-  item.append(info,action);list.append(item);
- });
- $("milestoneStatus").textContent="آزادشده: "+fa(unlocked)+" از ۴ | دریافت‌شده: "+fa(claimed)+" از ۴";
-}
-
-function claimMilestone(m){
- if(g.score<m.score||g.claimedMilestones.includes(m.score))return;
- const oldScore=g.score;
- g.claimedMilestones.push(m.score);
- g.score+=m.reward;
- g.best=Math.max(g.best,g.score);
- if(!save()){
-  g.claimedMilestones=g.claimedMilestones.filter(x=>x!==m.score);
-  g.score=oldScore;
-  return;
- }
- render();
- $("milestoneStatus").textContent="🎉 جایزه "+m.title+" دریافت شد! +"+fa(m.reward);
- $("gameStatus").textContent="🎁 جایزه پیشرفت به امتیازت اضافه شد.";
-}
-
 function render(){
- const lv=Math.floor(g.score/100)+1,p=g.score%100;
+ $("homeScore").textContent=fa(g.score);
+ let lv=Math.floor(g.score/100)+1,p=g.score%100;
  $("score").textContent=fa(g.score);
  $("taps").textContent=fa(g.taps);
  $("best").textContent=fa(g.best);
@@ -361,372 +350,36 @@ function render(){
  $("missionReward").textContent=g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";
  $("combo").textContent="×"+fa(Math.max(1,g.combo));
  $("challengeBest").textContent=fa(g.challengeBest);
- renderBadges();renderMilestones();
+ renderBadges();
 }
 
 function addPoints(n,msg){
- const oldScore=g.score,oldBest=g.best;
  g.score+=n;g.best=Math.max(g.best,g.score);
- if(!save()){g.score=oldScore;g.best=oldBest;return false}
- render();
+ save();render();
  $("gameStatus").textContent=msg+"؛ "+fa(n)+" امتیاز اضافه شد.";
- return true;
 }
 
 let challengeActive=false,challengeTime=30,challengeTaps=0,timer=null;
+
 function updateChallenge(){
  $("challengeStatus").textContent="⏳ زمان: "+fa(challengeTime)+" ثانیه | ضربه‌ها: "+fa(challengeTaps);
 }
+
 function finishChallenge(){
  if(!challengeActive)return;
  challengeActive=false;clearInterval(timer);
  g.challengeBest=Math.max(g.challengeBest,challengeTaps);
- if(challengeTaps>0)unlock("challenge");
- save();render();
- const bonus=challengeTaps>=30?20:challengeTaps>=15?10:0;
+ unlock("challenge");save();render();
+ let bonus=challengeTaps>=30?20:challengeTaps>=15?10:0;
  if(bonus)addPoints(bonus,"جایزه چالش");
  $("challengeStatus").textContent="🏁 تمام شد! "+fa(challengeTaps)+" ضربه؛ "+(bonus?"جایزه "+fa(bonus)+" امتیازی گرفتی.":"برای جایزه بعدی حداقل ۱۵ ضربه بزن.");
  $("challengeBtn").disabled=false;
  $("challengeBtn").textContent="⏱ شروع دوباره چالش";
 }
-$("challengeBtn").addEventListener("click",()=>{
- if(challengeActive)return;
- challengeActive=true;challengeTime=30;challengeTaps=0;
- $("challengeBtn").disabled=true;
- $("challengeBtn").textContent="چالش در حال اجراست";
- updateChallenge();
- timer=setInterval(()=>{
-  challengeTime--;updateChallenge();
-  if(challengeTime<=0)finishChallenge();
- },1000);
-});
 
-/* اتصال تبلیغات بومی تپسل و جلوگیری از پاداش تکراری */
-let completedViews=0,lastNativeRewardCount=0;
-
-try{
- if(window.AndroidAds){
-  if(typeof AndroidAds.getCompletedAdsCount==="function")
-   completedViews=Math.max(0,Math.floor(Number(AndroidAds.getCompletedAdsCount())||0));
-  if(typeof AndroidAds.getAcknowledgedRewardCount==="function")
-   lastNativeRewardCount=Math.max(0,Math.floor(Number(AndroidAds.getAcknowledgedRewardCount())||0));
- }
-}catch(e){}
-
-g.rewardedCount=Math.max(g.rewardedCount,lastNativeRewardCount);
-save();
-
-try{
- if(g.rewardedCount>lastNativeRewardCount&&g.rewardedCount<=completedViews&&window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
-  AndroidAds.acknowledgeReward(g.rewardedCount);
-  lastNativeRewardCount=g.rewardedCount;
- }
-}catch(e){}
-
-function views(){$("views").textContent=fa(completedViews)}
-views();
-
-function adStatus(t){$("adStatus").textContent=String(t||"")}
-function enableAd(){$("watchButton").disabled=false}
-
-window.onNativeAdStatus=m=>{adStatus(m);enableAd()};
-window.onRewardedAdReady=()=>{adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");enableAd()};
-window.onRewardedAdNotReady=()=>{adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");enableAd()};
-window.onRewardedAdOpened=()=>adStatus("تبلیغ در حال نمایش است...");
-window.onRewardedAdClosed=()=>{adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");enableAd()};
-window.onRewardedAdError=()=>{adStatus("خطا در دریافت یا نمایش تبلیغ.");enableAd()};
-
-window.onCompletedAdsCount=count=>{
- const c=Math.max(0,Math.floor(Number(count)||0));
- completedViews=Math.max(completedViews,c);
- views();
-};
-
-window.onAdRewarded=count=>{
- const c=Math.floor(Number(count));
- if(!Number.isSafeInteger(c)||c<=0)return;
-
- completedViews=Math.max(completedViews,c);
- views();
-
- const effective=Math.max(g.rewardedCount,lastNativeRewardCount);
-
- if(c>effective){
-  const delta=c-effective;
-  const oldScore=g.score,oldBest=g.best,oldRewarded=g.rewardedCount;
-
-  g.rewardedCount=c;
-  g.score+=delta*10;
-  g.best=Math.max(g.best,g.score);
-
-  if(!save()){
-   g.rewardedCount=oldRewarded;
-   g.score=oldScore;
-   g.best=oldBest;
-   return;
-  }
-
-  lastNativeRewardCount=Math.max(lastNativeRewardCount,c);
-  render();
-  $("gameStatus").textContent="پاداش تبلیغ تأییدشده تپسل؛ "+fa(delta*10)+" امتیاز اضافه شد.";
- }else{
-  lastNativeRewardCount=Math.max(lastNativeRewardCount,c);
- }
-
- try{
-  if(window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
-   const ack=Math.max(c,g.rewardedCount);
-   if(ack<=completedViews)AndroidAds.acknowledgeReward(ack);
-  }
- }catch(e){}
-
- adStatus("پاداش توسط SDK تپسل تأیید شد.");
- enableAd();
-};
-
-$("watchButton").addEventListener("click",()=>{
- if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){
-  adStatus("اتصال اندروید به تبلیغات برقرار نیست.");
-  return;
- }
- $("watchButton").disabled=true;
- adStatus("در حال درخواست تبلیغ...");
- try{
-  AndroidAds.showRewardedAd();
- }catch(e){
-  adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");
-  enableAd();
- }
-});
-
-/* Supabase: حساب، جلسات بازی و درخواست برداشت */
-const SUPABASE_URL="https://mzyhwknkfravyfgismmn.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16eWh3a25rZnJhdnlmZ2lzbW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0NzQ2MzYsImV4cCI6MjExMDA1MDYzNn0.mrOV_LwuhgPid7RA6Ho0CYwC5oZTblLWPD15mqjpAy0";
-let cloudClient=null,cloudUser=null,cloudSessionId=null,cloudTaps=0,pendingCloudTaps=0,cloudStartPromise=null,cloudBusy=false;
-
-function cloudMessage(t){$("cloudStatus").textContent=String(t||"")}
-function payoutMessage(t){$("payoutStatus").textContent=String(t||"")}
-function cloudMoney(n){return new Intl.NumberFormat("fa-IR").format(Math.max(0,Math.round(Number(n)||0)))+" ریال"}
-
-function setCloudUser(user){
- cloudUser=user||null;
- $("cloudAuthBox").hidden=!!cloudUser;
- $("cloudSignedBox").hidden=!cloudUser;
- $("cloudUserEmail").textContent=cloudUser?(cloudUser.email||"حساب کاربری فعال"):"";
- if(!cloudUser){
-  $("cloudBalance").textContent="۰ ریال";
-  $("cloudAvailable").textContent="۰ ریال";
-  $("payoutHistory").textContent="برای مشاهده، وارد حساب شو.";
- }
-}
-
-async function refreshCloudWallet(){
- if(!cloudClient||!cloudUser)return;
- $("cloudRefresh").disabled=true;
- try{
-  const [tx,req]=await Promise.all([
-   cloudClient.from("azn_wallet_transactions").select("direction,amount_minor,currency,created_at,note,source").eq("user_id",cloudUser.id).eq("currency","IRR").order("created_at",{ascending:false}).limit(500),
-   cloudClient.from("azn_payout_requests").select("id,method,amount_minor,currency,status,requested_at,provider_reference").eq("user_id",cloudUser.id).eq("currency","IRR").order("requested_at",{ascending:false}).limit(50)
-  ]);
-  if(tx.error)throw tx.error;
-  if(req.error)throw req.error;
-  let balance=0;
-  (tx.data||[]).forEach(r=>{
-   const amount=Number(r.amount_minor)||0,dir=String(r.direction||"").toLowerCase();
-   if(["credit","in","income","deposit"].includes(dir))balance+=amount;
-   else if(["debit","out","expense","withdrawal"].includes(dir))balance-=amount;
-  });
-  let reserved=0;
-  const history=$("payoutHistory");history.textContent="";
-  const statusFa={pending:"در انتظار بررسی",reviewing:"در حال بررسی",approved:"تأیید شده",paid:"پرداخت شده",rejected:"رد شده"};
-  (req.data||[]).forEach(r=>{
-   if(["pending","reviewing","approved"].includes(String(r.status)))reserved+=Number(r.amount_minor)||0;
-   const row=document.createElement("div"),info=document.createElement("span");
-   row.className="row";
-   info.textContent=(r.method==="bank_card"?"کارت بانکی":"شارژ/کارت هدیه")+" | "+cloudMoney(r.amount_minor)+" | "+(statusFa[r.status]||r.status)+" | "+(r.requested_at?new Date(r.requested_at).toLocaleDateString("fa-IR"):"");
-   row.append(info);history.append(row);
-  });
-  if(!(req.data||[]).length)history.textContent="هنوز درخواستی ثبت نشده است.";
-  $("cloudBalance").textContent=cloudMoney(balance);
-  $("cloudAvailable").textContent=cloudMoney(Math.max(0,balance-reserved));
-  payoutMessage("اطلاعات کیف پول به‌روزرسانی شد.");
- }catch(e){
-  payoutMessage("خطا در دریافت کیف پول: "+(e.message||"دسترسی پایگاه داده را بررسی کن."));
- }finally{
-  $("cloudRefresh").disabled=false;
- }
-}
-
-async function cloudSignUp(){
- const email=$("cloudEmail").value.trim(),password=$("cloudPassword").value,name=$("cloudName").value.trim();
- if(!cloudClient){cloudMessage("اتصال Supabase آماده نیست.");return}
- if(!email||password.length<8){cloudMessage("ایمیل معتبر و رمز حداقل ۸ نویسه وارد کن.");return}
- $("cloudSignUp").disabled=true;
- try{
-  const {data,error}=await cloudClient.auth.signUp({email,password,options:{data:{display_name:name}}});
-  if(error)throw error;
-  if(data.session){
-   setCloudUser(data.user);cloudMessage("حساب ساخته شد و وارد شدی.");await refreshCloudWallet();
-  }else{
-   cloudMessage("ثبت‌نام انجام شد. اگر تأیید ایمیل فعال است، ایمیل را تأیید کن و سپس وارد شو.");
-  }
- }catch(e){
-  cloudMessage("ثبت‌نام ناموفق: "+(e.message||"خطای ناشناخته"));
- }finally{
-  $("cloudSignUp").disabled=false;
- }
-}
-
-async function cloudSignIn(){
- const email=$("cloudEmail").value.trim(),password=$("cloudPassword").value;
- if(!email||!password){cloudMessage("ایمیل و رمز عبور را وارد کن.");return}
- $("cloudSignIn").disabled=true;
- try{
-  const {data,error}=await cloudClient.auth.signInWithPassword({email,password});
-  if(error)throw error;
-  setCloudUser(data.user);cloudMessage("ورود موفق بود.");await refreshCloudWallet();
- }catch(e){
-  cloudMessage("ورود ناموفق: "+(e.message||"ایمیل یا رمز را بررسی کن."));
- }finally{
-  $("cloudSignIn").disabled=false;
- }
-}
-
-async function finishCloudSession(){
- if(cloudStartPromise)await cloudStartPromise;
- if(!cloudClient||!cloudUser||!cloudSessionId)return;
- const id=cloudSessionId,taps=cloudTaps;
- cloudSessionId=null;cloudTaps=0;
- try{
-  const {data,error}=await cloudClient.rpc("azn_finish_game_session",{p_session_id:id,p_taps:taps});
-  if(error)throw error;
-  cloudMessage("جلسه بازی بررسی شد. نتیجه تأییدشده: "+fa(data));
- }catch(e){
-  cloudMessage("نتیجه جلسه بازی تأیید نشد: "+(e.message||""));
- }
-}
-
-async function startCloudSession(){
- if(!cloudClient||!cloudUser||cloudSessionId||cloudStartPromise)return;
- cloudStartPromise=(async()=>{
-  try{
-   const {data,error}=await cloudClient.rpc("azn_start_game_session");
-   if(error)throw error;
-   cloudSessionId=String(data||"");
-   if(!cloudSessionId)throw new Error("شناسه جلسه دریافت نشد.");
-   cloudTaps=pendingCloudTaps;pendingCloudTaps=0;
-  }catch(e){
-   pendingCloudTaps=0;
-   cloudMessage("جلسه آنلاین شروع نشد؛ بازی محلی فعال است. "+(e.message||""));
-  }finally{
-   cloudStartPromise=null;
-  }
- })();
- await cloudStartPromise;
-}
-
-function recordCloudTap(){
- if(!cloudClient||!cloudUser)return;
- if(cloudSessionId){cloudTaps=Math.min(5000,cloudTaps+1);return}
- pendingCloudTaps=Math.min(5000,pendingCloudTaps+1);
- if(!cloudStartPromise)startCloudSession();
-}
-
-async function cloudSignOut(){
- await finishCloudSession();
- const {error}=await cloudClient.auth.signOut();
- if(error){cloudMessage("خروج ناموفق: "+error.message);return}
- setCloudUser(null);cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0;
- cloudMessage("از حساب خارج شدی.");
-}
-
-async function submitPayout(){
- if(!cloudUser){payoutMessage("ابتدا وارد حساب کاربری شو.");return}
- const method=$("payoutMethod").value,amount=Number($("payoutAmount").value),reference=$("payoutReference").value.trim();
- if(!Number.isSafeInteger(amount)||amount<=0){payoutMessage("مبلغ صحیح و مثبت را به ریال وارد کن.");return}
- if(reference.length<8||reference.length>200){payoutMessage("توضیح باید بین ۸ تا ۲۰۰ نویسه باشد.");return}
- if(cloudBusy)return;
- cloudBusy=true;$("payoutSubmit").disabled=true;
- try{
-  const {data,error}=await cloudClient.rpc("azn_request_payout",{p_method:method,p_amount_minor:amount,p_provider_reference:reference});
-  if(error)throw error;
-  $("payoutAmount").value="";$("payoutReference").value="";
-  payoutMessage("درخواست ثبت شد. شناسه: "+String(data||"—")+"؛ این ثبت به معنی پرداخت وجه نیست.");
-  await refreshCloudWallet();
- }catch(e){
-  payoutMessage("ثبت درخواست ناموفق: "+(e.message||"موجودی یا دسترسی حساب را بررسی کن."));
- }finally{
-  cloudBusy=false;$("payoutSubmit").disabled=false;
- }
-}
-
-async function loadSupabaseSDK(){
- let sdk=window.supabase;
- if(sdk&&typeof sdk.createClient==="function")return sdk;
- const urls=[
-  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
-  "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
- ];
- for(const url of urls){
-  try{
-   await new Promise((resolve,reject)=>{
-    const script=document.createElement("script");
-    script.src=url;script.async=true;
-    script.onload=resolve;
-    script.onerror=()=>reject(new Error("بارگذاری ناموفق"));
-    document.head.appendChild(script);
-   });
-   sdk=window.supabase;
-   if(sdk&&typeof sdk.createClient==="function")return sdk;
-  }catch(e){}
- }
- throw new Error("کتابخانه Supabase از هیچ‌کدام از منابع بارگذاری نشد؛ اینترنت گوشی را بررسی کن.");
-}
-
-async function initializeCloud(){
- try{
-  const sdk=await loadSupabaseSDK();
-  cloudClient=sdk.createClient(
-   SUPABASE_URL,
-   SUPABASE_KEY,
-   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}
-  );
-  if(!cloudClient||!cloudClient.auth)throw new Error("ساخت اتصال Supabase ناموفق بود.");
-  cloudMessage("اتصال آماده است؛ برای استفاده از کیف پول وارد حساب شو.");
-  cloudClient.auth.onAuthStateChange((event,session)=>{
-   setCloudUser(session&&session.user?session.user:null);
-   if(session&&session.user)Promise.resolve().then(refreshCloudWallet);
-   if(event==="SIGNED_OUT"){
-    cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0;
-   }
-  });
-  const {data,error}=await cloudClient.auth.getSession();
-  if(error)throw error;
-  const user=data&&data.session?data.session.user:null;
-  setCloudUser(user||null);
-  if(user)await refreshCloudWallet();
- }catch(e){
-  cloudClient=null;
-  cloudMessage("اتصال برقرار نشد: "+(e.message||"اینترنت یا کتابخانه اتصال را بررسی کن."));
- }
-}
-
-initializeCloud();
-$("cloudSignUp").addEventListener("click",cloudSignUp);
-$("cloudSignIn").addEventListener("click",cloudSignIn);
-$("cloudSignOut").addEventListener("click",cloudSignOut);
-$("cloudRefresh").addEventListener("click",refreshCloudWallet);
-$("payoutSubmit").addEventListener("click",submitPayout);
-document.addEventListener("visibilitychange",()=>{
- if(document.visibilityState==="hidden")finishCloudSession();
-});
-window.addEventListener("pagehide",()=>{finishCloudSession()});
-
-/* بازی اصلی */
 $("tap").addEventListener("click",()=>{
- recordCloudTap();
  if(g.day!==today()){
-  g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0;
+  g.day=today();g.dailyTaps=0;g.missionClaimed=false;
  }
  const now=Date.now();
  g.combo=(now-(g.lastTapAt||0)<=1100)?Math.min(30,g.combo+1):1;
@@ -750,14 +403,122 @@ $("tap").addEventListener("click",()=>{
  if(challengeActive){challengeTaps++;updateChallenge()}
 });
 
-/* دفتر درآمد ناشر */
+$("challengeBtn").addEventListener("click",()=>{
+ if(challengeActive)return;
+ challengeActive=true;challengeTime=30;challengeTaps=0;
+ $("challengeBtn").disabled=true;
+ $("challengeBtn").textContent="چالش در حال اجراست";
+ updateChallenge();
+ timer=setInterval(()=>{
+  challengeTime--;updateChallenge();
+  if(challengeTime<=0)finishChallenge();
+ },1000);
+});
+
+render();
+
+/* اتصال تبلیغات بومی تپسل */
+let completedViews=0,lastNativeRewardCount=0;
+
+try{
+ if(window.AndroidAds&&typeof AndroidAds.getCompletedAdsCount==="function"){
+  lastNativeRewardCount=Number(AndroidAds.getCompletedAdsCount())||0;
+  completedViews=lastNativeRewardCount;
+ }
+}catch(e){}
+
+function views(){
+ $("views").textContent=fa(completedViews);
+ $("homeViews").textContent=fa(completedViews);
+ $("homeCompleted").textContent=fa(completedViews);
+}
+views();
+
+function adStatus(t){
+ $("adStatus").textContent=String(t||"");
+ $("homeAdStatus").textContent=String(t||"");
+}
+
+function enableAd(){
+ $("watchButton").disabled=false;
+}
+
+window.onNativeAdStatus=m=>{
+ adStatus(m);
+ $("homeAdConnection").textContent="متصل";
+ enableAd();
+};
+
+window.onRewardedAdReady=()=>{
+ adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");
+ $("homeAdConnection").textContent="متصل";
+ enableAd();
+};
+
+window.onRewardedAdNotReady=()=>{
+ adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");
+ $("homeAdConnection").textContent="آماده نیست";
+ enableAd();
+};
+
+window.onRewardedAdOpened=()=>adStatus("تبلیغ در حال نمایش است...");
+
+window.onRewardedAdClosed=()=>{
+ adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");
+ enableAd();
+};
+
+window.onRewardedAdError=()=>{
+ adStatus("خطا در دریافت یا نمایش تبلیغ.");
+ $("homeAdConnection").textContent="خطا";
+ enableAd();
+};
+
+window.onCompletedAdsCount=count=>{
+ completedViews=Math.max(0,Number(count)||0);
+ views();
+};
+
+window.onAdRewarded=count=>{
+ let c=Math.max(0,Number(count)||0);
+ completedViews=c;views();
+ if(c>lastNativeRewardCount){
+  lastNativeRewardCount=c;
+  addPoints(10,"پاداش تبلیغ تأییدشده تپسل");
+ }
+ adStatus("پاداش توسط SDK تپسل تأیید شد.");
+ enableAd();
+};
+
+$("homeWatchButton").addEventListener("click",()=>{
+ showPage("ads");
+ $("watchButton").click();
+});
+
+$("watchButton").addEventListener("click",()=>{
+ if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){
+  adStatus("اتصال اندروید به تبلیغات برقرار نیست.");
+  $("homeAdConnection").textContent="قطع";
+  return;
+ }
+ $("watchButton").disabled=true;
+ adStatus("در حال درخواست تبلیغ...");
+ try{AndroidAds.showRewardedAd()}
+ catch(e){
+  adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");
+  enableAd();
+ }
+});
+
+/* دفتر ثبت دستی درآمد ناشر */
 let records=[];
 try{
- const x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");
+ let x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");
  if(Array.isArray(x))records=x;
 }catch(e){}
 
 $("date").value=today();
+
 const money=n=>new Intl.NumberFormat("fa-IR").format(Math.round(Number(n)||0))+" تومان";
 
 function persist(){
@@ -765,222 +526,109 @@ function persist(){
   localStorage.setItem(REV_KEY,JSON.stringify(records));
   return true;
  }catch(e){
-  $("bookMessage").textContent="ذخیره اطلاعات ناموفق بود.";
+  $("bookMessage").textContent="ذخیره‌سازی ناموفق بود.";
   return false;
  }
 }
 
-function renderRecords(){
- let total=0,pending=0;
- $("records").textContent="";
- records.forEach((r,index)=>{
-  const amount=Math.max(0,Number(r.amount)||0);
-  total+=amount;
-  if(r.status==="pending")pending+=amount;
-  const row=document.createElement("div");
-  row.className="row";
-  const info=document.createElement("span");
-  info.textContent=(r.date||"بدون تاریخ")+" | "+money(amount)+" | "+(r.status==="paid"?"تسویه‌شده":"در انتظار تسویه");
-  const del=document.createElement("button");
-  del.textContent="حذف";
-  del.addEventListener("click",()=>{
-   if(!confirm("این سابقه حذف شود؟"))return;
-   const old=records.slice();
-   records.splice(index,1);
-   if(!persist()){records=old;return}
-   renderRecords();
-  });
-  row.append(info,del);
-  $("records").append(row);
- });
+function renderBook(){
+ let total=records.reduce((a,r)=>a+Number(r.amount||0),0);
+ let pending=records.filter(r=>r.status==="pending").reduce((a,r)=>a+Number(r.amount||0),0);
  $("total").textContent=money(total);
  $("pending").textContent=money(pending);
- if(records.length===0)$("records").textContent="هنوز سابقه‌ای ثبت نشده است.";
-}
-
-$("saveRevenue").addEventListener("click",()=>{
- const amount=Number($("amount").value),date=$("date").value,status=$("payment").value;
- if(!Number.isFinite(amount)||amount<=0){
-  $("bookMessage").textContent="لطفاً مبلغ معتبر وارد کن.";return;
- }
- if(!date){$("bookMessage").textContent="لطفاً تاریخ را انتخاب کن.";return}
- const normalizedAmount=Math.round(amount);
- const duplicate=records.some(r=>
-  Number(r.amount)===normalizedAmount&&r.date===date&&r.status===status
- );
- if(duplicate){
-  $("bookMessage").textContent="رکوردی با همین مبلغ، تاریخ و وضعیت قبلاً ثبت شده است؛ برای جلوگیری از ثبت تکراری، مورد جدید اضافه نشد.";
+ $("records").textContent="";
+ if(!records.length){
+  $("records").textContent="هنوز درآمدی ثبت نشده است.";
   return;
  }
- records.push({amount:normalizedAmount,date,status});
- if(!persist()){records.pop();return}
- renderRecords();
- $("amount").value="";
- $("bookMessage").textContent="درآمد با موفقیت در همین دستگاه ثبت شد.";
-});
-
-function makeBackup(){
- return JSON.stringify({version:1,game:g,revenue:records});
-}
-
-$("backup").addEventListener("click",()=>{
- $("backupText").value=makeBackup();
- $("bookMessage").textContent="پشتیبان آماده شد؛ متن را در جای امن نگه دار.";
-});
-
-$("copyBackup").addEventListener("click",async()=>{
- const data=makeBackup();
- $("backupText").value=data;
- try{
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-   await navigator.clipboard.writeText(data);
-   $("bookMessage").textContent="متن پشتیبان کپی شد.";
-  }else{
-   $("backupText").focus();$("backupText").select();
-   $("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن.";
-  }
- }catch(e){
-  $("backupText").focus();$("backupText").select();
-  $("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن.";
- }
-});
-
-$("restore").addEventListener("click",()=>{
- try{
-  const data=JSON.parse($("backupText").value);
-  if(!data||data.version!==1||!data.game||!Array.isArray(data.revenue))throw new Error("invalid backup");
-  if(!confirm("اطلاعات فعلی با اطلاعات پشتیبان جایگزین شود؟"))return;
-
-  const previousGame=g,previousRecords=records;
-  const restored={...g,...data.game};
-
-  restored.achievements=Array.isArray(restored.achievements)?restored.achievements:[];
-  restored.claimedMilestones=Array.isArray(restored.claimedMilestones)?restored.claimedMilestones:[];
-  restored.score=Math.max(0,Number(restored.score)||0);
-  restored.taps=Math.max(0,Number(restored.taps)||0);
-  restored.best=Math.max(restored.score,Number(restored.best)||0);
-  restored.dailyTaps=Math.max(0,Number(restored.dailyTaps)||0);
-
-  /* شمارنده پاداش در برابر بازگردانی پشتیبان به عقب برنمی‌گردد */
-  restored.rewardedCount=Math.min(
-   completedViews,
-   Math.max(
-    previousGame.rewardedCount||0,
-    lastNativeRewardCount,
-    Math.floor(Number(restored.rewardedCount)||0)
-   )
-  );
-
-  g=restored;
-  records=data.revenue.filter(r=>r&&Number.isFinite(Number(r.amount))&&Number(r.amount)>0)
-   .map(r=>({amount:Math.round(Number(r.amount)),date:String(r.date||today()),status:r.status==="paid"?"paid":"pending"}));
-
-  if(!save()||!persist()){
-   g=previousGame;records=previousRecords;
-   save();persist();
-   $("bookMessage").textContent="ذخیره بازیابی ناموفق بود؛ اطلاعات قبلی حفظ شد.";
-   return;
-  }
-
-  try{
-   if(g.rewardedCount>lastNativeRewardCount&&g.rewardedCount<=completedViews&&window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
-    AndroidAds.acknowledgeReward(g.rewardedCount);
-    lastNativeRewardCount=g.rewardedCount;
+ records.slice().reverse().forEach(r=>{
+  let ix=records.indexOf(r);
+  let line=document.createElement("div");
+  line.className="row";
+  let span=document.createElement("span");
+  span.textContent=r.date+" | "+money(r.amount)+" | "+(r.status==="paid"?"تسویه‌شده":"در انتظار تسویه");
+  let b=document.createElement("button");
+  b.textContent="حذف";
+  b.onclick=()=>{
+   if(confirm("این رکورد حذف شود؟")){
+    let old=records.slice();
+    records.splice(ix,1);
+    if(persist())renderBook();
+    else records=old;
    }
-  }catch(e){}
-
-  render();renderRecords();
-  $("bookMessage").textContent="بازیابی اطلاعات با موفقیت انجام شد.";
- }catch(e){
-  $("bookMessage").textContent="فایل پشتیبان معتبر نیست یا قابل خواندن نیست.";
- }
-});
-
-render();
-renderRecords();
-})();
-</script>
-
-<script>
-(function(){
-const main=document.querySelector("main.wrap");
-if(!main)return;
-
-const cards=[...main.querySelectorAll(":scope > .card, :scope > section.card")];
-const findCard=(prefix)=>{
-return cards.find(c=>{
-const h=c.querySelector("h3");
-return h&&h.textContent.trim().startsWith(prefix);
-});
-};
-
-const game=main.querySelector(".game");
-const badges=findCard("🏅");
-const mission=findCard("🎯");
-const ad=findCard("🎁 پاداش تبلیغ");
-const publisher=findCard("💰");
-const milestones=findCard("🎁 جوایز");
-const revenue=findCard("📒");
-const wallet=main.querySelector("#cloudAccount");
-const banner=cards.find(c=>c.classList.contains("note"));
-
-const groups={
-home:[game],
-tasks:[badges,mission,milestones],
-earn:[ad,publisher,revenue,banner],
-wallet:[wallet]
-};
-
-Object.entries(groups).forEach(([group,items])=>{
-items.filter(Boolean).forEach(card=>{
-card.classList.add("azn-panel");
-card.dataset.aznPanel=group;
-});
-});
-
-const shortcuts=document.createElement("div");
-shortcuts.className="azn-shortcuts";
-shortcuts.innerHTML=
-'<button type="button" data-go="tasks"><span>🏆</span>جوایز و مأموریت</button>'+
-'<button type="button" data-go="earn"><span>🎁</span>تبلیغ و درآمد</button>'+
-'<button type="button" data-go="wallet"><span>💳</span>کیف پول</button>';
-
-const header=main.querySelector(".head");
-header.after(shortcuts);
-
-const nav=document.createElement("nav");
-nav.className="azn-nav";
-nav.innerHTML=
-'<button data-tab="home"><span>⌂</span><small>خانه</small></button>'+
-'<button data-tab="tasks"><span>🏆</span><small>جوایز</small></button>'+
-'<button data-tab="earn"><span>🎁</span><small>درآمد</small></button>'+
-'<button data-tab="wallet"><span>👤</span><small>حساب</small></button>';
-
-main.append(nav);
-
-function showPage(name){
-Object.entries(groups).forEach(([group,items])=>{
-items.filter(Boolean).forEach(card=>{
-card.classList.toggle("active",group===name);
-card.scrollTop=0;
-});
-});
-shortcuts.hidden=name!=="home";
-nav.querySelectorAll("[data-tab]").forEach(button=>{
-button.classList.toggle("selected",button.dataset.tab===name);
-});
+  };
+  line.append(span,b);
+  $("records").append(line);
+ });
 }
 
-nav.querySelectorAll("[data-tab]").forEach(button=>{
-button.addEventListener("click",()=>showPage(button.dataset.tab));
-});
-shortcuts.querySelectorAll("[data-go]").forEach(button=>{
-button.addEventListener("click",()=>showPage(button.dataset.go));
-});
+$("saveRevenue").onclick=()=>{
+ let amount=Number($("amount").value);
+ let date=$("date").value;
+ let status=$("payment").value;
+ if(!Number.isFinite(amount)||amount<=0||!date){
+  $("bookMessage").textContent="مبلغ و تاریخ معتبر وارد کن.";
+  return;
+ }
+ records.push({amount:Math.round(amount),date,status});
+ if(persist()){
+  $("amount").value="";
+  $("bookMessage").textContent="ثبت شد.";
+  renderBook();
+ }else records.pop();
+};
 
+function backupData(){
+ return JSON.stringify({
+  app:"A.Z.N Earn",
+  type:"publisher-revenue-manual-backup",
+  version:1,
+  createdAt:new Date().toISOString(),
+  records
+ },null,2);
+}
+
+$("backup").onclick=()=>{
+ $("backupText").value=backupData();
+ $("bookMessage").textContent="پشتیبان ساخته شد؛ متن را در جای امن نگه دار.";
+};
+
+$("copyBackup").onclick=async()=>{
+ let v=backupData();
+ $("backupText").value=v;
+ try{
+  await navigator.clipboard.writeText(v);
+  $("bookMessage").textContent="پشتیبان کپی شد.";
+ }catch(e){
+  $("backupText").focus();
+  $("backupText").select();
+  $("bookMessage").textContent="متن انتخاب شد؛ کپی کن.";
+ }
+};
+
+$("restore").onclick=()=>{
+ let d;
+ try{d=JSON.parse($("backupText").value)}
+ catch(e){
+  $("bookMessage").textContent="متن پشتیبان معتبر نیست.";
+  return;
+ }
+ if(!d||d.app!=="A.Z.N Earn"||d.type!=="publisher-revenue-manual-backup"||!Array.isArray(d.records)||!d.records.every(r=>r&&Number(r.amount)>0&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&(r.status==="paid"||r.status==="pending"))){
+  $("bookMessage").textContent="ساختار پشتیبان معتبر نیست.";
+  return;
+ }
+ if(!confirm("سوابق فعلی با پشتیبان جایگزین شوند؟"))return;
+ let old=records;
+ records=d.records.map(r=>({amount:Number(r.amount),date:r.date,status:r.status}));
+ if(persist()){
+  $("bookMessage").textContent="بازیابی انجام شد.";
+  renderBook();
+ }else records=old;
+};
+
+renderBook();
 showPage("home");
 })();
 </script>
 </body>
 </html>
-
