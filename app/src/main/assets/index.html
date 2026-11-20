@@ -210,110 +210,274 @@ const fa=n=>new Intl.NumberFormat("fa-IR").format(Math.max(0,Math.floor(Number(n
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 const GAME_KEY="azn_play_game_v1",REV_KEY="azn_earn_publisher_revenue_v1";
 
-let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[],claimedMilestones:[]};
-try{const old=JSON.parse(localStorage.getItem(GAME_KEY)||"{}");if(old&&typeof old==="object")g={...g,...old}}catch(e){}
+let g={score:0,taps:0,best:0,day:today(),dailyTaps:0,missionClaimed:false,combo:0,bestCombo:0,lastTapAt:0,challengeBest:0,achievements:[],claimedMilestones:[],rewardedCount:0};
+
+try{
+ const old=JSON.parse(localStorage.getItem(GAME_KEY)||"{}");
+ if(old&&typeof old==="object"&&!Array.isArray(old))g={...g,...old};
+}catch(e){}
+
 g.achievements=Array.isArray(g.achievements)?g.achievements:[];
 g.claimedMilestones=Array.isArray(g.claimedMilestones)?g.claimedMilestones:[];
-g.score=Math.max(0,Number(g.score)||0);g.taps=Math.max(0,Number(g.taps)||0);g.best=Math.max(g.score,Number(g.best)||0);g.dailyTaps=Math.max(0,Number(g.dailyTaps)||0);
-if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
-const save=()=>{try{localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(e){$("gameStatus").textContent="ذخیره‌سازی روی دستگاه ممکن نشد."}};
+g.score=Math.max(0,Number(g.score)||0);
+g.taps=Math.max(0,Number(g.taps)||0);
+g.best=Math.max(g.score,Number(g.best)||0);
+g.dailyTaps=Math.max(0,Number(g.dailyTaps)||0);
+g.rewardedCount=Math.max(0,Math.floor(Number(g.rewardedCount)||0));
+
+if(g.day!==today()){
+ g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0;
+}
+
+const save=()=>{
+ try{
+  localStorage.setItem(GAME_KEY,JSON.stringify(g));
+  return true;
+ }catch(e){
+  $("gameStatus").textContent="ذخیره‌سازی روی دستگاه ناموفق بود؛ فضای ذخیره‌سازی را بررسی کن.";
+  return false;
+ }
+};
 
 const defs=[["first","bFirst","🌱 شروع‌کننده"],["hundred","bHundred","💯 صدتایی"],["combo","bCombo","⚡ کمبو استاد"],["level","bLevel","🚀 پیشرو"],["challenge","bChallenge","⏱️ چالش‌گر"],["daily","bDaily","🎯 متعهد"]];
-function unlock(k){if(g.achievements.includes(k))return;g.achievements.push(k);save();const d=defs.find(x=>x[0]===k);if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2]}
-function renderBadges(){defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])))}
+function unlock(k){
+ if(g.achievements.includes(k))return;
+ g.achievements.push(k);save();
+ const d=defs.find(x=>x[0]===k);
+ if(d)$("badgeStatus").textContent="🎉 نشان جدید آزاد شد: "+d[2];
+}
+function renderBadges(){
+ defs.forEach(d=>$(d[1]).classList.toggle("on",g.achievements.includes(d[0])));
+}
 
-const milestoneDefs=[{score:100,title:"جنگجوی تازه‌کار",icon:"🌱",reward:10},{score:200,title:"بازیکن پرتلاش",icon:"⚡",reward:20},{score:300,title:"استاد امتیازگیری",icon:"🏆",reward:30},{score:400,title:"قهرمان A.Z.N",icon:"👑",reward:50}];
+const milestoneDefs=[
+ {score:100,title:"جنگجوی تازه‌کار",icon:"🌱",reward:10},
+ {score:200,title:"بازیکن پرتلاش",icon:"⚡",reward:20},
+ {score:300,title:"استاد امتیازگیری",icon:"🏆",reward:30},
+ {score:400,title:"قهرمان A.Z.N",icon:"👑",reward:50}
+];
+
 function renderMilestones(){
- const list=$("milestoneList");list.textContent="";let unlocked=0,claimed=0;
+ const list=$("milestoneList");list.textContent="";
+ let unlocked=0,claimed=0;
  milestoneDefs.forEach(m=>{
   const done=g.score>=m.score,received=g.claimedMilestones.includes(m.score);
-  if(done)unlocked++;if(received)claimed++;
-  const item=document.createElement("div");item.className="milestone"+(done?" unlocked":"");
-  const info=document.createElement("div"),title=document.createElement("b"),detail=document.createElement("small");
-  title.textContent=m.icon+" "+m.title;detail.textContent=fa(m.score)+" امتیاز لازم | جایزه: +"+fa(m.reward);info.append(title,detail);
+  if(done)unlocked++;
+  if(received)claimed++;
+  const item=document.createElement("div");
+  item.className="milestone"+(done?" unlocked":"");
+  const info=document.createElement("div");
+  const title=document.createElement("b");
+  const detail=document.createElement("small");
+  title.textContent=m.icon+" "+m.title;
+  detail.textContent=fa(m.score)+" امتیاز لازم | جایزه: +"+fa(m.reward);
+  info.append(title,detail);
   const action=document.createElement("div");
-  if(received){const state=document.createElement("span");state.className="state";state.textContent="دریافت شد ✓";action.append(state)}
-  else if(done){const btn=document.createElement("button");btn.textContent="🎁 دریافت جایزه";btn.addEventListener("click",()=>claimMilestone(m));action.append(btn)}
-  else{const state=document.createElement("span");state.className="state";state.textContent="قفل 🔒";action.append(state)}
+  if(received){
+   const state=document.createElement("span");
+   state.className="state";state.textContent="دریافت شد ✓";action.append(state);
+  }else if(done){
+   const btn=document.createElement("button");
+   btn.textContent="🎁 دریافت جایزه";
+   btn.addEventListener("click",()=>claimMilestone(m));
+   action.append(btn);
+  }else{
+   const state=document.createElement("span");
+   state.className="state";state.textContent="قفل 🔒";action.append(state);
+  }
   item.append(info,action);list.append(item);
  });
  $("milestoneStatus").textContent="آزادشده: "+fa(unlocked)+" از ۴ | دریافت‌شده: "+fa(claimed)+" از ۴";
 }
+
 function claimMilestone(m){
  if(g.score<m.score||g.claimedMilestones.includes(m.score))return;
- g.claimedMilestones.push(m.score);g.score+=m.reward;g.best=Math.max(g.best,g.score);save();render();
+ const oldScore=g.score;
+ g.claimedMilestones.push(m.score);
+ g.score+=m.reward;
+ g.best=Math.max(g.best,g.score);
+ if(!save()){
+  g.claimedMilestones=g.claimedMilestones.filter(x=>x!==m.score);
+  g.score=oldScore;
+  return;
+ }
+ render();
  $("milestoneStatus").textContent="🎉 جایزه "+m.title+" دریافت شد! +"+fa(m.reward);
  $("gameStatus").textContent="🎁 جایزه پیشرفت به امتیازت اضافه شد.";
 }
+
 function render(){
  const lv=Math.floor(g.score/100)+1,p=g.score%100;
- $("score").textContent=fa(g.score);$("taps").textContent=fa(g.taps);$("best").textContent=fa(g.best);$("level").textContent=fa(lv);
- $("levelText").textContent=fa(p)+" از ۱۰۰";$("levelBar").style.width=p+"%";
+ $("score").textContent=fa(g.score);
+ $("taps").textContent=fa(g.taps);
+ $("best").textContent=fa(g.best);
+ $("level").textContent=fa(lv);
+ $("levelText").textContent=fa(p)+" از ۱۰۰";
+ $("levelBar").style.width=p+"%";
  $("missionText").textContent="پیشرفت امروز: "+fa(g.dailyTaps)+" از ۱۰۰";
  $("missionBar").style.width=Math.min(100,g.dailyTaps)+"%";
  $("missionReward").textContent=g.missionClaimed?"تکمیل شد ✓":"+۲۵ امتیاز";
- $("combo").textContent="×"+fa(Math.max(1,g.combo));$("challengeBest").textContent=fa(g.challengeBest);
+ $("combo").textContent="×"+fa(Math.max(1,g.combo));
+ $("challengeBest").textContent=fa(g.challengeBest);
  renderBadges();renderMilestones();
 }
-function addPoints(n,msg){g.score+=n;g.best=Math.max(g.best,g.score);save();render();$("gameStatus").textContent=msg+"؛ "+fa(n)+" امتیاز اضافه شد."}
+
+function addPoints(n,msg){
+ const oldScore=g.score,oldBest=g.best;
+ g.score+=n;g.best=Math.max(g.best,g.score);
+ if(!save()){g.score=oldScore;g.best=oldBest;return false}
+ render();
+ $("gameStatus").textContent=msg+"؛ "+fa(n)+" امتیاز اضافه شد.";
+ return true;
+}
 
 let challengeActive=false,challengeTime=30,challengeTaps=0,timer=null;
-function updateChallenge(){$("challengeStatus").textContent="⏳ زمان: "+fa(challengeTime)+" ثانیه | ضربه‌ها: "+fa(challengeTaps)}
+function updateChallenge(){
+ $("challengeStatus").textContent="⏳ زمان: "+fa(challengeTime)+" ثانیه | ضربه‌ها: "+fa(challengeTaps);
+}
 function finishChallenge(){
- if(!challengeActive)return;challengeActive=false;clearInterval(timer);
- g.challengeBest=Math.max(g.challengeBest,challengeTaps);unlock("challenge");save();render();
+ if(!challengeActive)return;
+ challengeActive=false;clearInterval(timer);
+ g.challengeBest=Math.max(g.challengeBest,challengeTaps);
+ if(challengeTaps>0)unlock("challenge");
+ save();render();
  const bonus=challengeTaps>=30?20:challengeTaps>=15?10:0;
  if(bonus)addPoints(bonus,"جایزه چالش");
  $("challengeStatus").textContent="🏁 تمام شد! "+fa(challengeTaps)+" ضربه؛ "+(bonus?"جایزه "+fa(bonus)+" امتیازی گرفتی.":"برای جایزه بعدی حداقل ۱۵ ضربه بزن.");
- $("challengeBtn").disabled=false;$("challengeBtn").textContent="⏱ شروع دوباره چالش";
+ $("challengeBtn").disabled=false;
+ $("challengeBtn").textContent="⏱ شروع دوباره چالش";
 }
 $("challengeBtn").addEventListener("click",()=>{
- if(challengeActive)return;challengeActive=true;challengeTime=30;challengeTaps=0;
- $("challengeBtn").disabled=true;$("challengeBtn").textContent="چالش در حال اجراست";updateChallenge();
- timer=setInterval(()=>{challengeTime--;updateChallenge();if(challengeTime<=0)finishChallenge()},1000);
+ if(challengeActive)return;
+ challengeActive=true;challengeTime=30;challengeTaps=0;
+ $("challengeBtn").disabled=true;
+ $("challengeBtn").textContent="چالش در حال اجراست";
+ updateChallenge();
+ timer=setInterval(()=>{
+  challengeTime--;updateChallenge();
+  if(challengeTime<=0)finishChallenge();
+ },1000);
 });
 
-/* اتصال تبلیغات بومی تپسل */
+/* اتصال تبلیغات بومی تپسل و جلوگیری از پاداش تکراری */
 let completedViews=0,lastNativeRewardCount=0;
-try{if(window.AndroidAds){if(typeof AndroidAds.getCompletedAdsCount==="function")completedViews=Number(AndroidAds.getCompletedAdsCount())||0;if(typeof AndroidAds.getAcknowledgedRewardCount==="function")lastNativeRewardCount=Number(AndroidAds.getAcknowledgedRewardCount())||0}}catch(e){}
+
+try{
+ if(window.AndroidAds){
+  if(typeof AndroidAds.getCompletedAdsCount==="function")
+   completedViews=Math.max(0,Math.floor(Number(AndroidAds.getCompletedAdsCount())||0));
+  if(typeof AndroidAds.getAcknowledgedRewardCount==="function")
+   lastNativeRewardCount=Math.max(0,Math.floor(Number(AndroidAds.getAcknowledgedRewardCount())||0));
+ }
+}catch(e){}
+
+g.rewardedCount=Math.max(g.rewardedCount,lastNativeRewardCount);
+save();
+
+try{
+ if(g.rewardedCount>lastNativeRewardCount&&g.rewardedCount<=completedViews&&window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
+  AndroidAds.acknowledgeReward(g.rewardedCount);
+  lastNativeRewardCount=g.rewardedCount;
+ }
+}catch(e){}
+
 function views(){$("views").textContent=fa(completedViews)}
 views();
+
 function adStatus(t){$("adStatus").textContent=String(t||"")}
 function enableAd(){$("watchButton").disabled=false}
+
 window.onNativeAdStatus=m=>{adStatus(m);enableAd()};
 window.onRewardedAdReady=()=>{adStatus("تبلیغ آماده است؛ برای مشاهده بزن.");enableAd()};
 window.onRewardedAdNotReady=()=>{adStatus("تبلیغ هنوز آماده نیست؛ کمی بعد تلاش کن.");enableAd()};
 window.onRewardedAdOpened=()=>adStatus("تبلیغ در حال نمایش است...");
 window.onRewardedAdClosed=()=>{adStatus("تبلیغ بسته شد؛ پاداش فقط با تأیید تپسل داده می‌شود.");enableAd()};
 window.onRewardedAdError=()=>{adStatus("خطا در دریافت یا نمایش تبلیغ.");enableAd()};
-window.onCompletedAdsCount=count=>{completedViews=Math.max(0,Number(count)||0);views()};
-window.onAdRewarded=count=>{
- const c=Math.max(0,Number(count)||0);completedViews=c;views();
- if(c>lastNativeRewardCount){
-  const newRewards=c-lastNativeRewardCount;lastNativeRewardCount=c;
-  addPoints(newRewards*10,"پاداش تبلیغ تأییدشده تپسل");
-  try{if(window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function")AndroidAds.acknowledgeReward(c)}catch(e){}
- }
- adStatus("پاداش توسط SDK تپسل تأیید شد.");enableAd();
+
+window.onCompletedAdsCount=count=>{
+ const c=Math.max(0,Math.floor(Number(count)||0));
+ completedViews=Math.max(completedViews,c);
+ views();
 };
+
+window.onAdRewarded=count=>{
+ const c=Math.floor(Number(count));
+ if(!Number.isSafeInteger(c)||c<=0)return;
+
+ completedViews=Math.max(completedViews,c);
+ views();
+
+ const effective=Math.max(g.rewardedCount,lastNativeRewardCount);
+
+ if(c>effective){
+  const delta=c-effective;
+  const oldScore=g.score,oldBest=g.best,oldRewarded=g.rewardedCount;
+
+  g.rewardedCount=c;
+  g.score+=delta*10;
+  g.best=Math.max(g.best,g.score);
+
+  if(!save()){
+   g.rewardedCount=oldRewarded;
+   g.score=oldScore;
+   g.best=oldBest;
+   return;
+  }
+
+  lastNativeRewardCount=Math.max(lastNativeRewardCount,c);
+  render();
+  $("gameStatus").textContent="پاداش تبلیغ تأییدشده تپسل؛ "+fa(delta*10)+" امتیاز اضافه شد.";
+ }else{
+  lastNativeRewardCount=Math.max(lastNativeRewardCount,c);
+ }
+
+ try{
+  if(window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
+   const ack=Math.max(c,g.rewardedCount);
+   if(ack<=completedViews)AndroidAds.acknowledgeReward(ack);
+  }
+ }catch(e){}
+
+ adStatus("پاداش توسط SDK تپسل تأیید شد.");
+ enableAd();
+};
+
 $("watchButton").addEventListener("click",()=>{
- if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){adStatus("اتصال اندروید به تبلیغات برقرار نیست.");return}
- $("watchButton").disabled=true;adStatus("در حال درخواست تبلیغ...");
- try{AndroidAds.showRewardedAd()}catch(e){adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");enableAd()}
+ if(!window.AndroidAds||typeof AndroidAds.showRewardedAd!=="function"){
+  adStatus("اتصال اندروید به تبلیغات برقرار نیست.");
+  return;
+ }
+ $("watchButton").disabled=true;
+ adStatus("در حال درخواست تبلیغ...");
+ try{
+  AndroidAds.showRewardedAd();
+ }catch(e){
+  adStatus("اجرای تبلیغ با خطا روبه‌رو شد.");
+  enableAd();
+ }
 });
 
 /* Supabase: حساب، جلسات بازی و درخواست برداشت */
 const SUPABASE_URL="https://mzyhwknkfravyfgismmn.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16eWh3a25rZnJhdnlmZ2lzbW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0NzQ2MzYsImV4cCI6MjExMDA1MDYzNn0.mrOV_LwuhgPid7RA6Ho0CYwC5oZTblLWPD15mqjpAy0";
 let cloudClient=null,cloudUser=null,cloudSessionId=null,cloudTaps=0,pendingCloudTaps=0,cloudStartPromise=null,cloudBusy=false;
+
 function cloudMessage(t){$("cloudStatus").textContent=String(t||"")}
 function payoutMessage(t){$("payoutStatus").textContent=String(t||"")}
 function cloudMoney(n){return new Intl.NumberFormat("fa-IR").format(Math.max(0,Math.round(Number(n)||0)))+" ریال"}
+
 function setCloudUser(user){
- cloudUser=user||null;$("cloudAuthBox").hidden=!!cloudUser;$("cloudSignedBox").hidden=!cloudUser;
+ cloudUser=user||null;
+ $("cloudAuthBox").hidden=!!cloudUser;
+ $("cloudSignedBox").hidden=!cloudUser;
  $("cloudUserEmail").textContent=cloudUser?(cloudUser.email||"حساب کاربری فعال"):"";
- if(!cloudUser){$("cloudBalance").textContent="۰ ریال";$("cloudAvailable").textContent="۰ ریال";$("payoutHistory").textContent="برای مشاهده، وارد حساب شو."}
+ if(!cloudUser){
+  $("cloudBalance").textContent="۰ ریال";
+  $("cloudAvailable").textContent="۰ ریال";
+  $("payoutHistory").textContent="برای مشاهده، وارد حساب شو.";
+ }
 }
+
 async function refreshCloudWallet(){
  if(!cloudClient||!cloudUser)return;
  $("cloudRefresh").disabled=true;
@@ -322,27 +486,35 @@ async function refreshCloudWallet(){
    cloudClient.from("azn_wallet_transactions").select("direction,amount_minor,currency,created_at,note,source").eq("user_id",cloudUser.id).eq("currency","IRR").order("created_at",{ascending:false}).limit(500),
    cloudClient.from("azn_payout_requests").select("id,method,amount_minor,currency,status,requested_at,provider_reference").eq("user_id",cloudUser.id).eq("currency","IRR").order("requested_at",{ascending:false}).limit(50)
   ]);
-  if(tx.error)throw tx.error;if(req.error)throw req.error;
+  if(tx.error)throw tx.error;
+  if(req.error)throw req.error;
   let balance=0;
   (tx.data||[]).forEach(r=>{
    const amount=Number(r.amount_minor)||0,dir=String(r.direction||"").toLowerCase();
    if(["credit","in","income","deposit"].includes(dir))balance+=amount;
    else if(["debit","out","expense","withdrawal"].includes(dir))balance-=amount;
   });
-  let reserved=0;const history=$("payoutHistory");history.textContent="";
+  let reserved=0;
+  const history=$("payoutHistory");history.textContent="";
   const statusFa={pending:"در انتظار بررسی",reviewing:"در حال بررسی",approved:"تأیید شده",paid:"پرداخت شده",rejected:"رد شده"};
   (req.data||[]).forEach(r=>{
    if(["pending","reviewing","approved"].includes(String(r.status)))reserved+=Number(r.amount_minor)||0;
-   const row=document.createElement("div"),info=document.createElement("span");row.className="row";
+   const row=document.createElement("div"),info=document.createElement("span");
+   row.className="row";
    info.textContent=(r.method==="bank_card"?"کارت بانکی":"شارژ/کارت هدیه")+" | "+cloudMoney(r.amount_minor)+" | "+(statusFa[r.status]||r.status)+" | "+(r.requested_at?new Date(r.requested_at).toLocaleDateString("fa-IR"):"");
    row.append(info);history.append(row);
   });
   if(!(req.data||[]).length)history.textContent="هنوز درخواستی ثبت نشده است.";
-  $("cloudBalance").textContent=cloudMoney(balance);$("cloudAvailable").textContent=cloudMoney(Math.max(0,balance-reserved));
+  $("cloudBalance").textContent=cloudMoney(balance);
+  $("cloudAvailable").textContent=cloudMoney(Math.max(0,balance-reserved));
   payoutMessage("اطلاعات کیف پول به‌روزرسانی شد.");
- }catch(e){payoutMessage("خطا در دریافت کیف پول: "+(e.message||"دسترسی پایگاه داده را بررسی کن."))}
- finally{$("cloudRefresh").disabled=false}
+ }catch(e){
+  payoutMessage("خطا در دریافت کیف پول: "+(e.message||"دسترسی پایگاه داده را بررسی کن."));
+ }finally{
+  $("cloudRefresh").disabled=false;
+ }
 }
+
 async function cloudSignUp(){
  const email=$("cloudEmail").value.trim(),password=$("cloudPassword").value,name=$("cloudName").value.trim();
  if(!cloudClient){cloudMessage("اتصال Supabase آماده نیست.");return}
@@ -351,82 +523,113 @@ async function cloudSignUp(){
  try{
   const {data,error}=await cloudClient.auth.signUp({email,password,options:{data:{display_name:name}}});
   if(error)throw error;
-  if(data.session){setCloudUser(data.user);cloudMessage("حساب ساخته شد و وارد شدی.");await refreshCloudWallet()}
-  else cloudMessage("ثبت‌نام انجام شد. اگر تأیید ایمیل فعال است، ایمیل را تأیید کن و سپس وارد شو.");
- }catch(e){cloudMessage("ثبت‌نام ناموفق: "+(e.message||"خطای ناشناخته"))}
- finally{$("cloudSignUp").disabled=false}
+  if(data.session){
+   setCloudUser(data.user);cloudMessage("حساب ساخته شد و وارد شدی.");await refreshCloudWallet();
+  }else{
+   cloudMessage("ثبت‌نام انجام شد. اگر تأیید ایمیل فعال است، ایمیل را تأیید کن و سپس وارد شو.");
+  }
+ }catch(e){
+  cloudMessage("ثبت‌نام ناموفق: "+(e.message||"خطای ناشناخته"));
+ }finally{
+  $("cloudSignUp").disabled=false;
+ }
 }
+
 async function cloudSignIn(){
  const email=$("cloudEmail").value.trim(),password=$("cloudPassword").value;
  if(!email||!password){cloudMessage("ایمیل و رمز عبور را وارد کن.");return}
  $("cloudSignIn").disabled=true;
  try{
   const {data,error}=await cloudClient.auth.signInWithPassword({email,password});
-  if(error)throw error;setCloudUser(data.user);cloudMessage("ورود موفق بود.");await refreshCloudWallet();
- }catch(e){cloudMessage("ورود ناموفق: "+(e.message||"ایمیل یا رمز را بررسی کن."))}
- finally{$("cloudSignIn").disabled=false}
+  if(error)throw error;
+  setCloudUser(data.user);cloudMessage("ورود موفق بود.");await refreshCloudWallet();
+ }catch(e){
+  cloudMessage("ورود ناموفق: "+(e.message||"ایمیل یا رمز را بررسی کن."));
+ }finally{
+  $("cloudSignIn").disabled=false;
+ }
 }
+
 async function finishCloudSession(){
  if(cloudStartPromise)await cloudStartPromise;
  if(!cloudClient||!cloudUser||!cloudSessionId)return;
- const id=cloudSessionId,taps=cloudTaps;cloudSessionId=null;cloudTaps=0;
+ const id=cloudSessionId,taps=cloudTaps;
+ cloudSessionId=null;cloudTaps=0;
  try{
   const {data,error}=await cloudClient.rpc("azn_finish_game_session",{p_session_id:id,p_taps:taps});
-  if(error)throw error;cloudMessage("جلسه بازی بررسی شد. نتیجه تأییدشده: "+fa(data));
- }catch(e){cloudMessage("نتیجه جلسه بازی تأیید نشد: "+(e.message||""))}
+  if(error)throw error;
+  cloudMessage("جلسه بازی بررسی شد. نتیجه تأییدشده: "+fa(data));
+ }catch(e){
+  cloudMessage("نتیجه جلسه بازی تأیید نشد: "+(e.message||""));
+ }
 }
+
 async function startCloudSession(){
  if(!cloudClient||!cloudUser||cloudSessionId||cloudStartPromise)return;
  cloudStartPromise=(async()=>{
   try{
-   const {data,error}=await cloudClient.rpc("azn_start_game_session");if(error)throw error;
-   cloudSessionId=String(data||"");if(!cloudSessionId)throw new Error("شناسه جلسه دریافت نشد.");
+   const {data,error}=await cloudClient.rpc("azn_start_game_session");
+   if(error)throw error;
+   cloudSessionId=String(data||"");
+   if(!cloudSessionId)throw new Error("شناسه جلسه دریافت نشد.");
    cloudTaps=pendingCloudTaps;pendingCloudTaps=0;
-  }catch(e){pendingCloudTaps=0;cloudMessage("جلسه آنلاین شروع نشد؛ بازی محلی فعال است. "+(e.message||""))}
-  finally{cloudStartPromise=null}
- })();await cloudStartPromise;
+  }catch(e){
+   pendingCloudTaps=0;
+   cloudMessage("جلسه آنلاین شروع نشد؛ بازی محلی فعال است. "+(e.message||""));
+  }finally{
+   cloudStartPromise=null;
+  }
+ })();
+ await cloudStartPromise;
 }
+
 function recordCloudTap(){
  if(!cloudClient||!cloudUser)return;
  if(cloudSessionId){cloudTaps=Math.min(5000,cloudTaps+1);return}
- pendingCloudTaps=Math.min(5000,pendingCloudTaps+1);if(!cloudStartPromise)startCloudSession();
+ pendingCloudTaps=Math.min(5000,pendingCloudTaps+1);
+ if(!cloudStartPromise)startCloudSession();
 }
+
 async function cloudSignOut(){
  await finishCloudSession();
  const {error}=await cloudClient.auth.signOut();
  if(error){cloudMessage("خروج ناموفق: "+error.message);return}
- setCloudUser(null);cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0;cloudMessage("از حساب خارج شدی.");
+ setCloudUser(null);cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0;
+ cloudMessage("از حساب خارج شدی.");
 }
+
 async function submitPayout(){
  if(!cloudUser){payoutMessage("ابتدا وارد حساب کاربری شو.");return}
  const method=$("payoutMethod").value,amount=Number($("payoutAmount").value),reference=$("payoutReference").value.trim();
  if(!Number.isSafeInteger(amount)||amount<=0){payoutMessage("مبلغ صحیح و مثبت را به ریال وارد کن.");return}
  if(reference.length<8||reference.length>200){payoutMessage("توضیح باید بین ۸ تا ۲۰۰ نویسه باشد.");return}
- if(cloudBusy)return;cloudBusy=true;$("payoutSubmit").disabled=true;
+ if(cloudBusy)return;
+ cloudBusy=true;$("payoutSubmit").disabled=true;
  try{
   const {data,error}=await cloudClient.rpc("azn_request_payout",{p_method:method,p_amount_minor:amount,p_provider_reference:reference});
   if(error)throw error;
   $("payoutAmount").value="";$("payoutReference").value="";
   payoutMessage("درخواست ثبت شد. شناسه: "+String(data||"—")+"؛ این ثبت به معنی پرداخت وجه نیست.");
   await refreshCloudWallet();
- }catch(e){payoutMessage("ثبت درخواست ناموفق: "+(e.message||"موجودی یا دسترسی حساب را بررسی کن."))}
- finally{cloudBusy=false;$("payoutSubmit").disabled=false}
+ }catch(e){
+  payoutMessage("ثبت درخواست ناموفق: "+(e.message||"موجودی یا دسترسی حساب را بررسی کن."));
+ }finally{
+  cloudBusy=false;$("payoutSubmit").disabled=false;
+ }
 }
+
 async function loadSupabaseSDK(){
  let sdk=window.supabase;
  if(sdk&&typeof sdk.createClient==="function")return sdk;
-
  const urls=[
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
   "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
  ];
-
  for(const url of urls){
   try{
    await new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src=url;
-    script.async=true;
+    script.src=url;script.async=true;
     script.onload=resolve;
     script.onerror=()=>reject(new Error("بارگذاری ناموفق"));
     document.head.appendChild(script);
@@ -441,128 +644,218 @@ async function loadSupabaseSDK(){
 async function initializeCloud(){
  try{
   const sdk=await loadSupabaseSDK();
-
   cloudClient=sdk.createClient(
    SUPABASE_URL,
    SUPABASE_KEY,
-   {
-    auth:{
-     persistSession:true,
-     autoRefreshToken:true,
-     detectSessionInUrl:false
-    }
-   }
+   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}
   );
-
-  if(!cloudClient||!cloudClient.auth){
-   throw new Error("ساخت اتصال Supabase ناموفق بود.");
-  }
-
+  if(!cloudClient||!cloudClient.auth)throw new Error("ساخت اتصال Supabase ناموفق بود.");
   cloudMessage("اتصال آماده است؛ برای استفاده از کیف پول وارد حساب شو.");
-
   cloudClient.auth.onAuthStateChange((event,session)=>{
    setCloudUser(session&&session.user?session.user:null);
-
-   if(session&&session.user){
-    Promise.resolve().then(refreshCloudWallet);
-   }
-
+   if(session&&session.user)Promise.resolve().then(refreshCloudWallet);
    if(event==="SIGNED_OUT"){
-    cloudSessionId=null;
-    cloudTaps=0;
-    pendingCloudTaps=0;
+    cloudSessionId=null;cloudTaps=0;pendingCloudTaps=0;
    }
   });
-
   const {data,error}=await cloudClient.auth.getSession();
   if(error)throw error;
-
   const user=data&&data.session?data.session.user:null;
   setCloudUser(user||null);
-
   if(user)await refreshCloudWallet();
-
  }catch(e){
   cloudClient=null;
   cloudMessage("اتصال برقرار نشد: "+(e.message||"اینترنت یا کتابخانه اتصال را بررسی کن."));
  }
 }
-initializeCloud();
 
+initializeCloud();
 $("cloudSignUp").addEventListener("click",cloudSignUp);
 $("cloudSignIn").addEventListener("click",cloudSignIn);
 $("cloudSignOut").addEventListener("click",cloudSignOut);
 $("cloudRefresh").addEventListener("click",refreshCloudWallet);
 $("payoutSubmit").addEventListener("click",submitPayout);
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")finishCloudSession()});
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="hidden")finishCloudSession();
+});
 window.addEventListener("pagehide",()=>{finishCloudSession()});
 
 /* بازی اصلی */
 $("tap").addEventListener("click",()=>{
  recordCloudTap();
- if(g.day!==today()){g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0}
- const now=Date.now();g.combo=(now-(g.lastTapAt||0)<=1100)?Math.min(30,g.combo+1):1;
- g.lastTapAt=now;g.bestCombo=Math.max(g.bestCombo,g.combo);
+ if(g.day!==today()){
+  g.day=today();g.dailyTaps=0;g.missionClaimed=false;g.combo=0;
+ }
+ const now=Date.now();
+ g.combo=(now-(g.lastTapAt||0)<=1100)?Math.min(30,g.combo+1):1;
+ g.lastTapAt=now;
+ g.bestCombo=Math.max(g.bestCombo,g.combo);
  const mult=g.combo>=10?3:g.combo>=5?2:1;
- g.taps++;g.dailyTaps++;g.score+=mult;g.best=Math.max(g.best,g.score);
+ g.taps++;g.dailyTaps++;g.score+=mult;
+ g.best=Math.max(g.best,g.score);
  $("comboHint").textContent=mult>1?"عالی! ضریب امتیاز فعال است":"سریع‌تر ضربه بزن تا ضریب بگیری";
- if(g.score>=10)unlock("first");if(g.score>=100)unlock("hundred");if(g.combo>=10)unlock("combo");if(Math.floor(g.score/100)+1>=5)unlock("level");
- if(g.dailyTaps>=100&&!g.missionClaimed){g.missionClaimed=true;g.score+=25;unlock("daily");$("gameStatus").textContent="🎉 مأموریت کامل شد؛ ۲۵ امتیاز جایزه گرفتی."}
- else $("gameStatus").textContent=mult>1?"🔥 کمبو ×"+fa(mult)+"! عالی پیش می‌ری.":"آفرین! برای کمبو سریع‌تر ضربه بزن.";
+ if(g.score>=10)unlock("first");
+ if(g.score>=100)unlock("hundred");
+ if(g.combo>=10)unlock("combo");
+ if(Math.floor(g.score/100)+1>=5)unlock("level");
+ if(g.dailyTaps>=100&&!g.missionClaimed){
+  g.missionClaimed=true;g.score+=25;unlock("daily");
+  $("gameStatus").textContent="🎉 مأموریت کامل شد؛ ۲۵ امتیاز جایزه گرفتی.";
+ }else{
+  $("gameStatus").textContent=mult>1?"🔥 کمبو ×"+fa(mult)+"! عالی پیش می‌ری.":"آفرین! برای کمبو سریع‌تر ضربه بزن.";
+ }
  save();render();
  if(challengeActive){challengeTaps++;updateChallenge()}
 });
 
 /* دفتر درآمد ناشر */
 let records=[];
-try{const x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");if(Array.isArray(x))records=x}catch(e){}
+try{
+ const x=JSON.parse(localStorage.getItem(REV_KEY)||"[]");
+ if(Array.isArray(x))records=x;
+}catch(e){}
+
 $("date").value=today();
 const money=n=>new Intl.NumberFormat("fa-IR").format(Math.round(Number(n)||0))+" تومان";
-function persist(){try{localStorage.setItem(REV_KEY,JSON.stringify(records))}catch(e){$("bookMessage").textContent="ذخیره اطلاعات ناموفق بود."}}
+
+function persist(){
+ try{
+  localStorage.setItem(REV_KEY,JSON.stringify(records));
+  return true;
+ }catch(e){
+  $("bookMessage").textContent="ذخیره اطلاعات ناموفق بود.";
+  return false;
+ }
+}
+
 function renderRecords(){
- let total=0,pending=0;$("records").textContent="";
+ let total=0,pending=0;
+ $("records").textContent="";
  records.forEach((r,index)=>{
-  const amount=Math.max(0,Number(r.amount)||0);total+=amount;if(r.status==="pending")pending+=amount;
-  const row=document.createElement("div");row.className="row";
-  const info=document.createElement("span");info.textContent=(r.date||"بدون تاریخ")+" | "+money(amount)+" | "+(r.status==="paid"?"تسویه‌شده":"در انتظار تسویه");
-  const del=document.createElement("button");del.textContent="حذف";
-  del.addEventListener("click",()=>{if(!confirm("این سابقه حذف شود؟"))return;records.splice(index,1);persist();renderRecords()});
-  row.append(info,del);$("records").append(row);
+  const amount=Math.max(0,Number(r.amount)||0);
+  total+=amount;
+  if(r.status==="pending")pending+=amount;
+  const row=document.createElement("div");
+  row.className="row";
+  const info=document.createElement("span");
+  info.textContent=(r.date||"بدون تاریخ")+" | "+money(amount)+" | "+(r.status==="paid"?"تسویه‌شده":"در انتظار تسویه");
+  const del=document.createElement("button");
+  del.textContent="حذف";
+  del.addEventListener("click",()=>{
+   if(!confirm("این سابقه حذف شود؟"))return;
+   const old=records.slice();
+   records.splice(index,1);
+   if(!persist()){records=old;return}
+   renderRecords();
+  });
+  row.append(info,del);
+  $("records").append(row);
  });
- $("total").textContent=money(total);$("pending").textContent=money(pending);
+ $("total").textContent=money(total);
+ $("pending").textContent=money(pending);
  if(records.length===0)$("records").textContent="هنوز سابقه‌ای ثبت نشده است.";
 }
+
 $("saveRevenue").addEventListener("click",()=>{
  const amount=Number($("amount").value),date=$("date").value,status=$("payment").value;
- if(!Number.isFinite(amount)||amount<=0){$("bookMessage").textContent="لطفاً مبلغ معتبر وارد کن.";return}
+ if(!Number.isFinite(amount)||amount<=0){
+  $("bookMessage").textContent="لطفاً مبلغ معتبر وارد کن.";return;
+ }
  if(!date){$("bookMessage").textContent="لطفاً تاریخ را انتخاب کن.";return}
- records.push({amount:Math.round(amount),date,status});persist();renderRecords();
- $("amount").value="";$("bookMessage").textContent="درآمد با موفقیت در همین دستگاه ثبت شد.";
+ const normalizedAmount=Math.round(amount);
+ const duplicate=records.some(r=>
+  Number(r.amount)===normalizedAmount&&r.date===date&&r.status===status
+ );
+ if(duplicate){
+  $("bookMessage").textContent="رکوردی با همین مبلغ، تاریخ و وضعیت قبلاً ثبت شده است؛ برای جلوگیری از ثبت تکراری، مورد جدید اضافه نشد.";
+  return;
+ }
+ records.push({amount:normalizedAmount,date,status});
+ if(!persist()){records.pop();return}
+ renderRecords();
+ $("amount").value="";
+ $("bookMessage").textContent="درآمد با موفقیت در همین دستگاه ثبت شد.";
 });
-function makeBackup(){return JSON.stringify({version:1,game:g,revenue:records})}
-$("backup").addEventListener("click",()=>{$("backupText").value=makeBackup();$("bookMessage").textContent="پشتیبان آماده شد؛ متن را در جای امن نگه دار."});
+
+function makeBackup(){
+ return JSON.stringify({version:1,game:g,revenue:records});
+}
+
+$("backup").addEventListener("click",()=>{
+ $("backupText").value=makeBackup();
+ $("bookMessage").textContent="پشتیبان آماده شد؛ متن را در جای امن نگه دار.";
+});
+
 $("copyBackup").addEventListener("click",async()=>{
- const data=makeBackup();$("backupText").value=data;
- try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(data);$("bookMessage").textContent="متن پشتیبان کپی شد."}
- else{$("backupText").focus();$("backupText").select();$("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن."}}
- catch(e){$("backupText").focus();$("backupText").select();$("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن."}
+ const data=makeBackup();
+ $("backupText").value=data;
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+   await navigator.clipboard.writeText(data);
+   $("bookMessage").textContent="متن پشتیبان کپی شد.";
+  }else{
+   $("backupText").focus();$("backupText").select();
+   $("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن.";
+  }
+ }catch(e){
+  $("backupText").focus();$("backupText").select();
+  $("bookMessage").textContent="متن انتخاب شد؛ آن را کپی کن.";
+ }
 });
+
 $("restore").addEventListener("click",()=>{
  try{
   const data=JSON.parse($("backupText").value);
   if(!data||data.version!==1||!data.game||!Array.isArray(data.revenue))throw new Error("invalid backup");
   if(!confirm("اطلاعات فعلی با اطلاعات پشتیبان جایگزین شود؟"))return;
+
+  const previousGame=g,previousRecords=records;
   const restored={...g,...data.game};
+
   restored.achievements=Array.isArray(restored.achievements)?restored.achievements:[];
   restored.claimedMilestones=Array.isArray(restored.claimedMilestones)?restored.claimedMilestones:[];
-  restored.score=Math.max(0,Number(restored.score)||0);restored.taps=Math.max(0,Number(restored.taps)||0);
-  restored.best=Math.max(restored.score,Number(restored.best)||0);restored.dailyTaps=Math.max(0,Number(restored.dailyTaps)||0);
+  restored.score=Math.max(0,Number(restored.score)||0);
+  restored.taps=Math.max(0,Number(restored.taps)||0);
+  restored.best=Math.max(restored.score,Number(restored.best)||0);
+  restored.dailyTaps=Math.max(0,Number(restored.dailyTaps)||0);
+
+  /* شمارنده پاداش در برابر بازگردانی پشتیبان به عقب برنمی‌گردد */
+  restored.rewardedCount=Math.min(
+   completedViews,
+   Math.max(
+    previousGame.rewardedCount||0,
+    lastNativeRewardCount,
+    Math.floor(Number(restored.rewardedCount)||0)
+   )
+  );
+
   g=restored;
-  records=data.revenue.filter(r=>r&&Number.isFinite(Number(r.amount))&&Number(r.amount)>0).map(r=>({amount:Math.round(Number(r.amount)),date:String(r.date||today()),status:r.status==="paid"?"paid":"pending"}));
-  save();persist();render();renderRecords();$("bookMessage").textContent="بازیابی اطلاعات با موفقیت انجام شد.";
- }catch(e){$("bookMessage").textContent="فایل پشتیبان معتبر نیست یا قابل خواندن نیست."}
+  records=data.revenue.filter(r=>r&&Number.isFinite(Number(r.amount))&&Number(r.amount)>0)
+   .map(r=>({amount:Math.round(Number(r.amount)),date:String(r.date||today()),status:r.status==="paid"?"paid":"pending"}));
+
+  if(!save()||!persist()){
+   g=previousGame;records=previousRecords;
+   save();persist();
+   $("bookMessage").textContent="ذخیره بازیابی ناموفق بود؛ اطلاعات قبلی حفظ شد.";
+   return;
+  }
+
+  try{
+   if(g.rewardedCount>lastNativeRewardCount&&g.rewardedCount<=completedViews&&window.AndroidAds&&typeof AndroidAds.acknowledgeReward==="function"){
+    AndroidAds.acknowledgeReward(g.rewardedCount);
+    lastNativeRewardCount=g.rewardedCount;
+   }
+  }catch(e){}
+
+  render();renderRecords();
+  $("bookMessage").textContent="بازیابی اطلاعات با موفقیت انجام شد.";
+ }catch(e){
+  $("bookMessage").textContent="فایل پشتیبان معتبر نیست یا قابل خواندن نیست.";
+ }
 });
-render();renderRecords();
+
+render();
+renderRecords();
 })();
 </script>
 </body>
