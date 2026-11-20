@@ -187,14 +187,27 @@ body{padding:0;background:radial-gradient(ellipse at 50% -10%,#302078 0,#111943 
 <footer class="footer">A.Z.N Earn + A.Z.N Play | نسخه آزمایشی</footer>
 </main>
 <script>
-(()=>{
+(() => {
 "use strict";
-const $=id=>document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-/* Supabase Auth: use the project's PUBLIC anon JWT key only. */
-const SUPABASE_URL="https://mzyhwknkfravyfgismmn.supabase.co";
-const SUPABASE_ANON_KEY="sb_publishable_quIHzAWNxQUpKSEaUFtfnA_w4B4wM7DE";
-let cloudClient=null,authMode="login",authUser=null;
-function authMsg(t){const e=document.getElementById("authMessage");if(e)e.textContent=t;}
-function authSummary(t){const e=document.getElementById("authSummary");if(e)e.textContent=t;}
-function setAuthMode(mode){authMode=mode;const login=mode==="login";$("authTabLogin").classList.toggle("selected",login);$("authTabSignup").classList.toggle("selected",!login);$("authTabSignup").classList.toggle("secondary",login);$("authTabLogin").classList.toggle("secondary",!login);$("authNameLabel").style.display=login?"none":"block";$("authDisplayName").style.display=login?"none":"block";$("authSubmit").textContent=login?"ورود به حساب":"ایجاد حساب کاربری";$("auth
+/* ------------------- 1. Supabase Auth ------------------- */
+const SUPABASE_URL = "https://mzyhwknkfravyfgismmn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_quIHzAWNxQUpKSEaUFtfnA_w4B4wM7DE";
+let cloudClient = null, authMode = "login", authUser = null;
+
+function authMsg(t) { const e = $("authMessage"); if (e) e.textContent = t; }
+function authSummary(t) { const e = $("authSummary"); if (e) e.textContent = t; }
+
+function setAuthMode(mode) {
+    authMode = mode;
+    const login = mode === "login";
+    $("authTabLogin").classList.toggle("selected", login);
+    $("authTabSignup").classList.toggle("selected", !login);
+    $("authTabSignup").classList.toggle("secondary", login);
+    $("authTabLogin").classList.toggle("secondary", !login);
+    $("authNameLabel").style.display = login ? "none" : "block";
+    $("authDisplayName").style.display = login ? "none" : "block";
+    $("authSubmit").textContent = login ? "ورود به حساب" : "ایجاد حساب کاربری";
+    $("authPassword").autocomplete = login ? "current-password" : "new-password";
+    authMsg(login ?
