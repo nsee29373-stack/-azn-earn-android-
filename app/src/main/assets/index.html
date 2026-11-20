@@ -67,6 +67,48 @@ input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid
 .cloud-help{font-size:11px;color:var(--muted);line-height:1.9}
 .cloud-divider{border:0;border-top:1px solid #343d68;margin:14px 0}
 [hidden]{display:none!important}
+
+/* A.Z.N EARN - PREMIUM MOBILE DESIGN */
+:root{--bg:#070b2b;--panel:#111b52;--line:#315dff;--txt:#fff;--muted:#c3d0ff;--cyan:#00eaff;--gold:#ffd21f}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{padding:0;background:radial-gradient(ellipse at 50% 0%,#342080,#10134c 45%,#050925);font-family:Tahoma,Arial,sans-serif;color:white}
+.wrap{width:100%;max-width:520px;height:100dvh;margin:auto;padding:env(safe-area-inset-top) 12px calc(76px + env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden}
+.head{flex:0 0 auto;padding:8px 3px;display:flex;align-items:center;justify-content:center;gap:8px}
+.logo{font-size:28px;filter:drop-shadow(0 0 10px #ffd21f)}
+h1{font-size:25px;margin:0;color:#ffdc4a;text-shadow:0 0 14px #ff9d00}
+.azn-shortcuts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 10px;flex-shrink:0}
+.azn-shortcuts button{padding:9px 3px;border-radius:15px;background:linear-gradient(145deg,#173dbe,#5017a7);border:1px solid #20eaff;color:white;box-shadow:0 0 12px #174bff88;font-size:10px}
+.azn-shortcuts span{display:block;font-size:21px;margin-bottom:3px}
+.azn-panel{display:none!important;margin:0!important;padding:12px!important;border-radius:20px!important;border:1px solid #278cff!important;background:linear-gradient(150deg,#122b77,#21105c 60%,#071c55)!important;box-shadow:0 0 16px #164cff88,0 0 28px #9c24ff33!important;overflow-y:auto;flex:1 1 auto;min-height:0}
+.azn-panel.active{display:block!important}
+.azn-panel h2,.azn-panel h3{color:white;text-shadow:0 0 8px #28cfff;font-size:15px}
+.azn-panel .muted,.azn-panel .note{color:#c9d8ff}
+.game{background:radial-gradient(circle at 50% 0%,#2949b9,#25106b 65%,#091a55)!important;border:1px solid #31eaff!important}
+.game .score{font-size:40px;color:#ffdf36;text-shadow:0 0 14px #ff9d00;margin:5px}
+.game .tap{width:clamp(115px,32vw,150px);margin:9px auto;border:4px solid #fff9;background:radial-gradient(circle at 30% 22%,#fff6a6,#ffba16 38%,#ff7900 65%,#a40bdc);box-shadow:0 0 0 5px #ffffff18,0 0 28px #ffb300,0 0 45px #7b20ff;color:#37105b;font-weight:900}
+.game .stat{background:#071b55;border:1px solid #39cfff}
+.game .stat b{color:#ffe05b}
+.azn-nav{position:fixed;z-index:99;bottom:env(safe-area-inset-bottom);left:50%;transform:translateX(-50%);width:min(496px,calc(100% - 18px));height:62px;padding:5px 8px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-radius:22px;border:1px solid #12dfff;background:linear-gradient(100deg,#071a5af5,#24105df5);box-shadow:0 0 18px #087dffbb,0 0 28px #9d26ff55}
+.azn-nav button{background:transparent;color:#b9c9ff;padding:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.azn-nav button span{font-size:20px}
+.azn-nav button small{font-size:10px}
+.azn-nav button.selected{color:#ffe04a;background:#ffffff12}
+.azn-panel .status{background:#071947;border:1px solid #2557bd;color:#c9f8ff}
+.azn-panel .mission,.azn-panel .stat,.azn-panel .bookstat,.azn-panel .milestone{background:#09194b;border-color:#315bcb}
+.azn-panel .link{background:linear-gradient(90deg,#087df0,#7c20dd)}
+.azn-panel input,.azn-panel select,.azn-panel textarea{background:#08163f;border-color:#3976d9}
+.azn-panel .badgeitem{background:#0a194a}
+.azn-panel .badgeitem.on{background:#4a2c14;border-color:#ffd21f}
+.footer{display:none}
+@media(max-height:700px){
+.head{padding:3px}
+.logo{font-size:22px}
+h1{font-size:21px}
+.azn-shortcuts{margin:2px 0 6px}
+.azn-shortcuts button{padding:6px 2px}
+.game .tap{width:108px;margin:5px auto}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
